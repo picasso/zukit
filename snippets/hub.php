@@ -23,7 +23,7 @@ class zukit_Snippets extends zukit_Singleton {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.1.1';
+        $this->version = '1.1.2';
 		$this->init_advanced_style();
 	}
 
@@ -48,23 +48,26 @@ class zukit_Snippets extends zukit_Singleton {
 
 	public function add_body_class($my_classes, $prefix = '') {
 		add_filter('body_class', function($classes) use ($my_classes, $prefix) {
-			$my_classes = $this->split_classes($my_classes);
-			// add prefix to all classes
-			if(!empty($prefix)) $my_classes = preg_filter('/^/', $prefix, $my_classes);
-			// remove all already existing classes
-			$my_classes = $this->remove_classes($my_classes, $classes, false);
-
+			$my_classes = $this->prefix_an_clean_class($classes, $my_classes, $prefix);
 			$classes[] = $this->merge_classes($my_classes);
-			return $classes;
+			return array_filter($classes);
 		});
 	}
 
-	public function add_admin_body_class($my_classes) {
-		add_filter('admin_body_class', function($classes) use ($my_classes) {
+	public function add_admin_body_class($my_classes, $prefix = '') {
+		add_filter('admin_body_class', function($classes) use ($my_classes, $prefix) {
 			$classes = $this->split_classes($classes);
-			$my_classes = $this->remove_classes($my_classes, $classes, false);
-		    return $this->merge_classes(array_merge($classes, $my_classes));
+			$my_classes = $this->prefix_an_clean_class($classes, $my_classes, $prefix);
+		    return $this->merge_classes(array_merge($classes, array_filter($my_classes)));
 		});
+	}
+
+	private function prefix_an_clean_class($classes, $my_classes, $prefix) {
+		$my_classes = $this->split_classes($my_classes);
+		// add prefix to all classes
+		if(!empty($prefix)) $my_classes = preg_filter('/^/', $prefix, $my_classes);
+		// remove all already existing classes
+		return $this->remove_classes($my_classes, $classes, false);
 	}
 }
 
