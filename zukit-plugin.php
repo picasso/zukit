@@ -80,6 +80,9 @@ class zukit_Plugin extends zukit_Singleton {
 		// all translations loaded only 'after_setup_theme'
 		add_action('after_setup_theme', [$this, 'load_translations']);
 
+		// add body class for an active theme (and maybe child theme)
+		$this->theme_mark();
+
 		$this->admin_config($file, $this->config['admin']);
 		$this->admin_menu_config();
 		$this->ajax_config();
@@ -95,6 +98,16 @@ class zukit_Plugin extends zukit_Singleton {
 
 	public function init() {}
 	public function admin_init() {}
+
+	private function theme_mark($delimiter = '-', $prefix = 'is-') {
+		$theme = wp_get_theme();
+		$names = [
+			preg_replace('/\s+/', $delimiter, strtolower($theme->name)),
+			empty($theme->parent_theme) ? null : strtolower(preg_replace('/\s+/', $delimiter, $theme->parent_theme)),
+		];
+		$this->snippets('add_body_class', $names, $prefix);
+		$this->snippets('add_admin_body_class', $names, $prefix);
+	}
 
 	// Translations -----------------------------------------------------------]
 
