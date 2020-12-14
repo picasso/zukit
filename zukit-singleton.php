@@ -115,9 +115,13 @@ class zukit_Singleton {
 
     public function enqueue_only($is_style = null, $handle = null) {
         $handle = is_null($handle) ? $this->create_handle() : $handle;
+
+        $style_handle = is_array($handle) ? ($handle[0] ?? null) : $handle;
+        $script_handle = is_array($handle) ? ($handle[1] ?? null) : $handle;
+
         // if $is_style is null - then enqueue both (style and script)
-        if($is_style === true || $is_style === null) wp_enqueue_style($handle);
-        if($is_style === false || $is_style === null) wp_enqueue_script($handle);
+        if($is_style === true || $is_style === null) wp_enqueue_style($style_handle);
+        if($is_style === false || $is_style === null) wp_enqueue_script($script_handle);
     }
 
     protected function create_handle($file = null) {
