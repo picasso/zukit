@@ -113,7 +113,7 @@ trait zusnippets_Content {
 		// we need remove any Gutenberg block which use 'get_excerpt' before apply_filters('the_content'...)
 		// otherwise it will lead to infinitive recursion
 		// check if there were added blocks which we should avoid during apply_filters('the_content'...)
-		$skip_blocks = apply_filters('zu_no_excerpt_blocks', []);
+		$skip_blocks = apply_filters('zukit_no_excerpt_blocks', []);
 		// for avoided Gutenberg block we shoud use add_filter('pre_render_block', ...) and return not null
 		$prevent_recursion = function($pre_render, $block) use($skip_blocks) {
 			return in_array($block['blockName'], $skip_blocks) ? '' : $pre_render;
