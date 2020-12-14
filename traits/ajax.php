@@ -19,7 +19,7 @@ trait zukit_Ajax {
 
 	private function ajax_config() {
 
-		$this->nonce = $this->config['nonce'] ?? $this->prefix.'_ajax_nonce';
+		$this->nonce = $this->get('nonce') ?? $this->prefix.'_ajax_nonce';
 
 		$this->routes = [
 			// make action via ajax call
@@ -287,7 +287,7 @@ trait zukit_Ajax {
 			}
 		}
 		// if $result is false - something went wrong - then return null
-		return rest_ensure_response($result || (object) null);
+		return rest_ensure_response($result ?? (object) null);
 	}
 
 	// Ajax Actions Helpers ---------------------------------------------------]
