@@ -16,8 +16,8 @@ class zukit_Addon {
 		if(empty($this->plugin)) {
 			_doing_it_wrong(__FUNCTION__, '"Addon" cannot be used without plugin!');
 		} else {
-			$this->config = $this->config();
-			$this->name = $this->config['name'] ?? 'zuaddon';
+			$this->config = array_merge($this->config_defaults(), $this->config());
+			$this->name = $this->get('name') ?? 'zuaddon';
 
 			$this->options_key = $this->name.'_options';
 			$this->init_options();
@@ -25,7 +25,14 @@ class zukit_Addon {
 		}
 	}
 
+	// Configuration management -----------------------------------------------]
+
 	protected function config() { return []; }
+	protected function config_defaults() { return []; }
+	protected function is_config($key, $check_value = true) {
+		return $this->plugin->is_option($key, $check_value, $this->config);
+	}
+
 	// 'construct_more' вызывается только после регистрации addon плагином!
 	protected function construct_more() {}
 
@@ -40,8 +47,8 @@ class zukit_Addon {
 
 	public function init_options() {
 		$options = $this->plugin->options();
-		if(!isset($options[$this->options_key]) && isset($this->config['options'])) {
-			$this->options = $this->config['options'];
+		if(!isset($options[$this->options_key]) && !is_null($this->get('options'))) {
+			$this->options = $this->get('options');
 			$this->plugin->set_option($this->options_key, $this->options, true);
 		} else {
 			$this->options($options);
@@ -88,16 +95,17 @@ class zukit_Addon {
 		return call_user_func_array([$this->plugin, 'sprintf_uri'], $params);
 	}
 	protected function enqueue_style($file, $params = []) {
-		return $this->plugin->enqueue_style($this->prefix_it($file), $params);
+		return $this->plugin->enqueue_style($this->filename($file, $params), $params);
 	}
 	protected function enqueue_script($file, $params = []) {
-		return $this->plugin->enqueue_script($this->prefix_it($file), $params);
+		return $this->plugin->enqueue_script($this->filename($file, $params), $params);
 	}
 	protected function admin_enqueue_style($file, $params = []) {
-		return $this->plugin->admin_enqueue_style($this->prefix_it($file), $params);
+
+		return $this->plugin->admin_enqueue_style($this->filename($file, $params), $params);
 	}
 	protected function admin_enqueue_script($file, $params = []) {
-		return $this->plugin->admin_enqueue_script($this->prefix_it($file), $params);
+		return $this->plugin->admin_enqueue_script($this->filename($file, $params), $params);
 	}
 	protected function ajax_error($error, $params = null) {
 		return $this->plugin->ajax_error($error, $params);
@@ -114,11 +122,6 @@ class zukit_Addon {
 	protected function create_notice($status, $message, $actions = []) {
 		return $this->plugin->create_notice($status, $message, $actions);
 	}
-	protected function prefix_it($str, $divider = '-') {
-		// if $str starts with '!' then do not prefix it (could be an absolute path)
-		if(substr($str, 0, 1) === '!') return $str;
-		return $this->plugin->prefix_it($str, $divider);
-	}
 
 	// Common interface plugin methods with availability check ----------------]
 	// NOTE: only public functions can be called with this helper
@@ -134,8 +137,21 @@ class zukit_Addon {
 
 	// Helpers ----------------------------------------------------------------]
 
+	protected function prefix_it($str, $divider = '-') {
+		// if $str starts with '!' then do not prefix it (could be an absolute path)
+		if(substr($str, 0, 1) === '!') return $str;
+		return $this->plugin->prefix_it($str, $divider);
+	}
+
 	protected function get($key, $from_plugin = false, $default_value = null) {
-		$config = $from_plugin ? $this->plugin->config : $this->config;
-		return isset($config[$key]) ? $config[$key] : $default_value;
+		return $this->plugin->get($key, $default_value, $from_plugin ? null : $this->config);
+		//
+		// $config = $from_plugin ? $this->plugin->config : $this->config;
+		// return isset($config[$key]) ? $config[$key] : $default_value;
+	}
+
+	private function filename($file, $params) {
+		$with_prefix = $params['add_prefix'] ?? true;
+		return $with_prefix ? $this->prefix_it($file) : $file;
 	}
 }
