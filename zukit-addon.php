@@ -122,6 +122,9 @@ class zukit_Addon {
 	protected function create_notice($status, $message, $actions = []) {
 		return $this->plugin->create_notice($status, $message, $actions);
 	}
+	protected function log_error($error, $context = null) {
+		$this->plugin->log_error($error, $context, 1);
+	}
 
 	// Common interface plugin methods with availability check ----------------]
 	// NOTE: only public functions can be called with this helper
