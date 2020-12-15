@@ -1,5 +1,9 @@
 @import "zukit-basic";
 
+@import "components/select-item";
+@import "components/list-input";
+@import "components/adv-text-control";
+
 // class prefixes -------------------------------------------------------------]
 
 $skeleton-class: zukit-skeleton;
@@ -7,17 +11,11 @@ $skeleton-editor-class: zukit-skeleton__editor;
 $skeleton-content-class: zukit-skeleton__content;
 $skeleton-sidebar-class: zukit-skeleton__sidebar;
 
-$selectitem-component-class: zukit-select-item;
-$listinput-component-class: zukit-list-input;
-$advtext-component-class: zukit-text-control;
 $table-component-class: zukit-table;
 $divider-component-class: zukit-divider;
 
-@import "components/select-item";
-@import "components/list-input";
 @import "components/table";
 @import "components/divider";
-@import "components/adv-text-control";
 
 .zukit-settings {
 

@@ -139,6 +139,8 @@ $wp-gray-200: #ddd;             // Used for most borders.
 $wp-blue-medium-100: #e5f5fa;
 $wp-blue-medium-500: #00a0d2;
 $wp-light-gray-500: #e2e4e7;
+$wp-link-blue: #0073aa;
+$wp-admin-blue-color: #0075af;
 
 // Fonts & basic variables.
 $wp-default-font: -apple-system, BlinkMacSystemFont,"Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,"Helvetica Neue", sans-serif;
@@ -197,7 +199,6 @@ $collection-transition-delay: 0.2s !default;
 
 // Admin Components -----------------------------------------------------------]
 
-$wp-admin-blue-color: #0075af;
 $admin-grey-blue-color: #323c5a;
 $admin-light-blue: #b2d5e7; // equal rgba($wp-admin-blue-color, 0.3) on white
 $admin-dark: #555d66;
