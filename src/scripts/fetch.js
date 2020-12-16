@@ -280,3 +280,11 @@ export function postAndCatchWithOptions({ route, options, picked, onSuccess, onE
 		if(_.isFunction(onError)) onError(error);
 	});
 }
+
+// Subset of functions for 'zukit-blocks'
+export const blocksSet = {
+	serializeData,
+	requestURL,
+	fetchAndCatchWithOptions,
+	postAndCatchWithOptions,
+};
