@@ -25,7 +25,7 @@ const buttonPossibleProps = [
 	'isPrimary', 'isTertiary', 'isPressed', 'isBusy', 'isDefault', 'isLink', 'isDestructive',
 ];
 
-const SelectItem = ({
+const SelectItemControl = ({
 		className,
 		columns = 2,
 		isSecondary = true,
@@ -101,4 +101,4 @@ const SelectItem = ({
 	);
 }
 
-export default SelectItem;
+export default SelectItemControl;

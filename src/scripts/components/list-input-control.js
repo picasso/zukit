@@ -46,7 +46,7 @@ const messageByKind = (kind, value) => {
 	return messageWithError(msg, value);
 }
 
-const ListInput = ({
+const ListInputControl = ({
 		separator = ',',
 		label,
 		help,
@@ -186,4 +186,4 @@ const ListInput = ({
 
 export default compose([
 	withNoticesContext,
-])(ListInput);
+])(ListInputControl);

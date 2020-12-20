@@ -79,6 +79,7 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 			height: 30px;
 			width: auto !important;
 			padding-right: 12px;
+			box-shadow: none;
 		}
 	}
 }

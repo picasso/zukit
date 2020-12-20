@@ -1,6 +1,7 @@
 // Admin Select Item Component ------------------------------------------------]
 
 $select-item-digits-height: 60px;
+$select-item-wrapper-padding: 5px;
 $select-item-basic-border-color: rgb(25, 30, 35);
 
 .#{$selectitem-component-class} {
@@ -86,6 +87,7 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		align-items: center;
 		background-color: white;
 		border: 1px solid rgba($select-item-basic-border-color, 0.2);
+		box-shadow: none;
 		border-radius: 3px !important;
 		height: auto;
 		margin: 0;
@@ -108,6 +110,14 @@ $select-item-basic-border-color: rgb(25, 30, 35);
         svg {
             fill: currentColor;
         }
+
+		.__wrapper {
+			line-height: 0;
+			font-size: 0;
+			width: 100%;
+			height: 100%;
+			padding: $select-item-wrapper-padding;
+		}
 
 		span {
 			width: 100%;
