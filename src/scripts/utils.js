@@ -25,9 +25,10 @@ export function isNum(n) {
 
 // convert argument to Boolean value
 // works for true, false, 0, 1, "true", "false", "TRUE", "FALSE", "0", "1", undefined
-export function toBool(val) {
+export function toBool(val, stringOrNull = false) {
 	let num;
-	return val != null && (!_.isNaN(num = +val) ? !!num : !!String(val).toLowerCase().replace(!!0,''));
+	const value = val != null && (!_.isNaN(num = +val) ? !!num : !!String(val).toLowerCase().replace(!!0,''));
+	return stringOrNull ? (value ? String(value) : null) : value;
 }
 
 export function toRange(num, min, max, useMinOnErr = true) {
