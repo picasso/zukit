@@ -273,7 +273,7 @@ class zukit_Singleton {
         else self::$log_filter = $class;
     }
 
-    public static function log(...$params) {
+    public static function log($context, ...$params) {
         // filter when $log_filter is not 'null'
         if(self::$log_filter !== null && self::$log_filter !== static::class) return;
         self::log_with_context($context, $params, 0);
