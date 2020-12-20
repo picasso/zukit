@@ -39,7 +39,13 @@ class zukit_Blocks extends zukit_Addon {
 
 	protected function config_defaults() {
 		return [
+			// should load zukit blocks JS & CSS (admin mode only)
 			'load_zukit'	=> true,
+			// should load plugin/theme CSS (admin mode only)
+			'load_css'		=> true,
+			// should load plugin/theme JS (admin mode only)
+			'load_js'		=> false,
+
 			'dynamic'		=> false,
 			'metakeys'		=> false,
 			'no_excerpt'	=> false,
@@ -117,22 +123,17 @@ class zukit_Blocks extends zukit_Addon {
 	protected function js_data($is_frontend) {}
 
 	public function editor_assets() {
-
 		$this->zukit_blocks_enqueue();
 		$this->register_style_and_script(false);
-
-			// $this->parent->register_script($this->get('handle'), [
-			// 	'wp-blocks',
-			// 	'wp-i18n',
-			// 	'wp-element',
-			// 	'wp-plugins',
-			// 	'wp-components',
-			// 	'wp-edit-post'
-			// ]);
 	}
 
 	public function block_assets() {
-		// $this->register_script(zu_Blocks::$handle. '-frontend', ['jquery']);
+		if(is_admin()) {
+			$this->plugin->force_frontend_enqueue(
+				$this->get('load_css'),
+				$this->get('load_js')
+			);
+		}
 
 		// $this->register_style_and_script(true);
 	}
@@ -147,6 +148,13 @@ class zukit_Blocks extends zukit_Addon {
 		if(self::$zukit_loaded === false && $this->is_config('load_zukit')) {
 			// dependencies for Zukit Blocks script & styles
 			$js_deps = ['wp-edit-post'];
+			// 	'wp-blocks',
+			// 	'wp-i18n',
+			// 	'wp-element',
+			// 	'wp-plugins',
+			// 	'wp-components',
+			// 	'wp-edit-post'
+
 			$css_deps = ['wp-edit-post'];
 			// params for 'zukit-blocks' script
 			$zukit_params = [

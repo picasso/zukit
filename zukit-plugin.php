@@ -388,6 +388,21 @@ class zukit_Plugin extends zukit_Singleton {
 		$this->enqueue_more(true, $hook);
 	}
 
+	// Этот метод используется для загрузки CSS and JS
+	// которые будут использованы для блоков внутри Gutenberg Editor
+	public function force_frontend_enqueue($load_css, $load_js) {
+		if($load_css && $this->should_load_css(true, null)) {
+			$css_params = $this->css_params_validated(true);
+			$css_params['register_only'] = false;
+			$this->enqueue_style(null, $css_params);
+		}
+		if($load_js && $this->should_load_js(true, null)) {
+			$js_params = $this->js_params_validated(true);
+			$js_params['register_only'] = false;
+			$this->enqueue_script(null, $js_params);
+		}
+	}
+
 	public function zukit_enqueue($hook) {
 		if($this->is_zukit_slug($hook)) {
 			// dependencies for Zukit script & styles
