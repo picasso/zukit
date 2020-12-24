@@ -102,6 +102,7 @@ $some-green: #5b9a68; // #83b19a - truewine;  // #63ad72 - safari?
 $some-blue: #00aced;
 $some-violet: #bc2a8d;
 $some-red: #ff3358; // #ff3358 // #ff4136 // orig - #e32546
+$some-red-bright: #ff4136; // #ff3358 // #ff4136 // orig - #e32546
 
 $dark-blue-grey: #434750;
 $dark-grey: #363636;
@@ -110,10 +111,7 @@ $light-grey-more: #cfcfde;
 
 $light-yellow: #fff4d9;
 $dark-yellow: #fcb813;
-
 $black-blue: #2f2933;
-
-$bright-red: #ff4136; // #ff3358 // #ff4136 // orig - #e32546
 $gold-green-color: #c8ba51; // #9f985e;
 
 // Site colors ----------------------------------------------------------------]
@@ -124,6 +122,7 @@ $blue-color: $some-blue !default;
 $violet-color: $some-violet !default;
 $orange-color: $some-orange !default;
 $orange-bright-color: $some-orange-bright !default;
+$red-bright-color: $some-red-bright !default;
 
 // Wordpress basic vars -------------------------------------------------------]
 

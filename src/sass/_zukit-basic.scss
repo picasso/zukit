@@ -1,5 +1,7 @@
 @import "variables";
 
+$brand-color: $violet-color;
+
 $admin-grey-color: #e5e5e5;
 $admin-light-yellow: #ffffa5;
 $admin-light-brown: #f2d592; //#d5b464;
@@ -61,3 +63,4 @@ $select-item-size: 80px;
 $selectitem-component-class: zukit-select-item;
 $listinput-component-class: zukit-list-input;
 $advtext-component-class: zukit-text-control;
+$loader-component-class: zukit-loader-control;
