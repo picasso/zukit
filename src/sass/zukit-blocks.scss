@@ -3,3 +3,50 @@
 @import "components/select-item-control";
 @import "components/list-input-control";
 @import "components/adv-text-control";
+@import "components/loader-control";
+
+// Zukit Modal styling --------------------------------------------------------]
+
+.zukit-modal {
+	&.components-modal__frame {
+		.components-modal__header {
+			h1 {
+				font-size: 2em;
+			}
+		}
+		p {
+			font-size: 15px;
+			margin: 0;
+			line-height: 1.5;
+			color: rgba(black, 0.5);
+            text-shadow: 0 0 1px rgba(black, 0.1);
+		}
+		.__content-wrapper {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		.__button-wrapper {
+			margin-top: 32px;
+			display: flex;
+			justify-content: flex-end;
+			.components-button {
+				margin-left: 16px;
+			}
+		}
+        .__icon {
+            font-size: 0;
+            line-height: 1;
+            margin-right: 16px;
+            &, svg {
+                width: 24px * 2;
+                height: auto;
+            }
+        }
+        @each $color-name, $color-value in $admin-colors {
+            .__#{$color-name} {
+                color: $color-value;
+            }
+        }
+	}
+}
