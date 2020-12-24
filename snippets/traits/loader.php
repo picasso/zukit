@@ -20,21 +20,22 @@ trait zusnippets_Loader {
 		$wrapper = $getAll ? '' : sprintf('<div class="%1$s">', $classes);
 		$wrapper_closing = $getAll ? '' : '</div>';
 
+		// index 0
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 40 40" preserveAspectRatio="xMidYMin slice">
-				  <path opacity="%6$s" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
-				    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
-				    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
-				  <path d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
-				    C22.32,8.481,24.301,9.057,26.013,10.047z">
-				    <animateTransform attributeType="xml"
-				      attributeName="transform"
-				      type="rotate"
-				      from="0 20 20"
-				      to="360 20 20"
-				      dur="%2$ss"
-				      repeatCount="indefinite"/>
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="5 5 30 30" preserveAspectRatio="xMidYMin slice">
+					<path opacity="%6$s" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946s14.946-6.691,
+						14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634c0-6.425,5.209-11.634,
+						11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+					<path d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0C22.32,8.481,24.301,9.057,26.013,10.047z">
+						<animateTransform attributeType="xml"
+							attributeName="transform"
+							type="rotate"
+							from="0 20 20"
+							to="360 20 20"
+							dur="%2$ss"
+							repeatCount="indefinite"
+						/>
 				    </path>
 			  </svg>
 			%5$s',
@@ -46,106 +47,225 @@ trait zusnippets_Loader {
 			$opacity
 		);
 
+		// index 1
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 50 50" preserveAspectRatio="xMidYMin slice">
-			  <path d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
-			    <animateTransform attributeType="xml"
-			      attributeName="transform"
-			      type="rotate"
-			      from="0 25 25"
-			      to="360 25 25"
-			      dur="%2$ss"
-			      repeatCount="indefinite"/>
-			    </path>
-			  </svg>
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="7 7 50 50" preserveAspectRatio="xMidYMin slice">
+					<g stroke-width="4" stroke-linecap="round" stroke="currentColor">
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(180)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values="1;.85;.7;.65;.55;.45;.35;.25;.15;.1;0;1" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(210)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values="0;1;.85;.7;.65;.55;.45;.35;.25;.15;.1;0" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(240)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".1;0;1;.85;.7;.65;.55;.45;.35;.25;.15;.1" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(270)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".15;.1;0;1;.85;.7;.65;.55;.45;.35;.25;.15" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(300)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".25;.15;.1;0;1;.85;.7;.65;.55;.45;.35;.25" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(330)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".35;.25;.15;.1;0;1;.85;.7;.65;.55;.45;.35" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(0)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".45;.35;.25;.15;.1;0;1;.85;.7;.65;.55;.45" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(30)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".55;.45;.35;.25;.15;.1;0;1;.85;.7;.65;.55" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(60)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".65;.55;.45;.35;.25;.15;.1;0;1;.85;.7;.65" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(90)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".7;.65;.55;.45;.35;.25;.15;.1;0;1;.85;.7" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(120)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values=".85;.7;.65;.55;.45;.35;.25;.15;.1;0;1;.85" repeatCount="indefinite"/>
+					    </line>
+					    <line y1="12" y2="20" transform="translate(32,32) rotate(150)">
+					        <animate attributeName="stroke-opacity" dur="%2$ss" values="1;.85;.7;.65;.55;.45;.35;.25;.15;.1;0;1" repeatCount="indefinite"/>
+					    </line>
+					</g>
+				</svg>
 			%5$s',
 			$wrapper,
-			$duration,
+			$duration * 1.5,
 			$xmlns,
 			count($loaders),
 			$wrapper_closing
 		);
 
+		// index 2
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 50 50" preserveAspectRatio="xMidYMin slice">
-			  <path d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
-			    <animateTransform attributeType="xml"
-			      attributeName="transform"
-			      type="rotate"
-			      from="0 25 25"
-			      to="360 25 25"
-			      dur="%2$ss"
-			      repeatCount="indefinite"/>
-			    </path>
+			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 44 44" stroke="currentColor" preserveAspectRatio="xMidYMin slice">
+			      <g fill="none" fill-rule="evenodd" stroke-width="2">
+			          <circle cx="22" cy="22" r="1">
+			              <animate attributeName="r"
+			                  begin="0s" dur="%2$ss"
+			                  values="1; 20"
+			                  calcMode="spline"
+			                  keyTimes="0; 1"
+			                  keySplines="0.165, 0.84, 0.44, 1"
+			                  repeatCount="indefinite"
+						  />
+			              <animate attributeName="stroke-opacity"
+			                  begin="0s" dur="%2$ss"
+			                  values="1; 0"
+			                  calcMode="spline"
+			                  keyTimes="0; 1"
+			                  keySplines="0.3, 0.61, 0.355, 1"
+			                  repeatCount="indefinite"
+						  />
+			          </circle>
+			          <circle cx="22" cy="22" r="1">
+			              <animate attributeName="r"
+			                  begin="-%5$ss" dur="%2$ss"
+			                  values="1; 20"
+			                  calcMode="spline"
+			                  keyTimes="0; 1"
+			                  keySplines="0.165, 0.84, 0.44, 1"
+			                  repeatCount="indefinite"
+						  />
+			              <animate attributeName="stroke-opacity"
+			                  begin="-%5$ss" dur="%2$ss"
+			                  values="1; 0"
+			                  calcMode="spline"
+			                  keyTimes="0; 1"
+			                  keySplines="0.3, 0.61, 0.355, 1"
+			                  repeatCount="indefinite"
+						  />
+			          </circle>
+			      </g>
 			  </svg>
-			%5$s',
+			%6$s',
 			$wrapper,
-			$duration,
+			$duration * 3,
+			$xmlns,
+			count($loaders),
+			$duration * 1.5,
+			$wrapper_closing
+		);
+
+		// index 3
+		$loaders[] = zu_sprintf(
+			'%1$s
+				<svg version="1.1" id="loader-%5$s" data-id="%5$s" xmlns="%4$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMin slice">
+					<circle fill="none" stroke="currentColor" stroke-width="8" stroke-miterlimit="10" cx="50" cy="50" r="45" opacity="0.5"/>
+					<line fill="none" stroke-linecap="round" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="80" y2="50.5">
+						<animateTransform
+							attributeName="transform"
+							dur="%2$ss"
+							type="rotate"
+							from="0 50 50"
+							to="360 50 50"
+							repeatCount="indefinite"
+						/>
+					</line>
+					<line fill="none" stroke-linecap="round" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="49.5" y2="69">
+						<animateTransform
+							attributeName="transform"
+							dur="%3$ss"
+							type="rotate"
+							from="0 50 50"
+							to="360 50 50"
+							repeatCount="indefinite"
+						/>
+					</line>
+			  </svg>
+			%6$s',
+			$wrapper,
+			$duration * 2,
+			$duration * 2 * 3,
 			$xmlns,
 			count($loaders),
 			$wrapper_closing
 		);
 
+		// index 4
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%7$s" data-id="%7$s" xmlns="%6$s" viewBox="0 0 20 30" preserveAspectRatio="xMidYMin slice">
-			    <rect x="0" y="10" width="4" height="10" opacity="%5$s">
-			      <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="%2$ss" repeatCount="indefinite" />
-			      <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="%2$ss" repeatCount="indefinite" />
-			      <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="%2$ss" repeatCount="indefinite" />
-			    </rect>
-			    <rect x="8" y="10" width="4" height="10"  opacity="%5$s">
-			      <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="%3$ss" dur="%2$ss" repeatCount="indefinite" />
-			      <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="%3$ss" dur="%2$ss" repeatCount="indefinite" />
-			      <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="%3$ss" dur="%2$ss" repeatCount="indefinite" />
-			    </rect>
-			    <rect x="16" y="10" width="4" height="10"  opacity="%5$s">
-			      <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="%4$ss" dur="%2$ss" repeatCount="indefinite" />
-			      <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="%4$ss" dur="%2$ss" repeatCount="indefinite" />
-			      <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="%4$ss" dur="%2$ss" repeatCount="indefinite" />
-			    </rect>
-			  </svg>
-			%8$s',
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMin slice">
+					<path fill="currentColor" d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,
+						8.4-45.4-2-53.8-23.3c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
+				        <animateTransform
+				           attributeName="transform"
+				           attributeType="XML"
+				           type="rotate"
+				           dur="%5$ss"
+				           from="0 50 50" to="360 50 50"
+				           repeatCount="indefinite"
+					   />
+					</path>
+					<path fill="currentColor" d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,
+						4.1-27.7c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z">
+				        <animateTransform
+				           attributeName="transform"
+				           attributeType="XML"
+				           type="rotate"
+				           dur="%2$ss"
+				           from="0 50 50" to="-360 50 50"
+				           repeatCount="indefinite"
+						/>
+					</path>
+					<path fill="currentColor" d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,
+						0,35.3,13.5L82,35.7z" opacity="%6$s">
+				        <animateTransform
+				           attributeName="transform"
+				           attributeType="XML"
+				           type="rotate"
+				           dur="%5$ss"
+				           from="0 50 50" to="360 50 50"
+				           repeatCount="indefinite"
+					   />
+					</path>
+				</svg>
+			%7$s',
 			$wrapper,
 			$duration,
-			($duration / 3),
-			($duration / 3) * 2,
+			$xmlns,
+			count($loaders),
+			$duration * 2,
 			$opacity,
-			$xmlns,
-			count($loaders),
 			$wrapper_closing
 		);
 
+		// index 5
 		$duration_long = $duration * 5;
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 55 80" preserveAspectRatio="xMidYMin slice">
-					<g transform="matrix(1 0 0 -1 0 80)">
-					    <rect width="10" height="20" rx="3">
+			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 55 55" preserveAspectRatio="xMidYMin slice">
+					<g transform="matrix(1 0 0 -1 0 55)">
+					    <rect width="10" height="14" rx="3">
 					        <animate attributeName="height"
 					             begin="0s" dur="%2$ss"
-					             values="20;45;57;80;64;32;66;45;64;23;66;13;64;56;34;34;2;23;76;79;20" calcMode="linear"
-					             repeatCount="indefinite" />
+					             values="14;31;39;55;44;22;45;31;44;16;45;9;44;39;23;23;1;16;52;54;14" calcMode="linear"
+					             repeatCount="indefinite"
+							 />
 					    </rect>
-					    <rect x="15" width="10" height="80" rx="3">
+					    <rect x="15" width="10" height="55" rx="3">
 					        <animate attributeName="height"
 					             begin="0s" dur="%7$ss"
-					             values="80;55;33;5;75;23;73;33;12;14;60;80" calcMode="linear"
-					             repeatCount="indefinite" />
+					             values="55;38;23;3;52;16;50;23;8;10;41;55" calcMode="linear"
+					             repeatCount="indefinite"
+							 />
 					    </rect>
-					    <rect x="30" width="10" height="50" rx="3">
+					    <rect x="30" width="10" height="34" rx="3">
 					        <animate attributeName="height"
 					             begin="0s" dur="%5$ss"
-					             values="50;34;78;23;56;23;34;76;80;54;21;50" calcMode="linear"
-					             repeatCount="indefinite" />
+					             values="34;23;54;16;39;16;23;52;55;37;14;34" calcMode="linear"
+					             repeatCount="indefinite"
+							 />
 					    </rect>
-					    <rect x="45" width="10" height="30" rx="3">
+					    <rect x="45" width="10" height="21" rx="3">
 					        <animate attributeName="height"
 					             begin="0s" dur="%6$ss"
-					             values="30;45;13;80;56;72;45;76;34;23;67;30" calcMode="linear"
-					             repeatCount="indefinite" />
+					             values="21;31;9;55;39;50;31;52;23;16;46;21" calcMode="linear"
+					             repeatCount="indefinite"
+							 />
 					    </rect>
 					</g>
 				</svg>
@@ -160,70 +280,49 @@ trait zusnippets_Loader {
 			$wrapper_closing
 		);
 
-		$loaders[] = zu_sprintf(
-			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 24 30" preserveAspectRatio="xMidYMin slice">
-			    <rect x="0" y="0" width="4" height="10">
-			      <animateTransform attributeType="xml"
-			        attributeName="transform" type="translate"
-			        values="0 0; 0 20; 0 0"
-			        begin="0" dur="%2$ss" repeatCount="indefinite" />
-			    </rect>
-			    <rect x="10" y="0" width="4" height="10">
-			      <animateTransform attributeType="xml"
-			        attributeName="transform" type="translate"
-			        values="0 0; 0 20; 0 0"
-			        begin="%5$ss" dur="%2$ss" repeatCount="indefinite" />
-			    </rect>
-			    <rect x="20" y="0" width="4" height="10">
-			      <animateTransform attributeType="xml"
-			        attributeName="transform" type="translate"
-			        values="0 0; 0 20; 0 0"
-			        begin="%6$ss" dur="%2$ss" repeatCount="indefinite" />
-			    </rect>
-			  </svg>
-			%7$s',
-			$wrapper,
-			$duration,
-			$xmlns,
-			count($loaders),
-			($duration / 3),
-			($duration / 3) * 2,
-			$wrapper_closing
-		);
-
+		// index 6
 		$loaders[] = zu_sprintf(
 			'%1$s
 			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 120 30" preserveAspectRatio="xMidYMin slice">
 				    <circle cx="15" cy="15" r="15" fill="currentColor">
-				        <animate attributeName="r" from="15" to="15"
-				                 begin="0s" dur="%2$ss"
-				                 values="15;9;15" calcMode="linear"
-				                 repeatCount="indefinite" />
-				        <animate attributeName="fill-opacity" from="%8$s" to="%8$s"
-				                 begin="0s" dur="%2$ss"
-				                 values="1;.5;1" calcMode="linear"
-				                 repeatCount="indefinite" />
+				        <animate
+							attributeName="r"
+							from="15" to="15"
+			                begin="0s" dur="%2$ss"
+			                values="15;9;15" calcMode="linear"
+							repeatCount="indefinite"
+						 />
+				        <animate
+							attributeName="fill-opacity"
+							from="%8$s" to="%8$s"
+				            begin="0s" dur="%2$ss"
+				            values="1;.5;1" calcMode="linear"
+				            repeatCount="indefinite"
+						/>
 				    </circle>
 				    <circle cx="60" cy="15" r="9" fill="currentColor">
 				        <animate attributeName="r" from="9" to="9"
-				                 begin="0s" dur="%2$ss"
-				                 values="9;15;9" calcMode="linear"
-				                 repeatCount="indefinite" />
+							begin="0s" dur="%2$ss"
+							values="9;15;9" calcMode="linear"
+							repeatCount="indefinite"
+						 />
 				        <animate attributeName="fill-opacity" from="%6$" to="%6$"
-				                 begin="0s" dur="%2$ss"
-				                 values=".5;1;.5" calcMode="linear"
-				                 repeatCount="indefinite" />
+							begin="0s" dur="%2$ss"
+							values=".5;1;.5" calcMode="linear"
+							repeatCount="indefinite"
+						/>
 				    </circle>
 				    <circle cx="105" cy="15" r="15" fill="currentColor">
 				        <animate attributeName="r" from="15" to="15"
-				                 begin="0s" dur="%2$ss"
-				                 values="15;9;15" calcMode="linear"
-				                 repeatCount="indefinite" />
+							begin="0s" dur="%2$ss"
+							values="15;9;15" calcMode="linear"
+							repeatCount="indefinite"
+						/>
 				        <animate attributeName="fill-opacity" from="%8$s" to="%8$s"
-				                 begin="0s" dur="%2$ss"
-				                 values="1;.5;1" calcMode="linear"
-				                 repeatCount="indefinite" />
+							begin="0s" dur="%2$ss"
+							values="1;.5;1" calcMode="linear"
+							repeatCount="indefinite"
+						 />
 				    </circle>
 				</svg>
 			%7$s',
@@ -235,6 +334,47 @@ trait zusnippets_Loader {
 			($opacity * 3) > 1 ? 1 : ($opacity * 3),
 			$wrapper_closing,
 			$opacity,
+		);
+
+		// index 7
+		$loaders[] = zu_sprintf(
+			'%1$s
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 64 64" preserveAspectRatio="xMidYMin slice">
+				<svg viewBox="0 0 64 64">
+				    <g stroke-width="0">
+				        <circle cx="24" cy="0" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="8;7;6;5;4;3;2;1;8" repeatCount="indefinite"></animate>
+				        </circle>
+				        <circle cx="16.970562748477143" cy="16.97056274847714" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="1;8;7;6;5;4;3;2;1" repeatCount="indefinite"></animate>
+				        </circle>
+				        <circle cx="1.4695761589768238e-15" cy="24" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="2;1;8;7;6;5;4;3;2" repeatCount="indefinite"></animate>
+				        </circle>
+				        <circle cx="-16.97056274847714" cy="16.970562748477143" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="3;2;1;8;7;6;5;4;3" repeatCount="indefinite"></animate>
+				        </circle>
+				        <circle cx="-24" cy="2.9391523179536475e-15" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="4;3;2;1;8;7;6;5;4" repeatCount="indefinite"></animate>
+				        </circle>
+				        <circle cx="-16.970562748477143" cy="-16.97056274847714" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="5;4;3;2;1;8;7;6;5" repeatCount="indefinite"></animate>
+				        </circle>
+				        <circle cx="-4.408728476930472e-15" cy="-24" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="6;5;4;3;2;1;8;7;6" repeatCount="indefinite"></animate>
+				        </circle>
+				        <circle cx="16.97056274847714" cy="-16.970562748477143" transform="translate(32,32)">
+				            <animate attributeName="r" dur="%2$ss" values="7;6;5;4;3;2;1;8;7" repeatCount="indefinite"></animate>
+				        </circle>
+				    </g>
+				</svg>
+				</svg>
+			%5$s',
+			$wrapper,
+			$duration,
+			$xmlns,
+			count($loaders),
+			$wrapper_closing
 		);
 
 		if($getAll) return $loaders;
