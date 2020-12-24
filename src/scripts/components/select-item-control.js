@@ -58,7 +58,11 @@ const SelectItemControl = ({
 			<div key={ getKey(value, label) } className={ mergeClasses(
 				`${cname}__button-wrapper`,
 				`${cname}__${ value }`,
-				{['is-selected']: selectedItem === value && !isDisabled, ['is-disabled']: isDisabled }) }>
+				{
+					'is-selected': selectedItem === value && !isDisabled,
+					'is-disabled': isDisabled,
+				})
+			}>
 				<Button
 					className={ mergeClasses(`${cname}__button`, buttonClass, `${cname}__${ value }`,  {['is-selected']: selectedItem === value && !isDisabled }) }
 					isSecondary={ isSecondary }
@@ -67,7 +71,7 @@ const SelectItemControl = ({
 					style={ style || buttonStyle  }
 					{ ...pick(additionalProps, buttonPossibleProps) }
 				>
-					{ isFunction(transformValue) ? transformValue(value) : value }
+					{ isFunction(transformValue) ? transformValue(value, label, style) : value }
 				</Button>
 				{ withLabels &&
 					<div className="block-editor-block-styles__item-label">
@@ -87,7 +91,7 @@ const SelectItemControl = ({
 			condition={ !withoutControl }
 			elseDiv
 			wrap={ BaseControl }
-			className={ mergeClasses(cname, `__${columns}columns`, 'components-base-control', className) }
+			className={ mergeClasses(cname, `__${columns}columns`, 'components-base-control', { '__recap': recap }, className) }
 			label={ label }
 			help={ help }
 		>

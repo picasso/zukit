@@ -1,6 +1,6 @@
 <?php
 
-// Plugin Ajax Trait ----------------------------------------------------------]
+// Plugin Ajax/REST API Trait -------------------------------------------------]
 //
 // const READABLE = 'GET'
 // const CREATABLE = 'POST'
@@ -9,19 +9,28 @@
 
 trait zukit_Ajax {
 
-	private $api_prefix	= 'zukit';
-	private $api_version = 1;
-	private $routes = [];
+	private $zukit_api_prefix = 'zukit';
+	private $zukit_api_version = 1;
+	private $zukit_routes;
+
+	private $api_prefix;
+	private $api_version;
+	private $routes;
+
 	private $nonce;
 	private $ajax_error;
 
-	private static $rest_registered = false;
+	private static $zukit_rest_registered = false;
+
+	protected function api_routes() {}
 
 	private function ajax_config() {
 
 		$this->nonce = $this->get('nonce') ?? $this->prefix.'_ajax_nonce';
+		$this->api_prefix = $this->get('api_prefix') ?? $this->prefix;
+		$this->api_version = $this->get('api_version') ?? 1;
 
-		$this->routes = [
+		$this->zukit_routes = [
 			// make action via ajax call
 			'action'		=> [
 				'methods' 		=> WP_REST_Server::CREATABLE,
@@ -75,22 +84,42 @@ trait zukit_Ajax {
 				],
 				'permission'	=> 'edit_posts',
 			],
-
+			// get some data by key
+			'zudata'		=> [
+				'methods' 		=> WP_REST_Server::READABLE,
+				'callback'		=> 'get_zudata',
+				'args'			=> [
+					'key'		=> [
+						'default'			=> false,
+						'sanitize_callback' => 'sanitize_key',
+					],
+				],
+				'permission'	=> 'edit_posts',
+			],
 		];
 
+		$this->routes = $this->api_routes() ?? [];
+
+		add_action('rest_api_init' , [$this, 'init_zukit_api']);
 		add_action('rest_api_init' , [$this, 'init_api']);
 	}
 
+	public function init_zukit_api() {
+		// prevent 'register_rest_route' for Zukit be called many times from different plugins
+		if(self::$zukit_rest_registered) return;
+		$this->init_routes($this->zukit_routes, $this->zukit_api_prefix, $this->zukit_api_version);
+		self::$zukit_rest_registered = true;
+	}
+
 	public function init_api() {
-		// prevent 'register_rest_route' be called many times from different plugins
-		if(self::$rest_registered) return;
+		$this->init_routes($this->routes, $this->api_prefix, $this->api_version);
+	}
 
-		foreach($this->routes as $route => $params) {
+	private function init_routes($routes, $api_prefix, $api_version) {
 
-			$namespace = sprintf('%1$s/v%2$s',
-				$this->api_prefix,
-				$this->api_version
-			);
+		$namespace = sprintf('%1$s/v%2$s', $api_prefix, $api_version);
+		foreach($routes as $route => $params) {
+
 			$endpoint = sprintf('/%1$s', $route);
 
 			register_rest_route($namespace, $endpoint, [
@@ -102,8 +131,6 @@ trait zukit_Ajax {
                 },
 			]);
 		}
-
-		self::$rest_registered = true;
 	}
 
 	// Sanitize helpers -------------------------------------------------------]
@@ -288,6 +315,63 @@ trait zukit_Ajax {
 		}
 		// if $result is false - something went wrong - then return null
 		return rest_ensure_response($result ?? (object) null);
+	}
+
+	protected function extend_zudata($key) {}
+
+	public function get_zudata($request) {
+
+		$params =  $request->get_params();
+
+		$key = $params['key'];
+		$result = null;
+
+		$zumedia_found = function_exists('zumedia');
+
+		// collect data for REST API
+		switch($key) {
+			case 'folders':
+			case 'albums':
+				if($zumedia_found) {
+					// get_folders
+					$parent_id = $params['parentId'] ?? 0;
+					$result = zu_mplus()->get_albums($parent_id);
+				}
+				break;
+
+			case 'folder_by_image':
+			case 'album_by_image':
+				if($zumedia_found) {
+					// get_folder_by_image_idss
+					$image_id = $params['imageId'] ?? 0;
+					$result = zu_mplus()->get_album_by_image_id($image_id);
+				}
+				break;
+
+			case 'gallery_by_image':
+				if($zumedia_found) {
+					// get_gallery_by_image_id
+					$image_id = $params['imageId'] ?? 0;
+					$result = zu_mplus()->get_gallery_by_image_id($image_id);
+				}
+				break;
+
+			case 'loaders':
+				$duration = $params['duration'] ?? 0.8;
+				$opacity = $params['opacity'] ?? 0.2;
+				$result = $this->snippets('loader', -1, $duration, null, $opacity);
+				break;
+
+			// process 'zudata' from all loaded plugins/theme
+			default:
+				foreach($this->instance_by_slug() as $router) {
+					$result = $router->extend_zudata($key) ?? null;
+					if(!empty($result)) break;
+				}
+		}
+
+		// if $result is empty - something went wrong - then return empty object
+		return rest_ensure_response(empty($result) ? (object) null :  $result);
 	}
 
 	// Ajax Actions Helpers ---------------------------------------------------]
