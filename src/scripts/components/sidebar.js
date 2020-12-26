@@ -96,7 +96,6 @@ const ZukitSidebar = ({
 						className="__plugin_actions admin-blue"
 						icon={ 'admin-settings' }
 						isSecondary
-						isLarge
 						onClick={ resetOptions }
 					>
 						{ __('Reset Plugin Options', 'zukit') }
@@ -117,7 +116,6 @@ const ZukitSidebar = ({
 										}
 										icon={ icon }
 										isSecondary
-										isLarge
 										onClick={ () => ajaxAction(value) }
 									>
 										{ label }
@@ -164,7 +162,6 @@ const ZukitSidebar = ({
 								}
 								icon={ icon }
 								isSecondary
-								isLarge
 								onClick={ () => ajaxAction(value) }
 							>
 								{ label }
