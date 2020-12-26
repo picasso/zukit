@@ -46,7 +46,17 @@ trait zusnippets_Useful {
 			trim($subdir, '/\\'),
 			empty($subdir) ? '' : '/'
 		);
-		if(!file_exists($filepath)) return '';
+		if(!file_exists($filepath)) {
+			
+			$this->log_error([
+				'path'		=> $path,
+				'name'		=> $name,
+				'params'	=> $params,
+				'filepath'	=> $filepath,
+			], 'SVG file not found!');
+
+			return '';
+		}
 
 		$svg = file_get_contents($filepath);
 		if($preserve_ratio && stripos($svg, 'preserveAspectRatio') === false) {

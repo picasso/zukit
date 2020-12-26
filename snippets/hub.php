@@ -23,7 +23,7 @@ class zukit_Snippets extends zukit_Singleton {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.1.3';
+        $this->version = '1.1.4';
 		$this->init_advanced_style();
 	}
 
