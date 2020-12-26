@@ -110,7 +110,11 @@ class zukit_Blocks extends zukit_Addon {
 			// 'register_only' => true,
 			'add_prefix'	=> false,
 			'deps'			=> $is_frontend ? [] : ['wp-edit-post'],
-			'data'			=> $this->js_data($is_frontend),
+			'data'			=> $is_frontend ? $this->js_data(true) : array_merge(
+				['jsdata_name'	=> $this->prefix_it('blocks_data', '_')],
+				$this->plugin->api_basics(),
+				$this->js_data(false) ?? []
+			),
 		];
 	}
 	protected function css_params($is_frontend) {

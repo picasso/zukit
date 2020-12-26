@@ -86,8 +86,9 @@ trait zukit_Admin {
 		return false;
 	}
 
-	private function instance_by_slug($slug = null) {
-		return is_null($slug) ? self::$zukit_items : (self::$zukit_items[$slug] ?? null);
+	private function instance_by_router($router = null) {
+		// $router is $this->admin_slug()
+		return is_null($router) ? self::$zukit_items : (self::$zukit_items[$router] ?? null);
 	}
 
 	public function admin_menu() {

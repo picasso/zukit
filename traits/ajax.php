@@ -58,7 +58,7 @@ trait zukit_Ajax {
 					],
 					'key'		=> [
 						'default'			=> false,
-						'sanitize_callback' => 'sanitize_key',
+						'sanitize_callback' => [$this, 'sanitize_path'],
 					],
 				],
 				'permission'	=> 'edit_posts',
@@ -131,6 +131,14 @@ trait zukit_Ajax {
                 },
 			]);
 		}
+	}
+
+	public function api_basics() {
+		return [
+			'router'	=> $this->get_router_name(),
+			'root'		=> $this->api_prefix,
+			'verion'	=> $this->api_version,
+		];
 	}
 
 	// Sanitize helpers -------------------------------------------------------]
@@ -317,7 +325,7 @@ trait zukit_Ajax {
 		return rest_ensure_response($result ?? (object) null);
 	}
 
-	protected function extend_zudata($key) {}
+	protected function extend_zudata($key, $params) {}
 
 	public function get_zudata($request) {
 
@@ -326,47 +334,47 @@ trait zukit_Ajax {
 		$key = $params['key'];
 		$result = null;
 
-		$zumedia_found = function_exists('zumedia');
+		// if $router is defined then use it, otherwise use $this
+		// because some methods are plugin dependent and some are not
+		$request_router = $this->get_router($params, false);
+		$router = is_null($request_router) ? $this : $request_router;
 
 		// collect data for REST API
 		switch($key) {
-			case 'folders':
-			case 'albums':
-				if($zumedia_found) {
-					// get_folders
-					$parent_id = $params['parentId'] ?? 0;
-					$result = zu_mplus()->get_albums($parent_id);
-				}
-				break;
-
-			case 'folder_by_image':
-			case 'album_by_image':
-				if($zumedia_found) {
-					// get_folder_by_image_idss
-					$image_id = $params['imageId'] ?? 0;
-					$result = zu_mplus()->get_album_by_image_id($image_id);
-				}
-				break;
-
-			case 'gallery_by_image':
-				if($zumedia_found) {
-					// get_gallery_by_image_id
-					$image_id = $params['imageId'] ?? 0;
-					$result = zu_mplus()->get_gallery_by_image_id($image_id);
-				}
-				break;
-
 			case 'loaders':
+				$loader_index = $params['loaderIndex'] ?? null;
 				$duration = $params['duration'] ?? 0.8;
-				$opacity = $params['opacity'] ?? 0.2;
-				$result = $this->snippets('loader', -1, $duration, null, $opacity);
+
+				if($loader_index !== null) {
+					$result = $this->snippets('loader', -1, $duration);
+					$result = array_key_exists($loader_index, $result) ? $result[$loader_index] : (object) null;
+				} else {
+					$result = [];
+					foreach($this->snippets('loader', -1, $duration) as $index => $value) {
+						$result[$index] = $value;
+					}
+				}
+				break;
+
+			case 'svg':
+				$name = $params['name'] ?? 'logo';
+				$folder = $params['folder'] ?? 'images/';
+				$result = $this->snippets('insert_svg_from_file', $router->dir, $name, [
+		            'preserve_ratio'	=> true,
+		            'strip_xml'			=> true,
+		            'subdir'			=> $folder,
+				]);
 				break;
 
 			// process 'zudata' from all loaded plugins/theme
 			default:
-				foreach($this->instance_by_slug() as $router) {
-					$result = $router->extend_zudata($key) ?? null;
-					if(!empty($result)) break;
+				if($request_router !== null) {
+					$result = $request_router->extend_zudata($key, $params) ?? null;
+				} else {
+					foreach($this->instance_by_router() as $plugin_router) {
+						$result = $plugin_router->extend_zudata($key, $params) ?? null;
+						if(!empty($result)) break;
+					}
 				}
 		}
 
@@ -380,18 +388,30 @@ trait zukit_Ajax {
 		$this->ajax_error = false;
 	}
 
+	private function get_router_name() {
+		return $this->admin_slug();
+	}
+
 	// $rest_router serves to identify the plugin that currently uses the REST API,
 	// since all plugins inherit the same Zukit_plugin class and identification
 	// is required to determine which of the active plugins should respond to ajax requests
-	private function get_router($params) {
+	private function get_router($params, $log_errors = true) {
 
 		$this->reset_ajax_error();
 
-		$router_slug = $params['router'] ?? '';
-		$rest_router = $this->instance_by_slug($router_slug);
+		$router = $params['router'] ?? '';
+		$rest_router = $this->instance_by_router($router);
 
 		if($rest_router instanceof zukit_Plugin) return $rest_router;
-		$this->ajax_error(__('Active router not defined', 'zukit'), $params);
+
+		$message = __('Active router not defined', 'zukit');
+		$this->ajax_error($message, $params);
+
+		if($log_errors) {
+			// also log the error as it is quite severe
+			$this->log_error($params, $message);
+		}
+
 		return null;
 	}
 
