@@ -8,6 +8,7 @@ const { apiFetch } = wp;
 import { messageWithError, toJSON } from './utils.js';
 
 const cacheKey = 'cache';
+const routerKey = 'router';
 const apiBaseURL = '/zukit/v1/';
 
 // restRouter serves to identify the plugin that currently uses the REST API,
@@ -175,7 +176,7 @@ export function ajaxUpdateOptions(keys, values, createNotice, updateHooks) {
 	const requestData = {
 		route: 'options',
 		options: {
-			router: restRouter,
+			// router: restRouter,
 			keys,
 			values,
 		},
@@ -227,8 +228,8 @@ function serializeData(data, cache = false, skip = []) {
         }
     }
 
-	// Automatically add the 'router' param to all API request
-	str.push(`router=${encodeURIComponent(restRouter)}`);
+	// Automatically add the "router" param to all API request
+	if(!_.has(obj, routerKey)) str.push(`${routerKey}=${encodeURIComponent(restRouter)}`);
 
     if(cache) {
         let random = Math.floor(Math.random() * 1000000);
@@ -239,19 +240,27 @@ function serializeData(data, cache = false, skip = []) {
 }
 
 // Check URL and transform it if needed
-export function requestURL(url, options, picked = []) {
+export function requestURL(url, options, router = null, picked = [], customBaseURL = null) {
 
+	const baseURL = customBaseURL || apiBaseURL;
     // extend url with API base
 	// and remove any leading and trailing slashes
-	let requestUrl = !_.startsWith(url, apiBaseURL) ? (apiBaseURL + url.replace(/^\\+|\\+$/g, '')) : url.replace(/\\+$/g, '');
+	let requestUrl = !_.startsWith(url, baseURL) ? (baseURL + url.replace(/^\\+|\\+$/g, '')) : url.replace(/\\+$/g, '');
 
+	// add 'router' if is defined
+	const optionsWithRouter = _.isNil(router) ? options : _.set({ ...options }, routerKey, router);
 	// maybe pick only some keys
-	const urlOptions = !_.isEmpty(picked) ? _.pick(options, picked) : options;
+	const urlOptions = !_.isEmpty(picked) ? _.pick(optionsWithRouter, picked) : optionsWithRouter;
 
     // convert data to query string for requests without BODY
     if(!_.isEmpty(urlOptions)) requestUrl = `${requestUrl}/?${serializeData(urlOptions, urlOptions.cache)}`;
 
     return requestUrl;
+}
+
+function requestURLWithRoot(root, version, url, options, router = null, picked = []) {
+	const apiBase = `/${root}/v${version}/`;
+	return requestURL(url, options, router, picked, apiBase);
 }
 
 // create GET API Promise with Route and Options, then execute it and process results with callbacks
@@ -265,10 +274,11 @@ export function fetchAndCatchWithOptions({ route, options, picked, onSuccess, on
 }
 
 // create POST API Promise with Route and Options, then execute it and process results with callbacks
-export function postAndCatchWithOptions({ route, options, picked, onSuccess, onError }) {
+export function postAndCatchWithOptions({ route, options, picked, onSuccess, onError, router }) {
 
 	const method = 'POST';
-	const requestOptions = { ...options, router: restRouter };
+	const postRouter = router || restRouter;
+	const requestOptions = { ...options, router: postRouter };
 
 	apiFetch({
 		path: requestURL(route),
@@ -284,7 +294,7 @@ export function postAndCatchWithOptions({ route, options, picked, onSuccess, onE
 // Subset of functions for 'zukit-blocks'
 export const blocksSet = {
 	serializeData,
-	requestURL,
+	requestURL: requestURLWithRoot,
 	fetchAndCatchWithOptions,
 	postAndCatchWithOptions,
 };

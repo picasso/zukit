@@ -1,97 +1,88 @@
 // WordPress dependencies
 
-const { isNil, isArray, isEmpty, get, some, reduce } = lodash;
-const { createHigherOrderComponent } = wp.compose;
-const { withSelect, useSelect, useDispatch } = wp.data;
+const { isNil, isArray, isEmpty, some, reduce } = lodash;
+const { useSelect, useDispatch } = wp.data;
 
 // Internal dependencies
 
-import ZU_STORE from './store.js';
-import { isNum } from './../utils.js';
+import { setupStore } from './generic-store.js';
+import { useCoreDataGeneric, useSvgFromFileGeneric } from './core-store.js';
 
 const emptyArray = [];
 
-// Get Albums -----------------------------------------------------------------]
+// Setup and re-export Zukit Core store ---------------------------------------]
 
-// Higher-order component which add 'albums' to the original component
-export const withAlbums = createHigherOrderComponent(
-	withSelect((select) => {
-		return {
-			albums: select(ZU_STORE).getZuData('albums') || null,
-		}
-	}),
-	'withAlbums',
-);
+export function setupCoreStore(router) {
 
-// Custom hook which returns 'albums'
-export const useAlbums = () => {
-	const { albums = null } = useSelect((select) => {
-		return { albums: select(ZU_STORE).getZuData('albums') };
-	}, []);
-
-	// если пустой массив, то всегда возвращаем один и тот же объект
-	return isEmpty(albums) ? emptyArray : albums;
-};
-
-// Get Loaders ----------------------------------------------------------------]
-
-// Higher-order component which add 'loaderHTML' to the original component
-export const withLoader = createHigherOrderComponent(
-	withSelect((select, { loader, shape }) => {
-		const loaders = select(ZU_STORE).getZuData('loaders') || null;
-		const loaderIndex = isNum(loader) ? loader : shape;
-		return {
-			loaderHTML: isEmpty(loaders) ? null : (get(loaders, loaderIndex) || null),
-		}
-	}),
-	'withLoader',
-);
-
-// Custom hook which returns 'loader' by 'index'
-export const useLoader = (index) => {
-	const { loaders = null } = useSelect((select) => {
-		return { loaders: select(ZU_STORE).getZuData('loaders') };
-	}, []);
-
-	// если пустой массив или неправильный 'index', то возвращаем null
-	return isEmpty(loaders) ? null : (index === -1 ? loaders : get(loaders, index) || null);
-};
-
-// Custom hook which returns all 'loaders'
-export const useLoaders = () => {
-	return useLoader(-1);
+	return {
+		useSvgFromFile: (name, folder = 'images/') => useSvgFromFileGeneric(name, folder, router),
+		useCoreData: (key, params) => useCoreDataGeneric(key, { ...params, router }),
+	};
 }
 
-// Get/Update Options ---------------------------------------------------------]
+// re-export all named imports
+export * from './core-store.js';
 
-// Custom hook which returns 'option' by 'key'
-export const useGetOption = (key, defaultValue = null) => {
-	const { value = null } = useSelect((select) => {
-		return { value: select(ZU_STORE).getOption(key) };
-	}, []);
-	return isNil(value) ? defaultValue : value;
-};
+// Setup but do not register Zukit Options store (router needed!) -------------]
 
-// Custom hook that returns all the 'options' that were passed in the 'keys' array
-// if 'waitAll' is true - hook returns 'null' as long as there is at least one key with a value of 'null'
-export const useGetOptions = (keys, waitAll = false) => {
-	const optionKeys = isArray(keys) ? keys : emptyArray;
-	const { gotOptions = null } = useSelect((select) => {
-		const { getOption } = select(ZU_STORE);
-		const reduced = reduce(optionKeys, (values, key) => {
-			values[key] = isNil(key) ? null : getOption(key);
-			return values;
-		}, {});
-		return { gotOptions: reduced };
-	}, [optionKeys]);
+export function setupOptionsStore(router) {
 
-	if(waitAll && some(gotOptions, isNil)) return null;
-	// если пустой объект, то всегда возвращаем null
-	return isEmpty(gotOptions) ? null : gotOptions;
-};
+	const ZUKIT_OPTIONS_STORE = `zukit/${router}`;
 
-// Custom hook which update 'option' by 'key'
-export const useUpdateOptions = () => {
-	const { updateOptions } = useDispatch(ZU_STORE);
-	return updateOptions;
-};
+	const { register: registerOptionsStore } = setupStore(
+		ZUKIT_OPTIONS_STORE,
+		'options', { get: 'option', update: 'options' }, router,
+	);
+
+	// Get/Set/Update Options -------------------------------------------------]
+
+	// Custom hook which returns 'option' by 'key'
+	const useGetOption = (key, defaultValue = null) => {
+		const { value = null } = useSelect((select) => {
+			return { value: select(ZUKIT_OPTIONS_STORE).getValue(key) };
+		}, []);
+		return isNil(value) ? defaultValue : value;
+	};
+
+	// Custom hook that returns all the 'options' that were passed in the 'keys' array
+	// if 'waitAll' is true - hook returns 'null' as long as there is at least one key with a value of 'null'
+	const useGetOptions = (keys, waitAll = false) => {
+		const optionKeys = isArray(keys) ? keys : emptyArray;
+		const { gotOptions = null } = useSelect((select) => {
+			const { getValue } = select(ZUKIT_OPTIONS_STORE);
+			const reduced = reduce(optionKeys, (values, key) => {
+				values[key] = isNil(key) ? null : getValue(key);
+				return values;
+			}, {});
+			return { gotOptions: reduced };
+		}, [optionKeys]);
+
+		if(waitAll && some(gotOptions, isNil)) return null;
+		// если пустой объект, то всегда возвращаем null
+		return isEmpty(gotOptions) ? null : gotOptions;
+	};
+
+	// Custom hook which set 'option' by 'key'
+	const useSetOption = () => {
+		const { updateValues } = useDispatch(ZUKIT_OPTIONS_STORE);
+		return (key, value) => updateValues({ [key]: value });
+	};
+
+	// Custom hook which update 'option' by 'key'
+	const useUpdateOptions = () => {
+		const { updateValues } = useDispatch(ZUKIT_OPTIONS_STORE);
+		return updateValues;
+	};
+
+	return {
+		registerOptionsStore,
+		useGetOption,
+		useGetOptions,
+		useSetOption,
+		useUpdateOptions,
+	};
+}
+
+// Re-export all named imports for creating Custom Store ----------------------]
+
+export * from './generic-store.js';
