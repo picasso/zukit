@@ -6,7 +6,7 @@ const { RawHTML } = wp.element;
 // Internal dependencies
 
 import { mergeClasses } from './../utils.js';
-import { useLoader } from './../data/use-store.js';
+import { useLoaders } from './../data/use-store.js';
 
 // Loader Component
 
@@ -24,12 +24,11 @@ const Loader = ({
 
 const WithOptions = ({
 		className,
-		shape = 'none',
+		id = 'none',
 		duration,
-		opacity,
 }) => {
 
-	const loaderHTML = useLoader(shape, duration, opacity);
+	const loaderHTML = useLoaders(id, duration);
 
 	return (
 		<Loader className={ className } loaderHTML={ loaderHTML } />

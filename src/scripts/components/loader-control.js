@@ -58,8 +58,8 @@ const LoaderControl = ({
 
 	if(loaders === null) return null;
 
-	const loaderOptions = reduce([...Array(loaders.length).keys()], (options, val) => {
-		options.push({ value: String(val), label: String(val) });
+	const loaderOptions = reduce(loaders, (options, _val, key) => {
+		options.push({ value: String(key), label: String(key) });
 		return options;
 	}, [{ value: 'none', label: __('Without Loader', 'zukit') }]);
 
