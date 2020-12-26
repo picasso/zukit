@@ -106,3 +106,9 @@ export function testComponentWithUpdate(component, updateOptions) {
 		<TestComponent updateOptions={ updateOptions }/>
 	);
 }
+
+// Subset of functions for 'zukit-blocks'
+export const blocksSet = {
+	toggleOption,
+	selectOption,
+};
