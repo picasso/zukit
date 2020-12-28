@@ -3,20 +3,35 @@
 $advtext-width: 580px;
 $advtext-button-height: 30px;
 $advtext-button-width: 36px; // svg 20px + margin 8px * 2
+$advtext-help-margin: -16px; // margin 8px * 2
 
 .#{$advtext-component-class} {
 	display: flex;
-	align-items: flex-end;
+	align-items: flex-start;
 	justify-content: flex-start;
 	max-width: $advtext-width;
 	.components-base-control {
 		width: 100%;
+		.block-editor-block-inspector & {
+			margin-bottom: 0;
+		}
 	}
-	.components-button {
-		position: relative;
-		bottom: 8px;
-		right: $advtext-button-width - 1; // to cover border
+	&.__with-label {
+		align-items: flex-end;
+	}
+	&.__with-label-help {
+		align-items: flex-start;
+	}
+	&.__with-button {
+		.components-base-control__help {
+			margin-right: $advtext-help-margin;
+		}
+		.components-text-control__input:focus {
+			box-shadow: none;
+		}
+	}
 
+	.components-button {
 		height: $advtext-button-height;
 		width: $advtext-button-width;
 		color: $custom-button-text-color;
@@ -24,6 +39,14 @@ $advtext-button-width: 36px; // svg 20px + margin 8px * 2
 		border: 1px solid $custom-button-border-color;
 		border-radius: 0 3px 3px 0;
 		box-shadow: none;
+		&.__with-label {
+			margin-bottom: 8px;
+		}
+		&.__with-label-help {
+			margin-top: 26px;
+			margin-bottom: 0;
+		}
+
 		&:hover {
 			box-shadow: none !important;
 			background-color: $custom-button-hover-color !important;
