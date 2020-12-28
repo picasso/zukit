@@ -83,6 +83,20 @@ export function toJSON(obj) {
 	return obj || '{}';
 }
 
+// Creates a new value using the template '<text>-<index>' while avoiding values from 'forbiddenValues'
+export const uniqueValue = (value, forbiddenValues, fallback = 'name') => {
+	const formatted =  String(value).replace(/([^-|\d])(\d+)$/, '$1-$2');
+	if(_.includes(forbiddenValues, formatted)) {
+		let index = 0;
+		const valueBody = String(formatted).replace(/-\d+$/, '').replace(/\d+$/, '') || fallback;
+		while(++index > 0) {
+			const testValue = `${valueBody}-${index}`;
+			if(!_.includes(forbiddenValues, testValue)) return testValue;
+		}
+	}
+	return formatted;
+}
+
 // Add error value (if present) to the message, converting any object to a string
 export function messageWithError(message, value = null) {
 
@@ -210,6 +224,7 @@ export const blocksSet = {
 	getIds,
 	getColor,
 	toJSON,
+	uniqueValue,
 	svgRef,
 	emptyGif,
 	brandAssets,
