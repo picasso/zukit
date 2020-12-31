@@ -7,7 +7,7 @@ const { withSelect, useSelect } = wp.data;
 // Internal dependencies
 
 import { isNum } from './../utils.js';
-import { setupStore, defaultSetValueMerger, defaultGetter } from './generic-store.js';
+import { setupStore, defaultMerger, defaultGetter } from './generic-store.js';
 
 // Create and register Zukit Core Data store ----------------------------------]
 
@@ -15,17 +15,18 @@ const ZUKIT_STORE = 'zukit/core';
 const FolderDepthSymbol = '\u00A0';
 const FolderDepthShift = 4;
 
+// Custom Core Data state merger & getter -------------------------------------]
+
 const basicKeys = ['loaders', 'galleries', 'folders'];
 
-// Custom Core Data state merger & getter
-function mergeData(prevState, stateKey, action) {
+function dataMerger(prevState, stateKey, action) {
 
     const { key, value } = action;
     const prevDataState = get(prevState, stateKey, {});
     const prevKeyState = get(prevDataState, key, {});
 
     if(includes(basicKeys, key)) {
-        return defaultSetValueMerger(prevState, stateKey, action);
+        return defaultMerger(prevState, stateKey, action);
     } else if(key === 'svg') {
         const { name, folder } = action;
         const prevFolderState = get(prevKeyState, folder, {});
@@ -57,10 +58,12 @@ function dataGetter(state, stateKey, key, params) {
     return undefined;
 }
 
-const { register: registerCoreStore } = setupStore(
-    ZUKIT_STORE,
-    'data', 'zudata', null, false,
-    {
+const { register: registerCoreStore } = setupStore({
+    name: ZUKIT_STORE,
+    stateKey: 'data',
+    routes: 'zudata',
+    withSetters: false,
+    initialState: {
         data: {
             folders: {},
             loaders: {},
@@ -68,14 +71,11 @@ const { register: registerCoreStore } = setupStore(
             svg: {},
         },
     },
-    mergeData,
-    dataGetter,
-);
+    merger: dataMerger,
+    getter: dataGetter,
+});
 
 registerCoreStore();
-
-// const emptyArray = [];
-// const emptyObject = {};
 
 // Custom hooks ---------------------------------------------------------------]
 
