@@ -33,7 +33,7 @@ class zukit_Blocks extends zukit_Addon {
 			// add_action('init', [$this, 'register_blocks'], 99);
 			add_action('enqueue_block_editor_assets', [$this, 'editor_assets']);
 			add_action('enqueue_block_assets', [$this, 'block_assets']);
-			// add_action('wp_enqueue_scripts', [$this, 'frontend_scripts']);
+			add_action('wp_enqueue_scripts', [$this, 'frontend_assets']);
 		}
 	}
 
@@ -68,13 +68,13 @@ class zukit_Blocks extends zukit_Addon {
 		if(!$this->blocks_available) return;
 
 		$handle = $this->get('handle');
-		$namespace = $this->get('namespace');
-		$blocks = $this->get('blocks');
+		// $namespace = $this->get('namespace');
+		// $blocks = $this->get('blocks');
 
-		foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
-			$block_name = strpos($block, '/') !== false ? $block : $namespace.'/'.$block;
+		foreach($this->get_blocks() as $block) {
+			// $block_name = strpos($block, '/') !== false ? $block : $namespace.'/'.$block;
 			register_block_type(
-				$block_name,
+				$block,
 				[
 					'editor_script'	=> $handle,
 					'editor_style'	=> $handle,
@@ -105,21 +105,20 @@ class zukit_Blocks extends zukit_Addon {
 
 	protected function should_load_css($is_frontend) { return true; }
 
-	protected function js_params($is_frontend) {
-		return [
-			// 'register_only' => true,
+	protected function js_params($is_frontend, $fromself = false) {
+		$params = [
 			'add_prefix'	=> false,
 			'deps'			=> $is_frontend ? [] : ['wp-edit-post'],
-			'data'			=> $is_frontend ? $this->js_data(true) : array_merge(
+			'data'			=> $is_frontend ? ($fromself ? null : $this->js_data(true)) : array_merge(
 				['jsdata_name'	=> $this->prefix_it('blocks_data', '_')],
 				$this->plugin->api_basics(),
-				$this->js_data(false) ?? []
+				($fromself ? null : $this->js_data(false)) ?? []
 			),
 		];
+		return $params;
 	}
 	protected function css_params($is_frontend) {
 		return [
-			// 'register_only' => true,
 			'add_prefix'	=> false,
 			'deps'			=> $is_frontend ? [] : ['wp-edit-post'],
 		];
@@ -142,9 +141,11 @@ class zukit_Blocks extends zukit_Addon {
 		// $this->register_style_and_script(true);
 	}
 
-	public function frontend_scripts() {
-
-		if(!is_admin()) {
+	public function frontend_assets() {
+		foreach($this->get_blocks() as $block) {
+			if(has_block($block)) {
+				$this->plugin->force_frontend_enqueue(false, true);
+			}
 		}
 	}
 
@@ -189,7 +190,7 @@ class zukit_Blocks extends zukit_Addon {
 		);
 		$js_params = $this->plugin->params_validated(
 			$this->js_params($is_frontend),
-			self::js_params($is_frontend)
+			self::js_params($is_frontend, true)
 		);
 
 		// add dependency to Zukit Blocks if required
@@ -209,6 +210,16 @@ class zukit_Blocks extends zukit_Addon {
 			[$this, $is_frontend ? 'enqueue_script' : 'admin_enqueue_script'],
 			[$handle, $js_params]
 		);
+	}
+
+	private function get_blocks() {
+		$namespace = $this->get('namespace');
+		$blocks = $this->get('blocks');
+		$names = [];
+		foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
+			$names[] = strpos($block, '/') !== false ? $block : $namespace.'/'.$block;
+		}
+		return $names;
 	}
 
 	private function get_colors() {

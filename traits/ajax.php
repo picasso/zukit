@@ -96,6 +96,40 @@ trait zukit_Ajax {
 				],
 				'permission'	=> 'edit_posts',
 			],
+			// get custom data by 'key'
+			'cuget'		=> [
+				'methods' 		=> WP_REST_Server::READABLE,
+				'callback'		=> 'get_custom',
+				'args'			=> [
+					'key'		=> [
+						'default'			=> false,
+						'sanitize_callback' => 'sanitize_key',
+					],
+				],
+				'permission'	=> 'edit_posts',
+			],
+			// set custom data for requested 'key'
+			// if value for 'key' is 'null' then this data will be deleted
+			'cuset'		=> [
+				'methods' 		=> WP_REST_Server::CREATABLE,
+				'callback'		=> 'set_custom',
+				'args'			=> [
+					'key'		=> [
+						'default'			=> false,
+						'sanitize_callback' => 'sanitize_key',
+					],
+					'keys'		=> [
+						'default'			=> [],
+						'sanitize_callback' => [$this, 'sanitize_paths'],
+					],
+					'values'	=> [
+						'default'			=> [],
+						// 'sanitize_callback' => 'sanitize_key',
+					],
+				],
+				'permission'	=> 'edit_posts',
+			],
+
 		];
 
 		$this->routes = $this->api_routes() ?? [];
@@ -380,6 +414,48 @@ trait zukit_Ajax {
 
 		// if $result is empty - something went wrong - then return empty object
 		return rest_ensure_response(empty($result) ? (object) null :  $result);
+	}
+
+
+	// Custom Data Routes which could be extended -----------------------------]
+
+	protected function get_custom_value($request_id, $params) {}
+
+	public function get_custom($request) {
+
+		$params =  $request->get_params();
+
+		$request_id = $params['key'];
+		$result = null;
+
+		foreach($this->instance_by_router() as $plugin_router) {
+			$result = $plugin_router->get_custom_value($request_id, $params) ?? null;
+			if(!is_null($result)) break;
+		}
+
+		// if $result is empty - something went wrong - then return empty object
+		return rest_ensure_response(is_null($result) ? (object) null :  $result);
+	}
+
+	protected function set_custom_value($request_id, $keys, $values) {}
+
+	public function set_custom($request) {
+
+		$params =  $request->get_params();
+
+		$request_id = $params['key'];
+		$keys = $params['keys'];
+		$values = $params['values'];
+		$result = null;
+
+		foreach($this->instance_by_router() as $plugin_router) {
+			$result = $plugin_router->set_custom_value($request_id, $keys, $values) ?? null;
+			if(!is_null($result)) break;
+		}
+
+		// if $result is empty - something went wrong - then return empty object,
+		// otherwise return 'false' or 'true' ('set_option' returns 'false' or 'options')
+		return rest_ensure_response(is_null($result) ? (object) null : $result !== false);
 	}
 
 	// Ajax Actions Helpers ---------------------------------------------------]
