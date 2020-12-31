@@ -285,14 +285,22 @@ class zukit_Singleton {
 
     private static function backtrace_line($line_shift = 0) {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        // NOTE: to research backtrace structure
         // error_log(var_export($backtrace, true));
         $line = 3 + $line_shift;
         return sprintf(
-            'DEBUG %4$s::%3$s() [%1$s:%2$s]',
+            'DEBUG %5$s%4$s%3$s() [%1$s:%2$s]',
             explode('wp-content', $backtrace[$line]['file'])[1] ?? '?',
             $backtrace[$line]['line'],
             $backtrace[$line]['function'],
-            $backtrace[$line]['class']
+            isset($backtrace[$line]['class']) ? '::' : '',
+            $backtrace[$line]['class'] ?? ''
         );
+    }
+}
+
+if(!function_exists('_zlg')) {
+    function _zlg(...$params) {
+        zukit_Singleton::log_with_context(null, $params, 0);
     }
 }

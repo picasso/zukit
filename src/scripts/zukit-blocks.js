@@ -4,6 +4,7 @@ import { blocksSet as render } from './render.js';
 import * as jq from './jquery-helpers.js';
 import * as components from './components/blocks-index.js';
 import * as data from './data/use-store.js';
+import debug from './debug.js';
 
 wp.zukit = {
     fetch,
@@ -12,4 +13,5 @@ wp.zukit = {
     jq,
     components,
     data,
+    debug,
 };
