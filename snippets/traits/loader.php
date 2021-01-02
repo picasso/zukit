@@ -24,19 +24,21 @@ trait zusnippets_Loader {
 		$loaders[] = zu_sprintf(
 			'%1$s
 				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="5 5 30 30" preserveAspectRatio="xMidYMin slice">
-					<path opacity="%6$s" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946s14.946-6.691,
-						14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634c0-6.425,5.209-11.634,
-						11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
-					<path d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0C22.32,8.481,24.301,9.057,26.013,10.047z">
-						<animateTransform attributeType="xml"
-							attributeName="transform"
-							type="rotate"
-							from="0 20 20"
-							to="360 20 20"
-							dur="%2$ss"
-							repeatCount="indefinite"
-						/>
-				    </path>
+					<g fill="currentColor">
+						<path opacity="%6$s" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946s14.946-6.691,
+							14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634c0-6.425,5.209-11.634,
+							11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+						<path d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0C22.32,8.481,24.301,9.057,26.013,10.047z">
+							<animateTransform attributeType="xml"
+								attributeName="transform"
+								type="rotate"
+								from="0 20 20"
+								to="360 20 20"
+								dur="%2$ss"
+								repeatCount="indefinite"
+							/>
+					    </path>
+					</g>
 			  </svg>
 			%5$s',
 			$wrapper,
@@ -101,8 +103,8 @@ trait zusnippets_Loader {
 		// index 2
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 44 44" stroke="currentColor" preserveAspectRatio="xMidYMin slice">
-			      <g fill="none" fill-rule="evenodd" stroke-width="2">
+			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 44 44" preserveAspectRatio="xMidYMin slice">
+			      <g fill="none" fill-rule="evenodd"  stroke="currentColor" stroke-width="2">
 			          <circle cx="22" cy="22" r="1">
 			              <animate attributeName="r"
 			                  begin="0s" dur="%2$ss"
@@ -154,27 +156,29 @@ trait zusnippets_Loader {
 		$loaders[] = zu_sprintf(
 			'%1$s
 				<svg version="1.1" id="loader-%5$s" data-id="%5$s" xmlns="%4$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMin slice">
-					<circle fill="none" stroke="currentColor" stroke-width="8" stroke-miterlimit="10" cx="50" cy="50" r="45" opacity="0.5"/>
-					<line fill="none" stroke-linecap="round" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="80" y2="50.5">
-						<animateTransform
-							attributeName="transform"
-							dur="%2$ss"
-							type="rotate"
-							from="0 50 50"
-							to="360 50 50"
-							repeatCount="indefinite"
-						/>
-					</line>
-					<line fill="none" stroke-linecap="round" stroke="currentColor" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="49.5" y2="69">
-						<animateTransform
-							attributeName="transform"
-							dur="%3$ss"
-							type="rotate"
-							from="0 50 50"
-							to="360 50 50"
-							repeatCount="indefinite"
-						/>
-					</line>
+					<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10">
+						<circle stroke-width="8" cx="50" cy="50" r="45" opacity="0.5"/>
+						<line stroke-width="4" x1="50" y1="50" x2="80" y2="50.5">
+							<animateTransform
+								attributeName="transform"
+								dur="%2$ss"
+								type="rotate"
+								from="0 50 50"
+								to="360 50 50"
+								repeatCount="indefinite"
+							/>
+						</line>
+						<line stroke-width="4" x1="50" y1="50" x2="49.5" y2="69">
+							<animateTransform
+								attributeName="transform"
+								dur="%3$ss"
+								type="rotate"
+								from="0 50 50"
+								to="360 50 50"
+								repeatCount="indefinite"
+							/>
+						</line>
+					</g>
 			  </svg>
 			%6$s',
 			$wrapper,
@@ -189,39 +193,41 @@ trait zusnippets_Loader {
 		$loaders[] = zu_sprintf(
 			'%1$s
 				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMin slice">
-					<path fill="currentColor" d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,
-						8.4-45.4-2-53.8-23.3c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
-				        <animateTransform
-				           attributeName="transform"
-				           attributeType="XML"
-				           type="rotate"
-				           dur="%5$ss"
-				           from="0 50 50" to="360 50 50"
-				           repeatCount="indefinite"
-					   />
-					</path>
-					<path fill="currentColor" d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,
-						4.1-27.7c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z">
-				        <animateTransform
-				           attributeName="transform"
-				           attributeType="XML"
-				           type="rotate"
-				           dur="%2$ss"
-				           from="0 50 50" to="-360 50 50"
-				           repeatCount="indefinite"
-						/>
-					</path>
-					<path fill="currentColor" d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,
-						0,35.3,13.5L82,35.7z" opacity="%6$s">
-				        <animateTransform
-				           attributeName="transform"
-				           attributeType="XML"
-				           type="rotate"
-				           dur="%5$ss"
-				           from="0 50 50" to="360 50 50"
-				           repeatCount="indefinite"
-					   />
-					</path>
+					<g fill="currentColor">
+						<path d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,
+							8.4-45.4-2-53.8-23.3c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
+					        <animateTransform
+					           attributeName="transform"
+					           attributeType="XML"
+					           type="rotate"
+					           dur="%5$ss"
+					           from="0 50 50" to="360 50 50"
+					           repeatCount="indefinite"
+						   />
+						</path>
+						<path d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,
+							4.1-27.7c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z">
+					        <animateTransform
+					           attributeName="transform"
+					           attributeType="XML"
+					           type="rotate"
+					           dur="%2$ss"
+					           from="0 50 50" to="-360 50 50"
+					           repeatCount="indefinite"
+							/>
+						</path>
+						<path d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,
+							0,35.3,13.5L82,35.7z" opacity="%6$s">
+					        <animateTransform
+					           attributeName="transform"
+					           attributeType="XML"
+					           type="rotate"
+					           dur="%5$ss"
+					           from="0 50 50" to="360 50 50"
+					           repeatCount="indefinite"
+						   />
+						</path>
+					</g>
 				</svg>
 			%7$s',
 			$wrapper,
@@ -238,7 +244,7 @@ trait zusnippets_Loader {
 		$loaders[] = zu_sprintf(
 			'%1$s
 			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 55 55" preserveAspectRatio="xMidYMin slice">
-					<g transform="matrix(1 0 0 -1 0 55)">
+					<g transform="matrix(1 0 0 -1 0 55)" fill="currentColor">
 					    <rect width="10" height="14" rx="3">
 					        <animate attributeName="height"
 					             begin="0s" dur="%2$ss"
@@ -283,47 +289,49 @@ trait zusnippets_Loader {
 		// index 6
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 120 30" preserveAspectRatio="xMidYMin slice">
-				    <circle cx="15" cy="15" r="15" fill="currentColor">
-				        <animate
-							attributeName="r"
-							from="15" to="15"
-			                begin="0s" dur="%2$ss"
-			                values="15;9;15" calcMode="linear"
-							repeatCount="indefinite"
-						 />
-				        <animate
-							attributeName="fill-opacity"
-							from="%8$s" to="%8$s"
-				            begin="0s" dur="%2$ss"
-				            values="1;.5;1" calcMode="linear"
-				            repeatCount="indefinite"
-						/>
-				    </circle>
-				    <circle cx="60" cy="15" r="9" fill="currentColor">
-				        <animate attributeName="r" from="9" to="9"
-							begin="0s" dur="%2$ss"
-							values="9;15;9" calcMode="linear"
-							repeatCount="indefinite"
-						 />
-				        <animate attributeName="fill-opacity" from="%6$" to="%6$"
-							begin="0s" dur="%2$ss"
-							values=".5;1;.5" calcMode="linear"
-							repeatCount="indefinite"
-						/>
-				    </circle>
-				    <circle cx="105" cy="15" r="15" fill="currentColor">
-				        <animate attributeName="r" from="15" to="15"
-							begin="0s" dur="%2$ss"
-							values="15;9;15" calcMode="linear"
-							repeatCount="indefinite"
-						/>
-				        <animate attributeName="fill-opacity" from="%8$s" to="%8$s"
-							begin="0s" dur="%2$ss"
-							values="1;.5;1" calcMode="linear"
-							repeatCount="indefinite"
-						 />
-				    </circle>
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 120 30" preserveAspectRatio="xMidYMin slice">
+					<g fill="currentColor">
+					    <circle cx="15" cy="15" r="15">
+					        <animate
+								attributeName="r"
+								from="15" to="15"
+				                begin="0s" dur="%2$ss"
+				                values="15;9;15" calcMode="linear"
+								repeatCount="indefinite"
+							 />
+					        <animate
+								attributeName="fill-opacity"
+								from="%8$s" to="%8$s"
+					            begin="0s" dur="%2$ss"
+					            values="1;.5;1" calcMode="linear"
+					            repeatCount="indefinite"
+							/>
+					    </circle>
+					    <circle cx="60" cy="15" r="9">
+					        <animate attributeName="r" from="9" to="9"
+								begin="0s" dur="%2$ss"
+								values="9;15;9" calcMode="linear"
+								repeatCount="indefinite"
+							 />
+					        <animate attributeName="fill-opacity" from="%6$" to="%6$"
+								begin="0s" dur="%2$ss"
+								values=".5;1;.5" calcMode="linear"
+								repeatCount="indefinite"
+							/>
+					    </circle>
+					    <circle cx="105" cy="15" r="15">
+					        <animate attributeName="r" from="15" to="15"
+								begin="0s" dur="%2$ss"
+								values="15;9;15" calcMode="linear"
+								repeatCount="indefinite"
+							/>
+					        <animate attributeName="fill-opacity" from="%8$s" to="%8$s"
+								begin="0s" dur="%2$ss"
+								values="1;.5;1" calcMode="linear"
+								repeatCount="indefinite"
+							 />
+					    </circle>
+					</g>
 				</svg>
 			%7$s',
 			$wrapper,
@@ -340,8 +348,7 @@ trait zusnippets_Loader {
 		$loaders[] = zu_sprintf(
 			'%1$s
 				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 64 64" preserveAspectRatio="xMidYMin slice">
-				<svg viewBox="0 0 64 64">
-				    <g stroke-width="0">
+				    <g stroke-width="0" fill="currentColor">
 				        <circle cx="24" cy="0" transform="translate(32,32)">
 				            <animate attributeName="r" dur="%2$ss" values="8;7;6;5;4;3;2;1;8" repeatCount="indefinite"></animate>
 				        </circle>
@@ -367,7 +374,6 @@ trait zusnippets_Loader {
 				            <animate attributeName="r" dur="%2$ss" values="7;6;5;4;3;2;1;8;7" repeatCount="indefinite"></animate>
 				        </circle>
 				    </g>
-				</svg>
 				</svg>
 			%5$s',
 			$wrapper,

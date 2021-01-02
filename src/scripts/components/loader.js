@@ -15,7 +15,7 @@ const Loader = ({
 		loaderHTML,
 }) => {
 
-	return ( isNil(loaderHTML) ? null :
+	return isNil(loaderHTML) ? null : (
 		<RawHTML className={ mergeClasses('zu-loader', className) }>
 			{ loaderHTML }
 		</RawHTML>
@@ -29,7 +29,6 @@ const WithOptions = ({
 }) => {
 
 	const loaderHTML = useLoaders(id, duration);
-
 	return (
 		<Loader className={ className } loaderHTML={ loaderHTML } />
 	);
