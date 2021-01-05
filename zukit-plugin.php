@@ -21,6 +21,7 @@ class zukit_Plugin extends zukit_Singleton {
 	protected $path_autocreated = false;
 	protected $data = [];
 	protected $addons = [];
+	protected $blocks = null;
 
 	private static $zukit_translations = false;
 	private $translations_loaded = null;
@@ -99,10 +100,10 @@ class zukit_Plugin extends zukit_Singleton {
 
 	protected function config() {}
 	protected function status() {}
-	protected function blocks() {}
 
 	public function init() {}
 	public function admin_init() {}
+	protected function blocks_init() {}
 
 	// Translations -----------------------------------------------------------]
 
@@ -402,6 +403,7 @@ class zukit_Plugin extends zukit_Singleton {
 			$this->enqueue_script(null, $js_params);
 		}
 	}
+	public function blocks_enqueue_more($is_frontend, $block_name, $attributes) {}
 
 	public function zukit_enqueue($hook) {
 		if($this->is_zukit_slug($hook)) {
@@ -475,8 +477,8 @@ class zukit_Plugin extends zukit_Singleton {
 	}
 
 	private function blocks_config() {
-		$blocks_addon = $this->blocks();
-		if($blocks_addon instanceof zukit_Blocks) $this->register_addon($blocks_addon);
+		$this->blocks = $this->blocks_init() ?? null;
+		if($this->blocks instanceof zukit_Blocks) $this->register_addon($this->blocks);
 	}
 
 	// Error handling ---------------------------------------------------------]

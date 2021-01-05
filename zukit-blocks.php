@@ -58,7 +58,6 @@ class zukit_Blocks extends zukit_Addon {
 	public function init() {
 		if($this->blocks_available) {
 			$this->register_blocks();
-			// $this->editor_assets();
 		}
 	}
 
@@ -68,11 +67,7 @@ class zukit_Blocks extends zukit_Addon {
 		if(!$this->blocks_available) return;
 
 		$handle = $this->get('handle');
-		// $namespace = $this->get('namespace');
-		// $blocks = $this->get('blocks');
-
 		foreach($this->get_blocks() as $block) {
-			// $block_name = strpos($block, '/') !== false ? $block : $namespace.'/'.$block;
 			register_block_type(
 				$block,
 				[
@@ -117,12 +112,14 @@ class zukit_Blocks extends zukit_Addon {
 		];
 		return $params;
 	}
+
 	protected function css_params($is_frontend) {
 		return [
 			'add_prefix'	=> false,
 			'deps'			=> $is_frontend ? [] : ['wp-edit-post'],
 		];
 	}
+
 	protected function js_data($is_frontend) {}
 
 	public function editor_assets() {
@@ -136,15 +133,22 @@ class zukit_Blocks extends zukit_Addon {
 				$this->get('load_css'),
 				$this->get('load_js')
 			);
+			$this->plugin->blocks_enqueue_more(false, null, null);
 		}
-
-		// $this->register_style_and_script(true);
 	}
 
 	public function frontend_assets() {
-		foreach($this->get_blocks() as $block) {
-			if(has_block($block)) {
-				$this->plugin->force_frontend_enqueue(false, true);
+		$frontend = $this->frontend_blocks();
+		$main_script_enqueued = false;
+		foreach((is_array($frontend) ? $frontend : [$frontend]) as $block) {
+			$attrs = $this->check_block($block);
+			if($attrs !== false) {
+				if($main_script_enqueued === false) {
+					$this->plugin->force_frontend_enqueue(false, true);
+					$main_script_enqueued = true;
+				}
+				$this->plugin->blocks_enqueue_more(true, $block, $attrs);
+				break;
 			}
 		}
 	}
@@ -212,12 +216,55 @@ class zukit_Blocks extends zukit_Addon {
 		);
 	}
 
+	// Blocks list, parsing and other helpers ---------------------------------]
+
+	// normalize block name to include namespace, if provided as non-namespaced
+	protected function full_name($name) {
+		if(strpos($name, '/') === false) {
+			$namespace = $this->get('namespace');
+			$name = $namespace.'/'.$name;
+		}
+		return $name;
+	}
+
+	protected function is_block($test, $block_name) {
+		return $test === $block_name || $test === $this->full_name($block_name);
+	}
+
+	// determine whether the current post contains a specific block type
+	// and parse its attributes (if found)
+	private function check_block($name) {
+
+	    $wp_post = get_post();
+		$post = $wp_post instanceof WP_Post ? $wp_post->post_content : null;
+		$block_name = $this->full_name($name);
+
+	    // test for existence of block by its fully qualified name
+	    $has_block = false !== strpos($post, '<!-- wp:' . $block_name . ' ');
+
+	    if($has_block) {
+			$preg_name = str_replace('/', '\/', $block_name);
+			preg_match_all('/<!-- wp:' . $preg_name . ' (.*?) -->/', $post, $matches);
+
+			$attrs = [];
+			foreach($matches[1] ?? [] as $attr_string) {
+				$json = json_decode(trim($attr_string), true);
+				$attrs[] = $json ?? null;
+			}
+			return $attrs;
+	    }
+
+	    return $has_block;
+	}
+
+	// you can override this function to change the list of blocks available on the frontend
+	protected function frontend_blocks() { return $this->get_blocks(); }
+
 	private function get_blocks() {
-		$namespace = $this->get('namespace');
 		$blocks = $this->get('blocks');
 		$names = [];
 		foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
-			$names[] = strpos($block, '/') !== false ? $block : $namespace.'/'.$block;
+			$names[] = $this->full_name($block);
 		}
 		return $names;
 	}
