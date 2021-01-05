@@ -301,6 +301,11 @@ class zukit_Singleton {
 
 if(!function_exists('_zlg')) {
     function _zlg(...$params) {
-        zukit_Singleton::log_with_context(null, $params, 0);
+        if(count($params) === 2 && is_string($params[1]) && substr($params[1], 0, 1) === '$') {
+            zukit_Singleton::log_with_context($params[1], $params[0], 0);
+
+        } else {
+            zukit_Singleton::log_with_context(null, $params, 0);
+        }
     }
 }
