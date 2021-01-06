@@ -1,3 +1,47 @@
+#### 1.1.0 / 2021-01-06
+
+* added `withDebounce` and `withoutValues` params for `AdvTextControl` component
+* renaming `ListInput` and `SelectItem` components
+* implemented `ModalMessage` component
+* implemented alternative `RawHTML` component
+* implemented `Loader` and `LoaderControl` components
+* added `jquery-helpers` and `data-store`
+* added `render` set for `zukit-blocks`
+
+* added support for Custom Blocks addon
+* implemented many helpers for Custom Blocks
+* implemented `force_frontend_enqueue` method to load plugin/themes scripts with Custom Blocks
+* added `Zukit Blocks` injection for Gutenberg pages
+* added colors support for `Zukit Blocks`
+
+* improvements to support data stores and REST API extending
+* added support for custom stores
+* added `api_basics` for `js_blocks_data`
+* refactoring `get_zudata` method, added support for `extend_zudata`
+* created Core Data store and Custom Hooks for Core Data
+* all components changed based on REST API changes
+
+* improved debug logging
+* added `Debug` module to __Zukit__ Blocks
+* added `log_error` method
+* added `context` to log method
+* added `_zlg` function for one variable logging
+* added error logging for SVG loading
+* changed `zukit` path detection
+
+* using `get` method instead of direct config access
+* all frontend scripts now use `suffix` param from config
+* added `is_config` method, now is possible to cancel prefixing script name with `add_prefix` param
+* method `enqueue only` now accept array as `$handle` param
+* added method for marking active theme with body class
+* changed filter name to `zukit_no_excerpt_blocks`
+
+* removed `isLarge` param from all buttons
+* added CSS for `zukit-modal` class
+* improved body class snippets
+* updated `loaders` and refactored with `group`
+* other small improvements
+
 #### 1.0.0 / 2020-12-06
 * adapted to changes in WP 5.5
 * refactoring use of plugin data
