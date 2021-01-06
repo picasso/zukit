@@ -47,13 +47,13 @@ $loader-none-transform: uppercase;
 				display: flex;
 				justify-content: center;
 				svg {
-					width: auto;
+					width: 100%;
 					height: 100%;
 				}
 
 				#loader-6 {
-					width: 80%;
-					height: 20%;
+					width: 90%;
+					height: auto;
 					align-self: center;
 				}
 			}

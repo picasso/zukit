@@ -211,7 +211,7 @@ $admin-disable-text-color: #a0a5aa;
 $admin-block-accent-color: $some-violet;
 
 $admin-control-highlight-color: $wp-admin-blue-color;
-$admin-control-font-family: Ubuntu,'Open Sans';
+$admin-control-font-family: Ubuntu,'Open Sans','Helvetica Neue',sans-serif;
 $admin-control-selected-color: rgba($admin-control-highlight-color, 0.3);
 $admin-control-text-color: $admin-dark;
 
