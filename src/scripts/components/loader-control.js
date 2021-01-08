@@ -72,9 +72,9 @@ const LoaderControl = ({
 				withoutControl
 				columns={ 3 }
 				options={ loaderOptions }
-				selectedItem={ shape }
+				selectedItem={ String(shape) }
 				onClick={ onChange }
-				transformValue={ value => value === 'none' ? noLoader : <Loader loaderHTML={ loaders[value] }/> }
+				transformValue={ value => value === 'none' ? noLoader : <Loader loaderHTML={ loaders[parseInt(value, 10)] }/> }
 			/>
 			<ToggleControl
 				label={ __('Reveal Loader', 'zukit') }
