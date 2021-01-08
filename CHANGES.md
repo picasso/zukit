@@ -1,5 +1,9 @@
-#### 1.1.0 / 2021-01-06
+#### 1.1.2 / 2021-01-08
+* fixed bug with `lookbehind` regex (Safari does not support it)
+* fixed bug with `shape` type in `LoaderControl` component
+* improved CSS to be compatible with WP 5.6
 
+#### 1.1.0 / 2021-01-06
 * added `withDebounce` and `withoutValues` params for `AdvTextControl` component
 * renaming `ListInput` and `SelectItem` components
 * implemented `ModalMessage` component
