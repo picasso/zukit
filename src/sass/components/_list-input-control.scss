@@ -39,7 +39,7 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 			overflow: hidden;
 			margin: 0 $list-input-padding $list-input-padding 0;
 
-			span {
+			span:not(.dashicons) {
 				color: $list-input-item-text-color;
 				padding: 0 0 0 $list-input-padding;
 			}

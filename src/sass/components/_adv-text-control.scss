@@ -39,6 +39,11 @@ $advtext-help-margin: -16px; // margin 8px * 2
 		border: 1px solid $custom-button-border-color;
 		border-radius: 0 3px 3px 0;
 		box-shadow: none;
+
+		span.dashicons {
+			padding-left: 2px;
+		}
+
 		&.__with-label {
 			margin-bottom: 8px;
 		}

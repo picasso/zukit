@@ -72,7 +72,7 @@ $divider-component-class: zukit-divider;
 
 			.components-base-control,
 				.components-button:not(.zukit-select-item__button):not(.__plugin_actions):not(.__exclude) {
-				font-size: $basic-font-size;
+				font-size: $basic-font-size !important;
 				color: $admin-grey-blue-color;
 			}
 
@@ -139,6 +139,8 @@ $divider-component-class: zukit-divider;
 			.components-base-control__help {
 				margin: 0 0 1em 1em;
 				color: $toggle-help-color;
+				font-size: 13px;
+				font-style: italic;
 			}
 
 			.components-toggle-control {
@@ -178,6 +180,13 @@ $divider-component-class: zukit-divider;
 			}
 			.block-editor-block-card__title {
 				margin-bottom: 1.5em;
+			}
+
+			.block-editor-block-card .block-editor-block-icon svg {
+				width: $settings-sidebar-icon-size;
+				height: $settings-sidebar-icon-size;
+				max-width: $settings-sidebar-icon-size;
+				max-height: $settings-sidebar-icon-size;
 			}
 
 			.components-panel__body.is-opened {
@@ -242,6 +251,9 @@ $divider-component-class: zukit-divider;
 					transform: translate(0, -50%);
 					margin: 0 8px;
 					background-color: rgba(white, 0.5);
+				}
+				span.dashicons {
+					margin-right: 8px;
 				}
 
 				@each $color-name, $color-value in $admin-colors {
