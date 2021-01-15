@@ -9,11 +9,11 @@
 
 trait zukit_Ajax {
 
-	private $zukit_api_prefix = 'zukit';
+	private $zukit_api_root = 'zukit';
 	private $zukit_api_version = 1;
 	private $zukit_routes;
 
-	private $api_prefix;
+	private $api_root;
 	private $api_version;
 	private $routes;
 
@@ -26,9 +26,9 @@ trait zukit_Ajax {
 
 	private function ajax_config() {
 
-		$this->nonce = $this->get('nonce') ?? $this->prefix.'_ajax_nonce';
-		$this->api_prefix = $this->get('api_prefix') ?? $this->prefix;
-		$this->api_version = $this->get('api_version') ?? 1;
+		$this->nonce = $this->get('api.nonce') ?? $this->prefix.'_ajax_nonce';
+		$this->api_root = $this->get('api.root') ?? $this->prefix;
+		$this->api_version = $this->get('api.version') ?? 1;
 
 		$this->zukit_routes = [
 			// make action via ajax call
@@ -141,17 +141,17 @@ trait zukit_Ajax {
 	public function init_zukit_api() {
 		// prevent 'register_rest_route' for Zukit be called many times from different plugins
 		if(self::$zukit_rest_registered) return;
-		$this->init_routes($this->zukit_routes, $this->zukit_api_prefix, $this->zukit_api_version);
+		$this->init_routes($this->zukit_routes, $this->zukit_api_root, $this->zukit_api_version);
 		self::$zukit_rest_registered = true;
 	}
 
 	public function init_api() {
-		$this->init_routes($this->routes, $this->api_prefix, $this->api_version);
+		$this->init_routes($this->routes, $this->api_root, $this->api_version);
 	}
 
-	private function init_routes($routes, $api_prefix, $api_version) {
+	private function init_routes($routes, $api_root, $api_version) {
 
-		$namespace = sprintf('%1$s/v%2$s', $api_prefix, $api_version);
+		$namespace = sprintf('%1$s/v%2$s', $api_root, $api_version);
 		foreach($routes as $route => $params) {
 
 			$endpoint = sprintf('/%1$s', $route);
@@ -170,7 +170,7 @@ trait zukit_Ajax {
 	public function api_basics() {
 		return [
 			'router'	=> $this->get_router_name(),
-			'root'		=> $this->api_prefix,
+			'root'		=> $this->api_root,
 			'verion'	=> $this->api_version,
 		];
 	}

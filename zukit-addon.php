@@ -38,6 +38,7 @@ class zukit_Addon {
 
 	public function init() {}
 	public function admin_init() {}
+	// нужно избавиться от $hook на front-end!!! Это не правильно, там $hook не доступен и не имеет смысла!
 	public function enqueue($hook) {}
 	public function admin_enqueue($hook) {}
 	public function clean() {}
@@ -101,7 +102,6 @@ class zukit_Addon {
 		return $this->plugin->enqueue_script($this->filename($file, $params), $params);
 	}
 	protected function admin_enqueue_style($file, $params = []) {
-
 		return $this->plugin->admin_enqueue_style($this->filename($file, $params), $params);
 	}
 	protected function admin_enqueue_script($file, $params = []) {
@@ -126,7 +126,7 @@ class zukit_Addon {
 		$this->plugin->log_error($error, $context, 1);
 	}
 
-	// Common interface plugin methods with availability check ----------------]
+	// Common interface to plugin methods with availability check -------------]
 	// NOTE: only public functions can be called with this helper
 
 	protected function call($func, ...$params) {

@@ -47,18 +47,25 @@ class zukit_Plugin extends zukit_Singleton {
 		$this->config = array_merge([
 			'prefix' 	=> 'zuplugin',
 			'suffix' 	=> 'frontend',
+
 			// admin settings
 			'admin' 	=> [],
+
 			// appearance
-			'icon'		=> $this->snippets('insert_svg_from_file', $this->dir, 'logo', [
-	            'preserve_ratio'	=> true,
-	            'strip_xml'			=> true,
-	            'subdir'			=> 'images/',
-			]),
-			'colors'	=> [],
+			'appearance'	=> [
+				'icon'		=> $this->snippets('insert_svg_from_file', $this->dir, 'logo', [
+		            'preserve_ratio'	=> true,
+		            'strip_xml'			=> true,
+		            'subdir'			=> 'images/',
+				]),
+				'colors'	=> [],
+			],
+
 			// translations
-			'path'				=> null,
-			'domain'			=> null,
+			'translations'	=> [
+				'path'				=> null,
+				'domain'			=> null,
+			],
 		], $this->config() ?? []);
 
 		$this->prefix = $this->get('prefix') ?? $this->prefix;
@@ -108,11 +115,11 @@ class zukit_Plugin extends zukit_Singleton {
 	// Translations -----------------------------------------------------------]
 
 	private function text_domain() {
-		return $this->get('domain') ?? $this->data['TextDomain'] ?? $this->prefix;
+		return $this->get('translations.domain') ?? $this->data['TextDomain'] ?? $this->prefix;
 	}
 
 	private function text_path() {
-		$path = $this->get('path') ?? $this->data['DomainPath'];
+		$path = $this->get('translations.path') ?? $this->data['DomainPath'];
 		return empty($path) ? null : $this->sprintf_dir('/%1$s', trim($path, '/'));
 	}
 
@@ -458,6 +465,17 @@ class zukit_Plugin extends zukit_Singleton {
 
 	public function get($key, $default_value = null, $addon_config = null) {
 		$config = is_null($addon_config) ? $this->config : $addon_config;
+		// If 'key' contains 'path' - then resolve it before get
+		$pathParts = explode('.', $key);
+		if(count($pathParts) > 1) {
+			$key = $pathParts[count($pathParts)-1];
+			foreach($pathParts as $pathKey) {
+				if($pathKey === $key) break;
+				if(!is_array($config)) return $default_value;
+				$config = $config[$pathKey] ?? null;
+			}
+		}
+
 		return isset($config[$key]) ? $config[$key] : $default_value;
 	}
 

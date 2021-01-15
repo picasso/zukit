@@ -38,7 +38,13 @@ trait zukit_Admin {
 
 		add_action('admin_init', function() {
 			register_setting($this->options_key.'_group', $this->options_key, []);
-			$this->snippets('add_admin_body_class', 'zukit-settings');
+		});
+
+		// add 'zukit-settings' class for Settings page only
+		add_action('admin_enqueue_scripts', function($hook) {
+			if($this->ends_with_slug($hook)) {
+				$this->snippets('add_admin_body_class', 'zukit-settings');
+			}
 		});
 
 		add_action('admin_menu', [$this, 'admin_menu']);
@@ -63,8 +69,8 @@ trait zukit_Admin {
 			'author'		=> __($this->data['Author'], $domain),
 			'link'			=> __($link, $domain),
 			'description'	=> __($desc, $domain),
-			'icon'			=> $this->get('icon'),
-			'colors'		=> $this->get('colors'),
+			'icon'			=> $this->get('appearance.icon'),
+			'colors'		=> $this->get('appearance.colors'),
 			'more' 			=> $this->extend_info(),
 		];
 	}
