@@ -79,8 +79,8 @@ class zukit_Plugin extends zukit_Singleton {
 		add_action('admin_init', [$this, 'admin_init'], 10);
 		add_action('admin_init', function() { $this->do_addons('admin_init'); }, 11);
 
-		add_action('wp_enqueue_scripts', [$this, 'frontend_enqueue'], 10, 1);
-		add_action('wp_enqueue_scripts', function($hook) { $this->do_addons('enqueue', $hook); }, 11, 1);
+		add_action('wp_enqueue_scripts', [$this, 'frontend_enqueue'], 10);
+		add_action('wp_enqueue_scripts', function() { $this->do_addons('enqueue'); }, 11);
 
 		// enqueue 'zukit' helpers & components and its CSS
 		add_action('admin_enqueue_scripts', [$this, 'zukit_enqueue'], 10, 1);
@@ -390,10 +390,10 @@ class zukit_Plugin extends zukit_Singleton {
 	protected function should_load_js($is_frontend, $hook) { return false; }
 	protected function enqueue_more($is_frontend, $hook) {}
 
-	public function frontend_enqueue($hook) {
-		if($this->should_load_css(true, $hook)) $this->enqueue_style(null, $this->css_params_validated(true));
-		if($this->should_load_js(true, $hook)) $this->enqueue_script(null, $this->js_params_validated(true));
-		$this->enqueue_more(true, $hook);
+	public function frontend_enqueue() {
+		if($this->should_load_css(true, null)) $this->enqueue_style(null, $this->css_params_validated(true));
+		if($this->should_load_js(true, null)) $this->enqueue_script(null, $this->js_params_validated(true));
+		$this->enqueue_more(true, null);
 	}
 
 	// Этот метод используется для загрузки CSS and JS
