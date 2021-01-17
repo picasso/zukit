@@ -28,9 +28,6 @@ class zukit_Addon {
 
 	protected function config() { return []; }
 	protected function config_defaults() { return []; }
-	protected function is_config($key, $check_value = true) {
-		return $this->plugin->is_option($key, $check_value, $this->config);
-	}
 
 	// 'construct_more' is only called after the add-on is registered by the plugin!
 	protected function construct_more() {}
