@@ -44,7 +44,7 @@ class zukit_Plugin extends zukit_Singleton {
 			$this->version = $this->data['Version'];
 		}
 
-		$this->config = array_merge([
+		$this->config = array_replace_recursive([
 			'prefix' 	=> 'zuplugin',
 			'suffix' 	=> 'frontend',
 
@@ -66,6 +66,10 @@ class zukit_Plugin extends zukit_Singleton {
 				'path'				=> null,
 				'domain'			=> null,
 			],
+
+			// custom blocks
+			'blocks'		=> zukit_Blocks::defaults(),
+
 		], $this->config() ?? []);
 
 		$this->prefix = $this->get('prefix') ?? $this->prefix;
@@ -254,19 +258,21 @@ class zukit_Plugin extends zukit_Singleton {
 		else {
 			// sets a value in a nested array based on path (if presented)
 			$pathParts = explode('.', $key);
+			$pathCount = count($pathParts);
 
-			if(count($pathParts) === 1) {
+			if($pathCount === 1) {
 				$options[$key] = $value;
 			} else {
-				$lastKey = $pathParts[count($pathParts)-1];
+				$lastKey = $pathParts[$pathCount-1];
 				$current = &$options;
 				foreach($pathParts as $pathKey) {
-					if($pathKey === $lastKey) break;
+					if($pathCount === 1) break;
 					if(!is_array($current)) {
 						if($this->path_autocreated) $current = [];
 						else return false;
 					}
 					$current = &$current[$pathKey];
+					$pathCount--;
 				}
 				if(!is_array($current)) {
 					if($this->path_autocreated) $current = [];
@@ -289,13 +295,15 @@ class zukit_Plugin extends zukit_Singleton {
 
 		// gets a value in a nested array based on path (if presented)
 		$pathParts = explode('.', $key);
+		$pathCount = count($pathParts);
 		$set = $options;
-		if(count($pathParts) > 1) {
-			$key = $pathParts[count($pathParts)-1];
+		if($pathCount > 1) {
+			$key = $pathParts[$pathCount-1];
 			foreach($pathParts as $pathKey) {
-				if($pathKey === $key) break;
+				if($pathCount === 1) break;
 				if(!is_array($set)) return $default;
 				$set = $set[$pathKey] ?? null;
+				$pathCount--;
 			}
 		}
 
@@ -467,15 +475,16 @@ class zukit_Plugin extends zukit_Singleton {
 		$config = is_null($addon_config) ? $this->config : $addon_config;
 		// If 'key' contains 'path' - then resolve it before get
 		$pathParts = explode('.', $key);
-		if(count($pathParts) > 1) {
-			$key = $pathParts[count($pathParts)-1];
+		$pathCount = count($pathParts);
+		if($pathCount > 1) {
+			$key = $pathParts[$pathCount - 1];
 			foreach($pathParts as $pathKey) {
-				if($pathKey === $key) break;
+				if($pathCount === 1) break;
 				if(!is_array($config)) return $default_value;
 				$config = $config[$pathKey] ?? null;
+				$pathCount--;
 			}
 		}
-
 		return isset($config[$key]) ? $config[$key] : $default_value;
 	}
 
