@@ -82,10 +82,9 @@ class zukit_Singleton {
 		return $absolute_marker ? ('!'.$filename) : $filename;
 	}
 
-    public function get_filepath($is_style, $is_frontend, $file, $without_dir = false) {
+    public function get_filepath($is_style, $is_frontend, $file) {
         $dir = $is_frontend ? ($is_style ? 'css' : 'js') : ($is_style ? 'admin/css' : 'admin/js');
-		$filename = sprintf($is_style ? '/%2$s/%1$s.css' : '/%2$s/%1$s.min.js', $file, $dir);
-		return $without_dir ? $filename : ($this->dir.$filename);
+		return sprintf($is_style ? '/%2$s/%1$s.css' : '/%2$s/%1$s.min.js', $file, $dir);
 	}
 
     public function get_version($filename = '') {
@@ -203,6 +202,8 @@ class zukit_Singleton {
                 'prefix'        => $this->prefix,
                 'dir'           => $this->dir,
             ], 'No file found to enqueue!');
+            
+            $handle = false;
         }
 		return $handle;
 	}
@@ -222,7 +223,7 @@ class zukit_Singleton {
                     $src = plugin_dir_url(self::$zukit_file).str_replace(plugin_dir_path(self::$zukit_file), '', $filepath);
                 }
             } else {
-                $filename = $this->get_filepath($is_style, $is_frontend, $file, true);
+                $filename = $this->get_filepath($is_style, $is_frontend, $file);
             }
 
             $filepath = empty($filepath) ? $this->dir.$filename : $filepath;
