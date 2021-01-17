@@ -11,6 +11,8 @@ class zukit_Blocks extends zukit_Addon {
 	protected $metakeys = [];
 
 	private $blocks_available = false;
+	private $block_names = null;
+	private $handle = null;
 
 	// We can only have one 'zukit-blocks' script loaded and therefore
     // store its status in a static property so that we can avoid repeated 'enqueue' calls.
@@ -28,7 +30,7 @@ class zukit_Blocks extends zukit_Addon {
 
 	protected function construct_more() {
 		$this->blocks_available = function_exists('register_block_type');
-
+		$this->handle = $this->get('blocks.handle', true) ?? $this->prefix_it('blocks');
 		if($this->blocks_available) {
 			// add_action('init', [$this, 'register_blocks'], 99);
 			add_action('enqueue_block_editor_assets', [$this, 'editor_assets']);
@@ -37,22 +39,30 @@ class zukit_Blocks extends zukit_Addon {
 		}
 	}
 
-	protected function config_defaults() {
+	final public static function defaults() {
 		return [
-			// should load zukit blocks JS & CSS (admin mode only)
-			'load_zukit'	=> true,
-			// should load plugin/theme CSS (admin mode only)
-			'load_css'		=> true,
-			// should load plugin/theme JS (admin mode only)
-			'load_js'		=> false,
+			// instance of class inheriting the class 'zukit_Blocks'
+			'instance'			=> null,
+			// should load zukit blocks JS & CSS for Gutenberg Block Editor
+			'load_zukit'		=> true,
+			// should load plugin/theme CSS for Gutenberg Block Editor
+			'load_css'			=> true,
+			// should load plugin/theme JS for Gutenberg Block Editor
+			'load_js'			=> false,
 
-			'dynamic'		=> false,
-			'metakeys'		=> false,
-			'no_excerpt'	=> false,
-			'namespace'		=> $this->get('prefix', true),
-			'handle'		=> $this->prefix_it('blocks'),
-			'blocks'		=> [],
+			'dynamic'			=> false,
+			'metakeys'			=> false,
+			'no_excerpt'		=> false,
+			'namespace'			=> null,
+			'handle'			=> null,
+			'blocks'			=> [],
+			'frontend_blocks'	=> [],
 		];
+	}
+
+	protected function is_blocks_config($key) {
+		$value = $this->get('blocks.'.$key, true);
+		return $value === true;
 	}
 
 	public function init() {
@@ -66,27 +76,26 @@ class zukit_Blocks extends zukit_Addon {
 		// return early if not available
 		if(!$this->blocks_available) return;
 
-		$handle = $this->get('handle');
 		foreach($this->get_blocks() as $block) {
 			register_block_type(
 				$block,
 				[
-					'editor_script'	=> $handle,
-					'editor_style'	=> $handle,
+					'editor_script'	=> $this->handle,
+					'editor_style'	=> $this->handle,
 					'style'			=> $this->prefix_it($this->get('suffix', true)),
 				]
 			);
 		}
 
 		// add block attributes, generate 'render_callbak' and register these blocks
-		if($this->is_config('dynamic') === true) $this->register_blocks_with_attributes();
+		if($this->is_blocks_config('dynamic')) $this->register_blocks_with_attributes();
 
 		// register meta keys to make them be accessible for blocks via the REST API
-		if($this->is_config('metakeys') === true) $this->register_metakeys();
+		if($this->is_blocks_config('metakeys')) $this->register_metakeys();
 
 		// add list of blocks which should be avoided during apply_filters('the_content'...)
 		// because we need remove any Gutenberg block which use 'get_excerpt' before apply_filters('the_content'...)
-		if($this->is_config('no_excerpt') === true) {
+		if($this->is_blocks_config('no_excerpt')) {
 			$no_excerpt_blocks = $this->no_excerpt();
 			if(!empty($no_excerpt_blocks)) {
 				add_filter('zukit_no_excerpt_blocks', function($blocks) use($no_excerpt_blocks) {
@@ -130,31 +139,31 @@ class zukit_Blocks extends zukit_Addon {
 	public function block_assets() {
 		if(is_admin()) {
 			$this->plugin->force_frontend_enqueue(
-				$this->get('load_css'),
-				$this->get('load_js')
+				$this->get('blocks.load_css', true),
+				$this->get('blocks.load_js', true)
 			);
 			$this->plugin->blocks_enqueue_more(false, null, null);
 		}
 	}
 
 	public function frontend_assets() {
-		$frontend = $this->frontend_blocks();
+		$frontend_blocks = $this->frontend_blocks();
 		$main_script_enqueued = false;
-		foreach((is_array($frontend) ? $frontend : [$frontend]) as $block) {
+		foreach($frontend_blocks as $block) {
 			$attrs = $this->check_block($block);
 			if($attrs !== false) {
 				if($main_script_enqueued === false) {
 					$this->plugin->force_frontend_enqueue(false, true);
 					$main_script_enqueued = true;
 				}
-				$this->plugin->blocks_enqueue_more(true, $block, $attrs);
+				$this->plugin->blocks_enqueue_more(true, $this->full_name($block), $attrs);
 				break;
 			}
 		}
 	}
 
 	public function zukit_blocks_enqueue() {
-		if(self::$zukit_loaded === false && $this->is_config('load_zukit')) {
+		if(self::$zukit_loaded === false && $this->is_blocks_config('load_zukit')) {
 			// dependencies for Zukit Blocks script & styles
 			$js_deps = ['wp-edit-post'];
 			// 	'wp-blocks',
@@ -186,7 +195,6 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	private function register_style_and_script($is_frontend) {
-		$handle = $this->get('handle');
 
 		$css_params = $this->plugin->params_validated(
 			$this->css_params($is_frontend),
@@ -198,7 +206,7 @@ class zukit_Blocks extends zukit_Addon {
 		);
 
 		// add dependency to Zukit Blocks if required
-		if($this->is_config('load_zukit')) {
+		if($this->is_blocks_config('load_zukit')) {
 			$css_params['deps'][] = self::$zukit_handle;
 			$js_params['deps'][] = self::$zukit_handle;
 		}
@@ -206,13 +214,13 @@ class zukit_Blocks extends zukit_Addon {
 		if($this->should_load_css($is_frontend)) {
 			call_user_func_array(
 				[$this, $is_frontend ? 'enqueue_style' : 'admin_enqueue_style'],
-				[$handle, $css_params]
+				[$this->handle, $css_params]
 			);
 		}
 
 		call_user_func_array(
 			[$this, $is_frontend ? 'enqueue_script' : 'admin_enqueue_script'],
-			[$handle, $js_params]
+			[$this->handle, $js_params]
 		);
 	}
 
@@ -221,7 +229,7 @@ class zukit_Blocks extends zukit_Addon {
 	// normalize block name to include namespace, if provided as non-namespaced
 	protected function full_name($name) {
 		if(strpos($name, '/') === false) {
-			$namespace = $this->get('namespace');
+			$namespace = $this->get('blocks.namespace', true) ?? $this->get('prefix', true);
 			$name = $namespace.'/'.$name;
 		}
 		return $name;
@@ -257,16 +265,20 @@ class zukit_Blocks extends zukit_Addon {
 	    return $has_block;
 	}
 
-	// you can override this function to change the list of blocks available on the frontend
-	protected function frontend_blocks() { return $this->get_blocks(); }
+	private function frontend_blocks() {
+		$frontend_blocks = $this->get('blocks.frontend_blocks', true) ?? $this->get_blocks();
+		return is_array($frontend_blocks) ? $frontend_blocks : [$frontend_blocks];
+	}
 
 	private function get_blocks() {
-		$blocks = $this->get('blocks');
-		$names = [];
-		foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
-			$names[] = $this->full_name($block);
+		if($this->block_names === null) {
+			$blocks = $this->get('blocks.blocks', true);
+			$this->block_names = [];
+			foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
+				$this->block_names[] = $this->full_name($block);
+			}
 		}
-		return $names;
+		return $this->block_names;
 	}
 
 	private function get_colors() {
