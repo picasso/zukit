@@ -202,7 +202,7 @@ class zukit_Singleton {
                 'prefix'        => $this->prefix,
                 'dir'           => $this->dir,
             ], 'No file found to enqueue!');
-            
+
             $handle = false;
         }
 		return $handle;
@@ -243,7 +243,7 @@ class zukit_Singleton {
 
     // Basic error handling ---------------------------------------------------]
 
-    public static function log_with_context($context, $error, $line_shift) {
+    public static function log_with_context($context, $error, $line_shift, $called_class = null) {
         $log = PHP_EOL.'* * * without context';
         if(is_string($context)) $log = PHP_EOL.'* * * '.$context;
         else if(!empty($context)) $log = preg_replace(
@@ -262,7 +262,7 @@ class zukit_Singleton {
         $log .= PHP_EOL.str_repeat('=', strlen($log) - 1);
         $log .= PHP_EOL.var_export($error, true).PHP_EOL;
         // add function and line
-        $log_line = self::backtrace_line($line_shift);
+        $log_line = self::backtrace_line($line_shift, $called_class);
         $log_line .= PHP_EOL.str_repeat('=', strlen($log_line));
         $log = PHP_EOL.$log_line.$log;
         error_log($log);
@@ -281,21 +281,22 @@ class zukit_Singleton {
     }
 
     public function log_error($error, $context = null, $line_shift = 0) {
-        self::log_with_context($context, $error, $line_shift);
+        self::log_with_context($context, $error, $line_shift, static::class);
     }
 
-    private static function backtrace_line($line_shift = 0) {
+    private static function backtrace_line($line_shift = 0, $called_class = null) {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         // NOTE: to research backtrace structure
         // error_log(var_export($backtrace, true));
         $line = 3 + $line_shift;
         return sprintf(
-            'DEBUG %5$s%4$s%3$s() [%1$s:%2$s]',
+            'DEBUG%6$s %5$s%4$s%3$s() [%1$s:%2$s]',
             explode('wp-content', $backtrace[$line]['file'])[1] ?? '?',
             $backtrace[$line]['line'],
             $backtrace[$line]['function'],
             isset($backtrace[$line]['class']) ? '::' : '',
-            $backtrace[$line]['class'] ?? ''
+            $backtrace[$line]['class'] ?? '',
+            empty($called_class) ? '' : sprintf('::{%1$s}', $called_class),
         );
     }
 }
