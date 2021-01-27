@@ -114,7 +114,6 @@ class zukit_Plugin extends zukit_Singleton {
 
 	public function init() {}
 	public function admin_init() {}
-	protected function blocks_init() {}
 
 	// Translations -----------------------------------------------------------]
 
@@ -342,41 +341,38 @@ class zukit_Plugin extends zukit_Singleton {
 		return $this->uri.$path;
 	}
 
-	protected function js_params($is_frontend) {
+	private function script_defaults() {
+
+		// for admin handle will be '<prefix>' and for frontend -> '<prefix>-<suffix>'
+		$admin_handle = $this->get('prefix');
+		$frontend_handle = $this->prefix_it($this->get('suffix'));
+
 		return [
-			'deps'		=> $is_frontend ? [] : ['zukit'],
-			'data'		=> $this->get_js_data($is_frontend),
-			// for admin handle will be '<prefix>' and for frontend -> '<prefix>-<suffix>'
-			'handle'	=> $is_frontend ? $this->prefix_it($this->get('suffix')) : $this->get('prefix'),
+			// front-end script & style
+			'script'	=> [
+				'deps'			=> [],
+				'data'			=> [$this, 'jsdata_defaults'],
+				'handle'		=> $frontend_handle,
+			],
+			'style'		=> [
+				'deps'			=> [],
+				'handle'		=> $frontend_handle,
+			],
+
+			// plugin/theme settings page script & style
+			'settings_script'	=> [
+				'deps'		=> ['zukit'],
+				'data'		=> [$this, 'jsdata_defaults'],
+				'handle'	=> $admin_handle,
+			],
+			'settings_style'	=> [
+				'deps'		=> ['zukit'],
+				'handle'	=> $admin_handle,
+			],
 		];
-	}
-	protected function css_params($is_frontend) {
-		return [
-			'deps'		=> $is_frontend ? [] : ['zukit'],
-			'handle'	=> $is_frontend ? $this->prefix_it($this->get('suffix')) : $this->get('prefix'),
-		];
-	}
-	// Guarantees that if user did not include any requred keys or set it to 'null'
-	// then default values will be added anyway
-	private function js_params_validated($is_frontend) {
-		return $this->params_validated(
-			$this->js_params($is_frontend),
-			self::js_params($is_frontend)
-		);
-		// $params_not_null = array_filter($this->js_params($is_frontend), function($val) { return !is_null($val); });
-		// return array_merge(self::js_params($is_frontend), $params_not_null);
-	}
-	private function css_params_validated($is_frontend) {
-		return $this->params_validated(
-			$this->css_params($is_frontend),
-			self::css_params($is_frontend)
-		);
-		//
-		// $params_not_null = array_filter($this->css_params($is_frontend), function($val) { return !is_null($val); });
-		// return array_merge(self::css_params($is_frontend), $params_not_null);
 	}
 
-	protected function get_js_data($is_frontend) {
+	private function jsdata_defaults($is_frontend) {
 		$default_data = $is_frontend ? [
 			'ajaxurl'       => admin_url('admin-ajax.php'),
 			'nonce'     	=> $this->ajax_nonce(true),
@@ -389,14 +385,45 @@ class zukit_Plugin extends zukit_Singleton {
 			'debug'			=> $this->debug_data(),
 			'actions' 		=> [],
 		];
-		$custom_data = $this->js_data($is_frontend);
-		return array_merge($default_data, is_array($custom_data) ? $custom_data : []);
+		return $default_data;
 	}
 
-	protected function js_data($is_frontend) {}
+	protected function js_params($is_frontend, $defaults = null) {
+		$params = $this->get($is_frontend ? 'script' : 'settings_script', [], $defaults);
+		$params['data'] = $this->get_callable_data($params['data'] ?? null, $is_frontend);
+		return $params;
+	}
+
+	protected function css_params($is_frontend, $defaults = null) {
+		return $this->get($is_frontend ? 'style' : 'settings_style', [], $defaults);
+	}
+
+	// Guarantees that if user did not include any requred keys or set it to 'null'
+	// then default values will be added anyway
+	private function js_params_validated($is_frontend) {
+		return $this->params_validated(
+			$this->js_params($is_frontend),
+			$this->js_params($is_frontend, $this->script_defaults())
+		);
+	}
+	private function css_params_validated($is_frontend) {
+		return $this->params_validated(
+			$this->css_params($is_frontend),
+			$this->css_params($is_frontend, $this->script_defaults())
+		);
+	}
+
+	// protected function js_data($is_frontend) {}
 	protected function should_load_css($is_frontend, $hook) { return false; }
 	protected function should_load_js($is_frontend, $hook) { return false; }
 	protected function enqueue_more($is_frontend, $hook) {}
+
+	public function frontend_handles() {
+		$handles = ['script' => null, 'style' => null];
+		if($this->should_load_js(true, null)) $handles['script'] = $this->enqueue_script(null, $this->js_params_validated(true), true);
+		if($this->should_load_css(true, null)) $handles['style'] = $this->enqueue_style(null, $this->css_params_validated(true), true);
+		return $handles;
+	}
 
 	public function frontend_enqueue() {
 		if($this->should_load_css(true, null)) $this->enqueue_style(null, $this->css_params_validated(true));
@@ -467,6 +494,13 @@ class zukit_Plugin extends zukit_Singleton {
 
 	// Helpers ----------------------------------------------------------------]
 
+	// gets a value and if this value is a function or a class method,
+	// then calls it and returns the result of this call
+	public function get_callable_data($data, $is_frontend) {
+		if(is_callable($data)) $data = call_user_func($data, $is_frontend);
+		return $data;
+	}
+
 	public function prefix_it($str, $divider = '-') {
 		return sprintf('%1$s%2$s%3$s', $this->prefix, $divider, $str);
 	}
@@ -490,7 +524,7 @@ class zukit_Plugin extends zukit_Singleton {
 
 	public function params_validated($params, $defaults = []) {
 		$params_not_null = array_filter($params, function($val) { return !is_null($val); });
-		return array_merge($defaults, $params_not_null);
+		return array_replace_recursive($defaults, $params_not_null);
 	}
 
 	private function theme_mark($delimiter = '-', $prefix = 'is-') {
@@ -504,8 +538,12 @@ class zukit_Plugin extends zukit_Singleton {
 	}
 
 	private function blocks_config() {
-		$this->blocks = $this->blocks_init() ?? null;
-		if($this->blocks instanceof zukit_Blocks) $this->register_addon($this->blocks);
+		$blocks = $this->get('blocks.blocks');
+		if(!empty($blocks)) {
+			$this->blocks = $this->get('blocks.instance');
+			if(is_null($this->blocks)) $this->blocks = new zukit_Blocks;
+			if($this->blocks instanceof zukit_Blocks) $this->register_addon($this->blocks);
+		}
 	}
 
 	// Error handling ---------------------------------------------------------]
