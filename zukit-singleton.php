@@ -77,7 +77,6 @@ class zukit_Singleton {
 	}
 
     public function get_zukit_filepath($is_style, $file, $absolute_marker = true) {
-        // $dir = dirname(self::$zukit_file).'/dist';
 		$filename = sprintf($is_style ? '%2$s/%1$s.css' : '%2$s/%1$s.min.js', $file, $this->zukit_dirname('dist'));
 		return $absolute_marker ? ('!'.$filename) : $filename;
 	}
@@ -93,11 +92,11 @@ class zukit_Singleton {
     	return $this->version;
     }
 
-    public function enqueue_style($file, $params = []) {
-        return $this->style_or_script(true, true, array_merge($params, ['file' => $file]));
+    public function enqueue_style($file, $params = [], $handle_only = false) {
+        return $this->style_or_script(true, true, array_merge($params, ['file' => $file, 'handle_only' => $handle_only]));
 	}
-    public function enqueue_script($file, $params = []) {
-		return $this->style_or_script(false, true, array_merge($params, ['file' => $file]));
+    public function enqueue_script($file, $params = [], $handle_only = false) {
+		return $this->style_or_script(false, true, array_merge($params, ['file' => $file, 'handle_only' => $handle_only]));
 	}
 
 	public function admin_enqueue_style($file, $params = []) {
@@ -146,6 +145,7 @@ class zukit_Singleton {
             'bottom'        => true,
             'data'          => null,
             'register_only' => false,
+            'handle_only'   => false,
             'absolute'      => false,
             'async'         => false,
             'defer'         => false,
@@ -164,6 +164,9 @@ class zukit_Singleton {
         extract($this->get_filepath_and_src($is_absolute, $is_style, $is_frontend, $file), EXTR_OVERWRITE);
 
 		if(is_null($filepath) || file_exists($filepath)) {
+            // return $handle without enqueue or register
+            if($handle_only) return $handle;
+            // generate script/style version
 			$version = $this->get_version($filepath);
             if($register_only) {
                 if($is_style) wp_register_style($handle, $src, $deps, $version, $media);
@@ -186,6 +189,12 @@ class zukit_Singleton {
             if(!$is_style && ($async || $defer)) {
                 $this->async_defer[$handle] = implode(' ', array_keys(array_filter(compact('async', 'defer'))));
             }
+
+            // $this->log_error([
+            //     '$file'         => basename($filepath),
+            //     '$handle'       => $handle,
+            //     '$data'         => $data,
+            // ], 'Test!');
 
 		} else {
             $this->log_error([
