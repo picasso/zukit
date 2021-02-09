@@ -14,6 +14,7 @@ class zukit_Blocks extends zukit_Addon {
 	private $block_names = null;
 	private $frontend_names = null;
 	private $handle = null;
+	private $namespace = null;
 
 	// We can only have one 'zukit-blocks' script loaded and therefore
     // store its status in a static property so that we can avoid repeated 'enqueue' calls.
@@ -32,6 +33,7 @@ class zukit_Blocks extends zukit_Addon {
 	protected function construct_more() {
 		$this->blocks_available = function_exists('register_block_type');
 		$this->handle = $this->get('blocks.handle', true) ?? $this->prefix_it('blocks');
+		$this->namespace = $this->get('blocks.namespace', true) ?? $this->get('prefix', true);
 		if($this->blocks_available) {
 			// add_action('init', [$this, 'register_blocks'], 99);
 			add_action('enqueue_block_editor_assets', [$this, 'editor_assets']);
@@ -243,11 +245,7 @@ class zukit_Blocks extends zukit_Addon {
 
 	// normalize block name to include namespace, if provided as non-namespaced
 	protected function full_name($name) {
-		if(strpos($name, '/') === false) {
-			$namespace = $this->get('blocks.namespace', true) ?? $this->get('prefix', true);
-			$name = $namespace.'/'.$name;
-		}
-		return $name;
+		return strpos($name, '/') === false ? ($this->namespace.'/'.$name) : $name;
 	}
 
 	protected function is_block($test, $block_name) {
