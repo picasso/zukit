@@ -1,3 +1,17 @@
+#### 1.1.3 / 2021-02-10
+* changed configuration structure
+* added access to nested configuration sections
+* refactoring to use `config` instead of `js_params` and `css_params`
+* refactoring to use plugin configuration for `zukit_Blocks` class
+* added `handle_only` option for enqueue methods
+* removed `is_config` method
+* fixed bug when nested key is equal parent key in options/config
+* fixed bug with recursive merging of config
+* fixed `get_filepath` method
+* added `called_class` for log methods when called non static
+* moved most of the documentation from README to __wiki__
+* other small improvements
+
 #### 1.1.2 / 2021-01-08
 * fixed bug with `lookbehind` regex (Safari does not support it)
 * fixed bug with `shape` type in `LoaderControl` component

@@ -5,32 +5,8 @@ _Framework serves as the basis for creating plugins or themes for WordPress._
 Implements basic functionality for managing scripts and creating plugin or theme settings page based on Gutenberg functionality.
 
 ## Install
-To _use_ __Zukit__ in your project, you need to install it as a `subtree` in your project. To simplify this process, I wrote a bash script [`zukit.sh`] that does all the necessary operations. You will need to download the script from the remote repository and then execute it. Before executing the script, you can change it and remove unnecessary (in your opinion) operations:
 
-```shell
-# retrieve 'zukit.sh' from the repository
-$ curl 'https://raw.githubusercontent.com/picasso/zukit/master/zukit.sh' > zukit.sh
-
-# maybe you have to give the script permission to run
-# chmod +x zukit.sh
-
-# execute script
-$ sh zukit.sh
-```
-
-To update __Zukit__ to the current version, you need to run the `subtree pull` command. You can change the commit message at your discretion:
-```shell
-# pull updates from Zukit
-$ git subtree pull --prefix=zukit zukit master --squash -m 'Zukit updated'
-```
-
-See [Git sparse-checkout](https://www.git-scm.com/docs/git-sparse-checkout) and [Git subtree](https://opensource.com/article/20/5/git-submodules-subtrees) for complete docs and examples.
-
-> &#x2757; Памятка. Попробовать потом [иначе](https://docs.github.com/en/free-pro-team@latest/github/using-git/about-git-subtree-merges)
-
-After installation, you can remove `zukit.sh` or add it to your `.gitignore` file.
-
-
+To _use_ __Zukit__ framework in your project, you need to load its classes before referring to the class that inherits the framework methods. There are many ways to do this, but the simplest is [install](https://github.com/picasso/zukit/wiki/%5BMisc%5D-Install) the framework as a `subtree` in your project.
 
 ## Documentation
 
