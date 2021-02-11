@@ -6,7 +6,7 @@ Implements basic functionality for managing scripts and creating plugin or theme
 
 ## Install
 
-To _use_ __Zukit__ framework in your project, you need to load its classes before referring to the class that inherits the framework methods. There are many ways to do this, but the simplest is [install](https://github.com/picasso/zukit/wiki/%5BMisc%5D-Install) the framework as a `subtree` in your project.
+To _use_ __Zukit__ framework in your project, you need to load its classes before referring to the class that inherits the framework methods. There are many ways to do this, but the easiest one is [to install the framework](https://github.com/picasso/zukit/wiki/%5BMisc%5D-Install) as a `subtree` in your project.
 
 ## Documentation
 
