@@ -17,8 +17,9 @@ trait zusnippets_Useful {
 		);
 	}
 
-	public function format_bytes($bytes, $precision = 0) {
-	    $units = array('Bytes', 'Kb', 'Mb', 'Gb', 'Tb');
+	public function format_bytes($bytes, $precision = 0, $approximately_sign = false) {
+	    $units = array('Bytes', 'KB', 'MB', 'GB', 'TB');
+		$sign = $approximately_sign && $bytes !== 0 ? '~' : '';
 
 	    $bytes = max($bytes, 0);
 	    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
@@ -26,7 +27,7 @@ trait zusnippets_Useful {
 
 	    $bytes /= pow(1024, $pow);
 
-	    return round($bytes, $precision) . ' ' . $units[$pow];
+	    return $sign . round($bytes, $precision) . ' ' . $units[$pow];
 	}
 
 	public function insert_svg_from_file($path, $name, $params) {
@@ -47,7 +48,7 @@ trait zusnippets_Useful {
 			empty($subdir) ? '' : '/'
 		);
 		if(!file_exists($filepath)) {
-			
+
 			$this->log_error([
 				'path'		=> $path,
 				'name'		=> $name,
