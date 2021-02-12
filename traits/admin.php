@@ -54,6 +54,7 @@ trait zukit_Admin {
 	protected function on_activation() {}
 	protected function on_deactivation() {}
 	protected function extend_info() { return (object)null;}
+	protected function extend_actions() { return (object)null;}
 
 	// Wordpress Admin Page ---------------------------------------------------]
 
@@ -72,6 +73,7 @@ trait zukit_Admin {
 			'icon'			=> $this->get('appearance.icon'),
 			'colors'		=> $this->get('appearance.colors'),
 			'more' 			=> $this->extend_info(),
+			'actions'		=> $this->extend_actions(),
 		];
 	}
 
