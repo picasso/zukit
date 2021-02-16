@@ -86,10 +86,9 @@ class zukit_Singleton {
 		return sprintf($is_style ? '/%2$s/%1$s.css' : '/%2$s/%1$s.min.js', $file, $dir);
 	}
 
-    public function get_version($filename = '') {
+    public function get_version($filename = '', $refresh = false) {
         if(is_null($filename)) return null; // if set to null, no version is added
-    	if($this->debug) return $this->filename_version($filename);
-    	return $this->version;
+        return $refresh ? $this->filename_version($filename) : $this->version;
     }
 
     public function enqueue_style($file, $params = [], $handle_only = false) {
@@ -149,6 +148,7 @@ class zukit_Singleton {
             'absolute'      => false,
             'async'         => false,
             'defer'         => false,
+            'refresh'       => $this->debug,
             'media'         => 'all',
 		], $params);
 
@@ -167,7 +167,7 @@ class zukit_Singleton {
             // return $handle without enqueue or register
             if($handle_only) return $handle;
             // generate script/style version
-			$version = $this->get_version($filepath);
+			$version = $this->get_version($filepath, $refresh);
             if($register_only) {
                 if($is_style) wp_register_style($handle, $src, $deps, $version, $media);
     			else wp_register_script($handle, $src, $deps, $version, $bottom);
@@ -194,6 +194,7 @@ class zukit_Singleton {
             //     '$file'         => basename($filepath),
             //     '$handle'       => $handle,
             //     '$data'         => $data,
+            //     '$refresh'      => $refresh,
             // ], 'Test!');
 
 		} else {
@@ -206,6 +207,7 @@ class zukit_Singleton {
                 '$filepath'     => $filepath,
                 '$src'          => $src,
                 '$handle'       => $handle,
+                '$refresh'      => $refresh,
 
                 'async_defer'   => $this->async_defer,
                 'prefix'        => $this->prefix,

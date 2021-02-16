@@ -88,16 +88,21 @@ class zukit_Addon {
 		return call_user_func_array([$this->plugin, 'sprintf_uri'], $params);
 	}
 	protected function enqueue_style($file, $params = []) {
-		return $this->plugin->enqueue_style($this->filename($file, $params), $params);
+		// $is_style, $is_frontend, $params
+		$params_with_defaults = $this->plugin->enforce_defaults(true, true, $params);
+		return $this->plugin->enqueue_style($this->filename($file, $params), $params_with_defaults);
 	}
 	protected function enqueue_script($file, $params = []) {
-		return $this->plugin->enqueue_script($this->filename($file, $params), $params);
+		$params_with_defaults = $this->plugin->enforce_defaults(false, true, $params);
+		return $this->plugin->enqueue_script($this->filename($file, $params), $params_with_defaults);
 	}
 	protected function admin_enqueue_style($file, $params = []) {
-		return $this->plugin->admin_enqueue_style($this->filename($file, $params), $params);
+		$params_with_defaults = $this->plugin->enforce_defaults(true, false, $params);
+		return $this->plugin->admin_enqueue_style($this->filename($file, $params), $params_with_defaults);
 	}
 	protected function admin_enqueue_script($file, $params = []) {
-		return $this->plugin->admin_enqueue_script($this->filename($file, $params), $params);
+		$params_with_defaults = $this->plugin->enforce_defaults(false, false, $params);
+		return $this->plugin->admin_enqueue_script($this->filename($file, $params), $params_with_defaults);
 	}
 	protected function ajax_error($error, $params = null) {
 		return $this->plugin->ajax_error($error, $params);

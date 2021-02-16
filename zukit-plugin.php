@@ -26,6 +26,7 @@ class zukit_Plugin extends zukit_Singleton {
 	private static $zukit_translations = false;
 	private $translations_loaded = null;
 	private $is_plugin = true;
+	private $refresh_scripts = false;
 
 	// Admin basics, menu management and REST API support
 	use zukit_Admin, zukit_AdminMenu, zukit_Ajax, zukit_Debug;
@@ -350,13 +351,15 @@ class zukit_Plugin extends zukit_Singleton {
 		return [
 			// front-end script & style
 			'script'	=> [
-				'deps'			=> [],
-				'data'			=> [$this, 'jsdata_defaults'],
-				'handle'		=> $frontend_handle,
+				'deps'		=> [],
+				'data'		=> [$this, 'jsdata_defaults'],
+				'handle'	=> $frontend_handle,
+				'refresh'	=> $this->refresh_scripts,
 			],
 			'style'		=> [
-				'deps'			=> [],
-				'handle'		=> $frontend_handle,
+				'deps'		=> [],
+				'handle'	=> $frontend_handle,
+				'refresh'	=> $this->refresh_scripts,
 			],
 
 			// plugin/theme settings page script & style
@@ -364,12 +367,20 @@ class zukit_Plugin extends zukit_Singleton {
 				'deps'		=> ['zukit'],
 				'data'		=> [$this, 'jsdata_defaults'],
 				'handle'	=> $admin_handle,
+				'refresh'	=> $this->refresh_scripts,
 			],
 			'settings_style'	=> [
 				'deps'		=> ['zukit'],
 				'handle'	=> $admin_handle,
+				'refresh'	=> $this->refresh_scripts,
 			],
 		];
+	}
+
+	public function enforce_defaults($is_style, $is_frontend, $params) {
+		return array_merge($params, [
+			'refresh'	=> $this->refresh_scripts,
+		]);
 	}
 
 	private function jsdata_defaults($is_frontend) {
