@@ -120,7 +120,7 @@ $divider-component-class: zukit-divider;
 			.__select_block {
 				display: flex;
 				justify-content: space-between;
-				@include breakpoint-width(LESS1020) {
+				@include breakpoint-width(LESS_SETTINGS_BREAK) {
 					flex-direction: column;
 				}
 			}
@@ -144,7 +144,7 @@ $divider-component-class: zukit-divider;
 				color: $toggle-help-color;
 				font-size: 13px;
 				font-style: italic;
-				@include breakpoint-width(LESS1020) {
+				@include breakpoint-width(LESS_SETTINGS_BREAK) {
 					margin-left: 0;
 				}
 			}
@@ -161,7 +161,7 @@ $divider-component-class: zukit-divider;
 					margin-bottom: 0;
 				}
 
-				@include breakpoint-width(LESS1020) {
+				@include breakpoint-width(LESS_SETTINGS_BREAK) {
 					flex-direction: column;
 					.components-base-control__field {
 						margin-bottom: 0.5em;
@@ -208,7 +208,7 @@ $divider-component-class: zukit-divider;
 				}
 			}
 
-			@include breakpoint-width(LESS880) {
+			@include breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
 				display: none;
 			}
 		}

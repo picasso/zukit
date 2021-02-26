@@ -233,6 +233,13 @@ $admin-type-label-color: #191e23; //rgba($admin-dark, 0.8);
 $admin-type-label-bg-color: #f3f4f5; //rgba($wp-admin-blue-color, 0.1);
 $admin-type-label-link-color: #999;
 
+// Basic Settings Page sizes --------------------------------------------------]
+
+$settings-max-width: 1020px; //none;
+$settings-min-width: 580px;
+$settings-sidebar-width: 280px;
+$settings-leftmenu-width: 160px;
+
 // Responsive Design ----------------------------------------------------------]
 
 $more-than-break-1280-width: 1200px;
@@ -249,37 +256,43 @@ $break-1800: 1800px;
 
 $break-layout: $break-1020;					// when all columns will be reverted to 100% width (and Normal Menu will be hidden and MX Menu will be shown)
 $topmenu-break-width: $break-1280;			// when Normal Menu will be reduced (small font and padding)
+$break-settings: $settings-max-width + $settings-sidebar-width + $settings-leftmenu-width;          // when settings area will reach 'max-width'
+$break-settings-sidebar: $settings-min-width + $settings-sidebar-width + $settings-leftmenu-width;  // when settings sidebar will be hidden
 
 @mixin breakpoint-width($point) {
-  @if $point == LESS320 {
-    @media all and (max-width: $break-320)  { @content; }
-  }
-  @else if $point == LESS480 {
-    @media all and (max-width: $break-480)  { @content; }
-  }
-
- @else if $point == LESS768 {
-    @media all and (max-width: $break-768)  { @content; }
-  }
-
- @else if $point == LESS880 {
-    @media all and (max-width: $break-880)  { @content; }
-  }
- @else if $point == LESS1020 {
-    @media all and (max-width: $break-1020)  { @content; }
-  }
- @else if $point == LESS_LAYOUT_BREAK {
-    @media all and (max-width: $break-layout)  { @content; }
-  }
- @else if $point == LESS1280 {
-    @media all and (max-width: $break-1280)  { @content; }
-  }
- @else if $point == LESS1800 {
-    @media all and (max-width: $break-1800)  { @content; }
-  }
- @else {
-	@media all and (max-width: $point)  { @content; }
-  }
+    @if $point == LESS320 {
+        @media all and (max-width: $break-320)  { @content; }
+    }
+    @else if $point == LESS480 {
+        @media all and (max-width: $break-480)  { @content; }
+    }
+    @else if $point == LESS768 {
+        @media all and (max-width: $break-768)  { @content; }
+    }
+    @else if $point == LESS880 {
+        @media all and (max-width: $break-880)  { @content; }
+    }
+    @else if $point == LESS1020 {
+        @media all and (max-width: $break-1020)  { @content; }
+    }
+    @else if $point == LESS_LAYOUT_BREAK {
+        @media all and (max-width: $break-layout)  { @content; }
+    }
+    @else if $point == LESS1280 {
+        @media all and (max-width: $break-1280)  { @content; }
+    }
+    @else if $point == LESS_SETTINGS_BREAK {
+        @media all and (max-width: $break-settings)  { @content; }
+    }
+    @else if $point == LESS_SETTINGS_SIDEBAR_BREAK {
+        @media all and (max-width: $break-settings-sidebar)  { @content; }
+    }
+    @else if $point == LESS1800 {
+        @media all and (max-width: $break-1800)  { @content; }
+    }
+    @else {
+        @media all and (max-width: $point)  { @content; }
+    }
 }
 
 @mixin breakpoint-height($point) {
