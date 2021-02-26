@@ -104,6 +104,9 @@ class zukit_Addon {
 		$params_with_defaults = $this->plugin->enforce_defaults(false, false, $params);
 		return $this->plugin->admin_enqueue_script($this->filename($file, $params), $params_with_defaults);
 	}
+	protected function ends_with_slug($hook, $slug = null) {
+		return $this->plugin->ends_with_slug($hook, $slug);
+	}
 	protected function ajax_error($error, $params = null) {
 		return $this->plugin->ajax_error($error, $params);
 	}
