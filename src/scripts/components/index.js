@@ -11,8 +11,8 @@ import ListInputControl from './list-input-control.js';
 import AdvTextControl from './advanced-text-control.js';
 import Loader from './loader.js';
 import LoaderControl from './loader-control.js';
-
-// ??? Higher-Order Components
+import ModalMessage from './modal-message.js';
+import RawHTML from './raw.js';
 
 export {
     ZukitSkeleton,
@@ -27,4 +27,6 @@ export {
     AdvTextControl,
     Loader,
     LoaderControl,
+    ModalMessage,
+    RawHTML,
 };
