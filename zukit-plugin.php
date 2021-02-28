@@ -394,7 +394,7 @@ class zukit_Plugin extends zukit_Singleton {
 			'options' 		=> $this->options,
 			'info'			=> $this->info(),
 			'debug'			=> $this->debug_data(),
-			'actions' 		=> [],
+			'actions' 		=> $this->extend_actions(),
 		];
 		return $default_data;
 	}
