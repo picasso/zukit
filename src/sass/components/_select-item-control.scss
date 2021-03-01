@@ -44,7 +44,7 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		list-style: none;
 		margin: $admin-button-wrapper-margin 0;
 		padding: $admin-button-wrapper-padding;
-		width: calc(100% - #{twice($admin-button-wrapper-margin)});
+		width: calc(100% - #{twice($admin-button-wrapper-padding)});
 
 		&.is-selected {
 			box-shadow: none;
@@ -80,10 +80,10 @@ $select-item-basic-border-color: rgb(25, 30, 35);
             }
         }
 
-        @include in('<.__2columns') { width: calc(50% - #{twice($admin-button-wrapper-margin)}); }
-        @include in('<.__3columns') { width: calc(33% - #{twice($admin-button-wrapper-margin)}); }
-		@include in('<.__4columns') { width: calc(25%); padding: 3px; }
-		@include in('<.__5columns') { width: calc(20%); padding: 3px; }
+        @include in('<.__2columns') { width: calc(50% - #{twice($admin-button-wrapper-padding)}); }
+        @include in('<.__3columns') { width: calc(33% - #{twice($admin-button-wrapper-padding)}); }
+		@include in('<.__4columns') { width: calc(25% - #{twice($admin-button-wrapper-padding)}); }
+		@include in('<.__5columns') { width: calc(20% - #{twice($admin-button-wrapper-padding)}); }
 
 		@include in('<.__box') {
 			padding: 0 !important;
