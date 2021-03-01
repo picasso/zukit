@@ -52,7 +52,7 @@ function checkDivider(item) {
 export function toggleOption(toggleOptions, options, updateOptions, withPath = null) {
 	const optionValue = k => get(options, withPath ? `${withPath}.${k}` : k);
 
-	return map(toggleOptions, (item, key) => checkDependency(item, options) &&
+	return map(toggleOptions, (item, key) => checkDependency(item, options, false, withPath) &&
 		<Fragment key={ key }>
 			<ToggleControl
 				label={ item.label }

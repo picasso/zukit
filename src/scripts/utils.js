@@ -61,12 +61,13 @@ export function getIds(items, asString = false) {
 	return asString ? _.join(ids, ',') : ids;
 }
 
-export function checkDependency(item, options, isAction = false) {
-	var depends = isAction ? item : _.get(item, 'depends');
+export function checkDependency(item, options, isAction = false, withPath = null) {
+	const depends = isAction ? item : _.get(item, 'depends');
 	if(_.isNil(depends)) return true;
 	if(depends === false) return false;
 
-	var value = options[_.trimStart(depends, '!')];
+	const cleanKey = _.trimStart(depends, '!');
+	const value =_.get(options, withPath ? `${withPath}.${cleanKey}` : cleanKey, false);
 	return _.startsWith(depends, '!') ? !value : value;
 }
 
