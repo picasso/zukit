@@ -22,6 +22,12 @@ $divider-component-class: zukit-divider;
 	#wpfooter {
 		display: none;
 	}
+	.interface-interface-skeleton__body {
+		padding: 0;
+	}
+	.interface-interface-skeleton__sidebar > div {
+	    height: auto;
+	}
 
 	.#{$skeleton-class} {
 	    background-color: white;
