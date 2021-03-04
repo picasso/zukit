@@ -105,7 +105,7 @@ class zukit_Table {
 		if($this->has($name)) {
 			$icon = [];
 			if(is_array($dashicon)) {
-				$style = $svg ?? null;
+				$style = $dashicon['style'] ?? null;
 				$tooltip = $dashicon['tooltip'] ?? null;
 				$svg = $dashicon['svg'] ?? null;
 				$dashicon = $dashicon['dashicon'] ?? null;
