@@ -1,3 +1,20 @@
+#### 1.1.4 / 2021-03-21
+* added `ModalMessage` and `RawHTML` components for the Settings Page export
+* added default size and `bottomHalf` option for `ZukitDivider` component
+* added `ends_with_slug` helper for add-ons
+* added `Settings Page` media breakpoints
+* added media breakpoints for `sidebar` and some controls
+* added `extend_actions` method
+* added `style` support for `iconcell`
+* added `re-init` flow for subtree shell script
+* refactoring `refresh_scripts` support
+* improved CSS for `interface-interface-skeleton` class
+* fixed width calculation for `SelectItemControl`
+* fixed bug with nested `depends` for `toggleOption` function
+* fixed bug with `actions` data
+* fixed bytes abbreviation on `B` instead of `b` in `format_bytes` function
+* other small improvements
+
 #### 1.1.3 / 2021-02-10
 * changed configuration structure
 * added access to nested configuration sections
