@@ -45,6 +45,7 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		margin: $admin-button-wrapper-margin 0;
 		padding: $admin-button-wrapper-padding;
 		width: calc(100% - #{twice($admin-button-wrapper-padding)});
+		z-index: 0;
 
 		&.is-selected {
 			box-shadow: none;
