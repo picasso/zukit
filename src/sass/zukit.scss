@@ -31,9 +31,25 @@ $divider-component-class: zukit-divider;
 	    height: auto;
 	}
 
-	// when WP version < 5.5 --------------------------------------------------]
+	// when WP == 5.4 ---------------------------------------------------------]
 
-	.wp_less_5_5 {
+	.wp_5_4 {
+		&.block-editor-editor-skeleton {
+			.block-editor-block-list__layout {
+				padding: 0;
+				.block-editor-block-list__block {
+					margin: 0 auto;
+				}
+			}
+			.components-range-control__number {
+				width: auto;
+			}
+		}
+	}
+
+	// when WP version < 5.4 --------------------------------------------------]
+
+	.wp_less_5_4 {
 		&.block-editor-editor-skeleton {
 		    padding: 0;
 		    left: -20px;
@@ -49,6 +65,9 @@ $divider-component-class: zukit-divider;
 						    padding: 0 !important;
 						    margin: 0 auto;
 						}
+					}
+					@include breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
+						width: 100%;
 					}
 				}
 				.block-editor-editor-skeleton__sidebar {

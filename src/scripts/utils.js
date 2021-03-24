@@ -154,8 +154,8 @@ export function hexToRGBA(hex, alpha, asObject = false) {
 export function compareVersions(a, b) {
     let i, diff;
     const regExStrip0 = /(\.0+)+$/;
-    const segmentsA = a.replace(regExStrip0, '').split('.');
-    const segmentsB = b.replace(regExStrip0, '').split('.');
+    const segmentsA = String(a).replace(regExStrip0, '').split('.');
+    const segmentsB = String(b).replace(regExStrip0, '').split('.');
     const l = Math.min(segmentsA.length, segmentsB.length);
 
     for(i = 0; i < l; i++) {

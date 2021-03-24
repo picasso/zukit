@@ -29,8 +29,10 @@ function editorClasses(element, more = '', wp = null) {
 
 	let classes = `${prefix50}__${element} ${prefix55}__${element} ${prefixZu}__${element}`;
 	if(isEmpty(element)) {
-		const version = `wp_${wp.replace(/\./g, '_')}` + (compareVersions(wp, '5.5') < 0 ? ' wp_less_5_5' : '');
-		classes = `${version} ${prefix50} ${prefix55} ${prefixZu} ${layout}`;
+		const ver = isEmpty(wp) ? '' : wp.replace(/\./g, '_');
+		const v2digs = 'wp_' + ver.replace(/(\d+_\d+)_\d+/g, '$1');
+		const verClass = `wp_${ver}${ver !== v2digs ? ' '+v2digs : ''}` + (compareVersions(wp, '5.4') < 0 ? ' wp_less_5_4' : '');
+		classes = `${verClass} ${prefix50} ${prefix55} ${prefixZu} ${layout}`;
 	} else if(element === 'editor') classes = `${prefixZu}__${element}`;
 
 	return (`${classes} ${more}`).trim();
@@ -109,6 +111,7 @@ const ZukitSkeleton = ({
 			<PanelsContext.Provider value={ getPanel }>
 				<EditComponent
 					id={ id }
+					wp={ wp }
 					info={ info }
 					title={ `${info.title} ${__('Settings', 'zukit')}` }
 					options={ options }

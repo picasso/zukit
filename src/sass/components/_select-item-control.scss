@@ -135,8 +135,8 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		box-shadow: none !important;
 
 		&:hover {
-			color: $select-item-hover-color;
-			background-color: $select-item-bg-hover-color;
+			color: $select-item-hover-color !important;
+			background-color: $select-item-bg-hover-color !important;
 			border-color: $select-item-border-hover-color !important;
 		}
 
