@@ -80,6 +80,16 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 				color: $select-item-disabled-color;
             }
         }
+		&.is-slot {
+            .components-button {
+				width: 100%;
+				height: 100%;
+                pointer-events: none;
+				background-color: transparent;
+				border-color: rgba($wp-gray-200, 0.4);
+				color: transparent;
+            }
+        }
 
         @include in('<.__2columns') { width: calc(50% - #{twice($admin-button-wrapper-padding)}); }
         @include in('<.__3columns') { width: calc(33% - #{twice($admin-button-wrapper-padding)}); }
