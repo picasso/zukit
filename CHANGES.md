@@ -1,3 +1,8 @@
+#### 1.1.6 / 2021-03-26
+* added inline style for submenu separators
+* added `fillMissing` prop for `SelectItemControl` component
+* tested for compatibility with WP 5.7
+
 #### 1.1.5 / 2021-03-24
 * added `compareVersions` function to `utils`
 * passed a WP version to the script and basic containers
