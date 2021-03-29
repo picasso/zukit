@@ -224,7 +224,7 @@ function styledIcon(icon) {
 	const styled = {
 		width: '1.4em',
 		height: '1.4em',
-		margin: '-0.1em 0.1em 0 0.2em',
+		margin: '-0.2em 0.1em 0 0.2em',
 		verticalAlign: 'middle',
 		fill: 'currentColor',
 	}

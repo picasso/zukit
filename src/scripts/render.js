@@ -7,7 +7,7 @@ const { ToggleControl, SelectControl, Button } = wp.components;
 
 // Internal dependencies
 
-import { externalData, checkDependency } from './utils.js';
+import { externalData, checkDependency, simpleMarkdown } from './utils.js';
 import { setRestRouter } from './fetch.js';
 import ZukitSkeleton from './components/skeleton.js'
 import ZukitDivider from './components/divider.js'
@@ -56,7 +56,7 @@ export function toggleOption(toggleOptions, options, updateOptions, withPath = n
 		<Fragment key={ key }>
 			<ToggleControl
 				label={ item.label }
-				help={ item.help  }
+				help={ simpleMarkdown(item.help, { br: true }) }
 				checked={ !!optionValue(key) }
 				onChange={ () => updateOptions({ [key]: !optionValue(key) }) }
 			/>

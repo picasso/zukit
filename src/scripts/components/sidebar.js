@@ -7,7 +7,7 @@ const { PanelBody, PanelRow, Button, ExternalLink, ToggleControl, Spinner } = wp
 
 // Internal dependencies
 
-import { mergeClasses, checkDependency } from './../utils.js';
+import { mergeClasses, checkDependency, simpleMarkdown } from './../utils.js';
 
 // Zukit Sidebar Component
 
@@ -123,7 +123,7 @@ const ZukitSidebar = ({
 										{ get(actionLoading, value) && <Spinner/> }
 									</Button>
 								</PanelRow>
-								{ help && <p className={ mergeClasses('__help', { [color]: color }) }>{ help }</p> }
+								{ help && <p className={ mergeClasses('__help', { [color]: color }) }>{ simpleMarkdown(help, { br: true }) }</p> }
 							</Fragment>
 						)
 					) }
