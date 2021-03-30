@@ -215,8 +215,23 @@ $divider-component-class: zukit-divider;
 				color: $toggle-help-color;
 				font-size: 13px;
 				font-style: italic;
+				text-align: right;
 				@include breakpoint-width(LESS_SETTINGS_BREAK) {
 					margin-left: 0;
+					text-align: left;
+				}
+				span {
+					color: darken($admin-magenta-color, 10%);
+					font-weight: 500;
+					// font-style: normal;
+					background-color: rgba($admin-magenta-color, 0.03);
+					display: inline-block;
+					padding: 0 3px;
+					margin: 0 2px;
+					border-radius: $admin-border-radius;
+				}
+				strong {
+					letter-spacing: 0.5px;
 				}
 			}
 
