@@ -25,7 +25,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.1.6';
+        $this->version = '1.1.7';
 		$this->init_advanced_style();
 	}
 }
@@ -67,14 +67,11 @@ if(!function_exists('zu_sprintf')) {
 	}
 }
 
-
-if(!function_exists('_zlg')) {
-    function _zlg(...$params) {
-        if(count($params) === 2 && is_string($params[1]) && substr($params[1], 0, 1) === '$') {
-            zukit_Singleton::log_with_context($params[1], $params[0], 0);
-
-        } else {
-            zukit_Singleton::log_with_context(null, $params, 0);
-        }
+if(!function_exists('zu_log')) {
+    function zu_log(...$params) {
+		zu_snippets()->log_with(0, null, ...$params);
+    }
+	function zu_logc($context, ...$params) {
+		zu_snippets()->log_with(0, $context, ...$params);
     }
 }
