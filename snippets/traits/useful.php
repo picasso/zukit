@@ -48,14 +48,12 @@ trait zusnippets_Useful {
 			empty($subdir) ? '' : '/'
 		);
 		if(!file_exists($filepath)) {
-
-			$this->log_error([
+			$this->logc('SVG file not found!', [
 				'path'		=> $path,
 				'name'		=> $name,
 				'params'	=> $params,
 				'filepath'	=> $filepath,
-			], 'SVG file not found!');
-
+			]);
 			return '';
 		}
 
