@@ -174,7 +174,7 @@ export function compareVersions(a, b) {
 // also replaces $link<index> constructs with elements from the 'params.links' array
 export function simpleMarkdown(string, params) {
 
-	if(!_.isString(string)) return undefined;
+	if(!_.isString(string)) return string;
 
 	const mod = _.defaults(params, {
 		links: null,

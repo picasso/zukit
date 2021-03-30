@@ -123,7 +123,11 @@ const ZukitSidebar = ({
 										{ get(actionLoading, value) && <Spinner/> }
 									</Button>
 								</PanelRow>
-								{ help && <p className={ mergeClasses('__help', { [color]: color }) }>{ simpleMarkdown(help, { br: true }) }</p> }
+								{ help &&
+									<p className={ mergeClasses('__help', { [color]: color }) }>
+										{ simpleMarkdown(help, { br: true }) }
+									</p>
+								}
 							</Fragment>
 						)
 					) }
