@@ -126,7 +126,10 @@ class zukit_Addon {
         $this->plugin->log_with(0, null, ...$params);
     }
 	protected function logc($context, ...$params) {
-		$this->plugin->log_with(0, $this->plugin->context_label($context), ...$params);
+		$this->plugin->log_with(0, $context, ...$params);
+	}
+	protected function logd($info, $value) {
+		$this->plugin->logd($info, $value);
 	}
 
 	// Common interface to plugin methods with availability check -------------]
