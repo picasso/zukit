@@ -269,6 +269,6 @@ trait zukit_AdminMenu {
 			$is_wrong = !(is_array($item) && count($item) > 2);
 			return $is_wrong ? '?' : (empty($item[0]) ? '-----'.$item[2].'-----' : $item[0]);
 		}, $is_menu ? $menu : $submenu[self::$default_menu_id]);
-		$this->logc('Menu/Subnemu Debug', $items);
+		$this->logc('*Menu/Subnemu Debug', $items);
 	}
 }

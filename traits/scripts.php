@@ -134,7 +134,7 @@ trait zukit_Scripts {
                 $this->async_defer[$handle] = implode(' ', array_keys(array_filter(compact('async', 'defer'))));
             }
 
-            // $this->logc('Test!', [
+            // $this->logc('?Script test', [
             //     '$file'         => basename($filepath),
             //     '$handle'       => $handle,
             //     '$data'         => $data,
@@ -142,7 +142,7 @@ trait zukit_Scripts {
             // ]);
 
 		} else {
-            $this->logc('No file found to enqueue!', [
+            $this->logc('!No file found to enqueue!', [
                 'is_style'      => $is_style,
                 'is_frontend'   => $is_frontend,
                 'is_absolute'   => $is_absolute,

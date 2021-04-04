@@ -484,7 +484,7 @@ trait zukit_Ajax {
 		$this->ajax_error($message, $params);
 
 		// also log the error as it is quite severe
-		if($log_errors) $this->logc($message, $params);
+		if($log_errors) $this->logc("?$message", $params);
 
 		return null;
 	}
