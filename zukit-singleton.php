@@ -33,12 +33,12 @@ class zukit_Singleton {
 
     // singleton should not be cloneable.
     final public function __clone() {
-        _doing_it_wrong(__FUNCTION__, 'Singleton object -> we do not want it to be cloned');
+        _doing_it_wrong(__FUNCTION__, 'Singleton object -> we do not want it to be cloned', '1.0.0');
     }
 
     // singletons should not be restorable from strings.
     final public function __wakeup() {
-        _doing_it_wrong(__FUNCTION__, 'Unserializing instances of this class is forbidden');
+        _doing_it_wrong(__FUNCTION__, 'Unserializing instances of this class is forbidden', '1.0.0');
     }
 
     // This is the static method that controls the access to the singleton
