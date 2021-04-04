@@ -67,11 +67,14 @@ if(!function_exists('zu_sprintf')) {
 	}
 }
 
-if(!function_exists('zu_log')) {
-    function zu_log(...$params) {
+if(!function_exists('_zu_log')) {
+    function _zu_log(...$params) {
 		zu_snippets()->log_with(0, null, ...$params);
     }
-	function zu_logc($context, ...$params) {
+	function _zu_logc($context, ...$params) {
 		zu_snippets()->log_with(0, $context, ...$params);
     }
+	function _zu_logd($info, $var) {
+		zu_snippets()->logd($info, $var);
+	}
 }
