@@ -62,13 +62,23 @@ export function getIds(items, asString = false) {
 }
 
 export function checkDependency(item, options, isAction = false, withPath = null) {
-	const depends = isAction ? item : _.get(item, 'depends');
+	let depends = isAction ? item : _.get(item, 'depends');
 	if(_.isNil(depends)) return true;
 	if(depends === false) return false;
 
-	const cleanKey = _.trimStart(depends, '!');
-	const value =_.get(options, withPath ? `${withPath}.${cleanKey}` : cleanKey, false);
-	return _.startsWith(depends, '!') ? !value : value;
+	depends = _.castArray(depends);
+
+	// the first element of the array determines what the logical operator will be (comparison by AND or OR)
+	// if the first element is not equal to '&&' or '||', then the comparison will be by OR
+	const logicalOp = depends[0] === '&&' || depends[0] === '||';
+	const logicalAND = depends[0] === '&&';
+
+	return _.reduce(logicalOp ? _.drop(depends, 1) : depends, (acc, dependencyKey) => {
+		const cleanKey = _.trimStart(dependencyKey, '!');
+		let value = _.get(options, withPath ? `${withPath}.${cleanKey}` : cleanKey, false);
+		value = _.startsWith(depends, '!') ? !value : value;
+		return acc === null ? value : (logicalAND ? acc && value : acc || value);
+	}, null);
 }
 
 // Convert object to JSON
