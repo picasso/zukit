@@ -49,10 +49,10 @@ function checkDivider(item) {
 	return has(item, 'divider') ? true : null;
 }
 
-export function toggleOption(toggleOptions, options, updateOptions, withPath = null) {
+export function toggleOption(toggleData, options, updateOptions, withPath = null) {
 	const optionValue = k => get(options, withPath ? `${withPath}.${k}` : k);
 
-	return map(toggleOptions, (item, key) => checkDependency(item, options, false, withPath) &&
+	return map(toggleData, (item, key) => checkDependency(item, options, false, withPath) &&
 		<Fragment key={ key }>
 			<ToggleControl
 				label={ item.label }
@@ -69,9 +69,9 @@ export function toggleOption(toggleOptions, options, updateOptions, withPath = n
 	);
 }
 
-export function selectOption(value, option, updateOptions) {
+export function selectOption(optionData, value, updateOptions) {
 
-	const { id, options = [], label = '', help, defaultValue } = option;
+	const { id, options = [], label = '', help, defaultValue } = optionData;
 	return (
 		<>
 			<label className="components-base-control__label __select_label" htmlFor={ id }>
