@@ -96,11 +96,14 @@ trait zukit_Logging {
         );
     }
 	// ╔─────────────────────╗
-	// │ * * * Context * * * │
+	// │ # # # Context # # # │
 	// ╚─────────────────────╝
 	private function context_label($context) {
 		if(empty($context)) return null;
-		$context = sprintf('│ * * * %s * * * │', $context);
+		$mod = substr($context, 0, 1);
+		$mod = in_array($mod, ['!', '?', '*']) ? $mod : '#';
+		$context = preg_replace('/^[!|?|*]/', '', $context);
+		$context = sprintf('│ %2$s %2$s %2$s %1$s %2$s %2$s %2$s │', $context, $mod);
 		$line = str_repeat($this->sline, mb_strlen($context) - 2);
 		return PHP_EOL.sprintf('╔%s╗', $line).PHP_EOL.$context.PHP_EOL.sprintf('╚%s╝', $line).PHP_EOL;
     }
