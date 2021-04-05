@@ -50,30 +50,39 @@ function checkDivider(item) {
 }
 
 export function toggleOption(toggleData, options, updateOptions, withPath = null) {
-	const optionValue = k => get(options, withPath ? `${withPath}.${k}` : k);
+	const fullKey = k => withPath ? `${withPath}.${k}` : k;
+	const optionValue = k => get(options, fullKey(k)); //  withPath ? `${withPath}.${k}` : k
 
 	return map(toggleData, (item, key) => checkDependency(item, options, false, withPath) &&
 		<Fragment key={ key }>
-			<ToggleControl
-				label={ item.label }
-				help={ simpleMarkdown(item.help, { br: true }) }
-				checked={ !!optionValue(key) }
-				onChange={ () => updateOptions({ [key]: !optionValue(key) }) }
-			/>
-			{ checkDivider(item, options) &&
+			{ checkDivider(item) &&
 				<ZukitDivider
 					size={ item.divider }
 				/>
 			}
+			<ToggleControl
+				label={ item.label }
+				help={ simpleMarkdown(item.help, { br: true }) }
+				checked={ !!optionValue(key) }
+				onChange={ () => updateOptions({ [fullKey(key)]: !optionValue(key) }) }
+			/>
 		</Fragment>
 	);
 }
 
-export function selectOption(optionData, value, updateOptions) {
+export function selectOption(optionData, options, updateOptions, withPath = null) {
 
-	const { id, options = [], label = '', help, defaultValue } = optionData;
-	return (
+	const { id = '?', options: selectOptions = [], label = '', help, defaultValue } = optionData;
+	const selectId = withPath ? `${withPath}.${id}` : id;
+	const value = get(options, selectId, defaultValue);
+
+	return (checkDependency(optionData, options, false, withPath) &&
 		<>
+			{ checkDivider(optionData) &&
+				<ZukitDivider
+					size={ optionData.divider }
+				/>
+			}
 			<label className="components-base-control__label __select_label" htmlFor={ id }>
 				{ label }
 			</label>
@@ -82,18 +91,20 @@ export function selectOption(optionData, value, updateOptions) {
 					<SelectControl
 						id={ id }
 						value={ value }
-						onChange={ value => updateOptions({ [id]: value }) }
-						options={ options }
+						onChange={ value => updateOptions({ [selectId]: value }) }
+						options={ selectOptions }
 					/>
-					<Button
-						isSecondary
-						className="__reset"
-						onClick={ () => updateOptions({ [id]: defaultValue }) }
-					>
-						{ __('Reset', 'zukit') }
-					</Button>
+					{ defaultValue !== undefined &&
+						<Button
+							isSecondary
+							className="__reset"
+							onClick={ () => updateOptions({ [selectId]: defaultValue }) }
+						>
+							{ __('Reset', 'zukit') }
+						</Button>
+					}
 				</div>
-				<p className="components-base-control__help">{ help }</p>
+				<p className="components-base-control__help">{ simpleMarkdown(help, { br: true }) }</p>
 			</div>
 		</>
 	);
