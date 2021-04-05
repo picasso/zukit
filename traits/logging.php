@@ -33,8 +33,7 @@ trait zukit_Logging {
 		$log = PHP_EOL.$data['log_line'].PHP_EOL.str_repeat($this->dline, strlen($data['log_line'])).($data['context'] ?? '');
 		foreach($data['args'] as $index => $var) {
 			if($var['name'] !== '?') $log .= $this->var_label($index, $var['name']);
-			// use 'var_export' instead of 'print_r' since the latter does not display 'false' values
-			$log .= PHP_EOL.var_export($var['value'], true).PHP_EOL;
+			$log .= PHP_EOL.$this->dump_log($var['value']).PHP_EOL;
 		}
         $this->file_log($log);
     }
@@ -68,10 +67,18 @@ trait zukit_Logging {
         else $this->log_filter[] = $class;
     }
 
-	// this method can be overridden to change the way of logging
+	// this methods can be overridden to change the way of logging
 	protected function file_log($log) {
 		error_log($log);
 	}
+
+	protected function dump_log($log) {
+		// use 'var_export' instead of 'print_r' since the latter does not display 'false' values
+		// this can be overridden in a child class
+		return var_export($log, true);
+	}
+
+	// private helpers --------------------------------------------------------]
 
 	private function skip_log() {
 		return !empty($this->log_filter) && in_array(static::class, $this->log_filter);
