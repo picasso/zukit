@@ -128,7 +128,7 @@ class zukit_Addon {
 	protected function logc($context, ...$params) {
 		$this->plugin->log_with(0, $context, ...$params);
 	}
-	protected function logd($info, $value) {
+	protected function logd($info, $value, $use_export = true) {
 		$this->plugin->logd($info, $value);
 	}
 
