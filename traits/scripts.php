@@ -112,6 +112,8 @@ trait zukit_Scripts {
             if($handle_only) return $handle;
             // generate script/style version
 			$version = $this->get_version($filepath, $refresh);
+            // force $deps to be an array
+            $deps = is_string($deps) ? [$deps] : $deps;
             if($register_only) {
                 if($is_style) wp_register_style($handle, $src, $deps, $version, $media);
     			else wp_register_script($handle, $src, $deps, $version, $bottom);
@@ -134,16 +136,17 @@ trait zukit_Scripts {
                 $this->async_defer[$handle] = implode(' ', array_keys(array_filter(compact('async', 'defer'))));
             }
 
-            // $this->logc('?Script test', [
-            //     '$file'         => basename($filepath),
+            // $this->logc('?SCRIPT TEST', basename($filepath), [
             //     '$handle'       => $handle,
             //     '$data'         => $data,
             //     '$refresh'      => $refresh,
+            //     '$deps'         => $deps,
+            //     '$bottom'       => $bottom,
             // ]);
 
 		} else {
-            $this->logc('!No file found to enqueue!', [
-                'is_style'      => $is_style,
+            $this->logc('!No file found to enqueue!', basename($src), [
+                'kind'          => $is_style ? 'CSS' : 'JS',
                 'is_frontend'   => $is_frontend,
                 'is_absolute'   => $is_absolute,
                 '$params'       => $params,
