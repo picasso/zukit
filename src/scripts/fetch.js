@@ -62,7 +62,7 @@ function onSuccessAjax(createNotice, request, callback = null, loading = null) {
 			params = { action: actionKey };
 		}
 
-		if(status !== 'data' && !withData) {
+		if(status !== 'data') {
 			createNotice({
 				status, 									// Can be one of: success, info, warning, error
 				content: messageWithError(content, params), // Text string to display
