@@ -604,20 +604,37 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	}
 }
 
+// Log functions for use in code -----------------------------------------------]
 // overriding the 'log' and 'logc' methods from the Zu+ plugin, if available
 
 if(!function_exists('zu_log')) {
     function zu_log(...$params) {
-		// if(class_exists('zu_Plus')) zu_Plus::dlog($params);
 		if(function_exists('zuplus')) zuplus()->dlog($params);
         else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, null, ...$params);
     }
+}
+if(!function_exists('zu_logc')) {
 	function zu_logc($context, ...$params) {
-		// if(class_exists('zu_Plus')) zu_Plus::dlogc($context, ...$params);
 		if(function_exists('zuplus')) zuplus()->dlogc($context, $params);
         else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, $context, ...$params);
     }
+}
+if(!function_exists('zu_log_if')) {
+    function zu_log_if($condition, ...$params) {
+		if($condition) {
+			if(function_exists('zuplus')) zuplus()->dlog($params);
+	        else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, null, ...$params);
+		}
+    }
+}
+if(!function_exists('zu_logd')) {
 	function zu_logd($info, $var) {
 		if(function_exists('zu_snippets')) zu_snippets()->logd($info, $var);
+	}
+}
+if(!function_exists('zu_log_location')) {
+	function zu_log_location($path, $priority = 1) {
+		if(function_exists('zuplus')) return zuplus()->dlog_location($path, $priority);
+		return null;
 	}
 }
