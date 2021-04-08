@@ -63,6 +63,9 @@ export function getIds(items, asString = false) {
 
 export function checkDependency(item, options, isAction = false, withPath = null) {
 	let depends = isAction ? item : _.get(item, 'depends');
+
+	// special case when we need to avoid the element with the key 'hasMoreActions'
+	if(_.get(item, 'hasMoreActions') === true) return false;
 	if(_.isNil(depends)) return true;
 	if(depends === false) return false;
 
