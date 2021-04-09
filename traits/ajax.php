@@ -268,7 +268,7 @@ trait zukit_Ajax {
 	public function ajax_reset_options() {
 		$options = $this->reset_options();
 		return $this->create_notice('infodata', // combine 'info' with 'data'
-			sprintf( 'Plugin <strong>"%1$s"</strong> settings are reset to defaults', $this->data['Name']),
+			sprintf( 'Plugin "**%1$s**" settings are reset to defaults', $this->data['Name']),
 			$options
 		);
 	}

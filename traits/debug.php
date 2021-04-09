@@ -100,7 +100,7 @@ trait zukit_Debug {
 
 	public function debug_empty_log() {
 		$file = $this->logfile_clean();
-		if($file === null) return $this->create_notice('error', __('Failed to clear log. Something went wrong.', 'zukit'));
+		if($file === null) return $this->create_notice('error', __('**Failed to clear log**. Something went wrong.', 'zukit'));
 		if(is_array($file)) return $file;
 		return $this->create_notice('info', sprintf('**Error log** has been cleared\nat `%1$s`', $file));
 	}
