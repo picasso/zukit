@@ -114,7 +114,8 @@ export const uniqueValue = (value, forbiddenValues, fallback = 'name') => {
 // Add error value (if present) to the message, converting any object to a string
 export function messageWithError(message, value = null) {
 
-	if(_.isNil(value)) return message;
+	const mdMessage = simpleMarkdown(message, { raw: true, br: true, json: true });
+	if(_.isNil(value)) return mdMessage;
 
 	value = _.isArray(value) || _.isPlainObject(value) ? toJSON(value) : String(value);
 	value = value
@@ -122,7 +123,7 @@ export function messageWithError(message, value = null) {
 		.replace(/,\s*/g, ',  ')
 		.replace(/"([^"]+)":/g, '<b>$1</b>: ');
 
-	return message.replace(/[:|.]\s*$/g, '') + `: <span class="zukit-data">${value}</span>`;
+	return mdMessage.replace(/[:|.]\s*$/g, '') + `: <span class="zukit-data">${value}</span>`;
 }
 
 // Returns SVG with a reference to an already loaded SVG set
@@ -193,6 +194,8 @@ export function simpleMarkdown(string, params) {
 		links: null,
 		br: false,
 		externalLink: true,
+		raw: false,
+		json: false,
 	});
 
 	let linkReplace = '<a href="$2" target="_blank" rel="external noreferrer noopener">$1</a>';
@@ -210,12 +213,14 @@ export function simpleMarkdown(string, params) {
 	md = md.replace(/\[([^\]]+)\]\(([^)]+)\)/gm, linkReplace);
 
 	// add <p></p> or <br/> if '\n' are found
-	if(_.includes(md, '\n')) {
-		if(mod.br) md = md.replace(/\n/gm, '<br/>');
-		else md = md.split('\n').map(line => `<p>${line}</p>`).join('');
+	if(_.includes(md, '\n') || (mod.json && _.includes(md, '\\n'))) {
+		const regex = mod.json ? /\\n/gm : /\n/gm;
+		if(mod.br) md = md.replace(regex, '<br/>');
+		else md = md.split(mod.json ? '\\n' : '\n').map(line => `<p>${line}</p>`).join('');
 	}
 
-	// return earlier if no tags are found
+	// return earlier if 'raw' output requested or no tags are found
+	if(mod.raw) return md;
 	if(md.match(/<[^<]+>/gm) === null) return string;
 
 	const body = string2dom(md);
