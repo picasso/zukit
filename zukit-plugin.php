@@ -14,6 +14,8 @@ require_once('traits/debug.php');
 
 class zukit_Plugin extends zukit_SingletonScripts {
 
+	private static $zukit_version = '1.1.6';
+
 	public $config;
 
 	protected $options_key;
@@ -118,6 +120,8 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	public function init() {}
 	public function admin_init() {}
+
+	public function zukit_ver() { return self::$zukit_version; }
 
 	// Translations -----------------------------------------------------------]
 
@@ -574,25 +578,13 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	public function check_error($error, $ajax = false, &$report = null) {
 		if(is_wp_error($error)) {
 			if(isset($report) && isset($report['errors'])) $report['errors'] += 1;
-
 			if($ajax) $this->ajax_error($error, is_array($report) ? null : $report);
-			else $this->log($report, $error);
 
+			$this->logc('!WP_Error occurred', $error, $report);
 			return true;
 		}
 		return false;
 	}
-
-	// overriding the 'log' and 'logc' methods from the Zu+ plugin, if available
-	public function log(...$params) {
-		if(function_exists('zuplus')) zuplus()->dlog($params, static::class);
-        else parent::log_with(0, null, ...$params);
-    }
-
-	public function logc($context, ...$params) {
-		if(function_exists('zuplus')) zuplus()->dlogc($context, $params, static::class);
-        else parent::log_with(0, $context, ...$params);
-    }
 
 	// Common Interface to Zu Snippets helpers with availability check --------]
 
@@ -601,40 +593,5 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		$snippets = zu_snippets();
 		if(method_exists($snippets, $func)) return call_user_func_array([$snippets, $func], $params);
 		else return null;
-	}
-}
-
-// Log functions for use in code -----------------------------------------------]
-// overriding the 'log' and 'logc' methods from the Zu+ plugin, if available
-
-if(!function_exists('zu_log')) {
-    function zu_log(...$params) {
-		if(function_exists('zuplus')) zuplus()->dlog($params);
-        else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, null, ...$params);
-    }
-}
-if(!function_exists('zu_logc')) {
-	function zu_logc($context, ...$params) {
-		if(function_exists('zuplus')) zuplus()->dlogc($context, $params);
-        else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, $context, ...$params);
-    }
-}
-if(!function_exists('zu_log_if')) {
-    function zu_log_if($condition, ...$params) {
-		if($condition) {
-			if(function_exists('zuplus')) zuplus()->dlog($params);
-	        else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, null, ...$params);
-		}
-    }
-}
-if(!function_exists('zu_logd')) {
-	function zu_logd($info, $var) {
-		if(function_exists('zu_snippets')) zu_snippets()->logd($info, $var);
-	}
-}
-if(!function_exists('zu_log_location')) {
-	function zu_log_location($path, $priority = 1) {
-		if(function_exists('zuplus')) return zuplus()->dlog_location($path, $priority);
-		return null;
 	}
 }

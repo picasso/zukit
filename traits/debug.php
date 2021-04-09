@@ -70,11 +70,28 @@ trait zukit_Debug {
 		return $this->is_option($this->debug_path($key), $check_value);
 	}
 
+	// Log methods ------------------------------------------------------------]
+
+	// overriding the 'log', 'logc' and 'logfile_clear' methods from the Zu+ plugin, if available
+	public function log(...$params) {
+		if(function_exists('zuplus')) zuplus()->dlog($params, static::class);
+        else parent::log_with(0, null, ...$params);
+    }
+
+	public function logc($context, ...$params) {
+		if(function_exists('zuplus')) zuplus()->dlogc($context, $params, static::class);
+        else parent::log_with(0, $context, ...$params);
+    }
+
+	// protected function logfile_clean() {
+	// 	return function_exists('zuplus') ? zuplus()->dlog_clean() : parent::logfile_clean();
+	// }
+
 	// Debug Ajax Actions -----------------------------------------------------]
 
 	public function debug_ajax_test() {
 		return $this->create_notice('info', sprintf(
-			'Plugin <strong>"%2$s"</strong> (%3$s) was available via Ajax on <span>%1$s</span>',
+			'Plugin "**%2$s**" [ %3$s ] was available via Ajax on `%1$s`',
 			date('H:i d.m.y',  $this->timestamp()),
 			$this->data['Name'],
 			$this->version
@@ -82,8 +99,44 @@ trait zukit_Debug {
 	}
 
 	public function debug_empty_log() {
-		return $this->create_notice('warning',
-			sprintf( 'empty_log is not implemented yet! (Plugin "%1$s")', $this->data['Name'])
-		);
+		$file = $this->logfile_clean();
+		if($file === null) return $this->create_notice('error', __('Failed to clear log. Something went wrong.', 'zukit'));
+		if(is_array($file)) return $file;
+		return $this->create_notice('info', sprintf('**Error log** has been cleared\nat `%1$s`', $file));
+	}
+}
+
+// Log functions for use in code ----------------------------------------------]
+// overriding the 'log' and 'logc' methods from the Zu+ plugin, if available
+
+if(!function_exists('zu_log')) {
+    function zu_log(...$params) {
+		if(function_exists('zuplus')) zuplus()->dlog($params);
+        else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, null, ...$params);
+    }
+}
+if(!function_exists('zu_logc')) {
+	function zu_logc($context, ...$params) {
+		if(function_exists('zuplus')) zuplus()->dlogc($context, $params);
+        else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, $context, ...$params);
+    }
+}
+if(!function_exists('zu_log_if')) {
+    function zu_log_if($condition, ...$params) {
+		if($condition) {
+			if(function_exists('zuplus')) zuplus()->dlog($params);
+	        else if(function_exists('zu_snippets')) zu_snippets()->log_with(0, null, ...$params);
+		}
+    }
+}
+if(!function_exists('zu_logd')) {
+	function zu_logd($info, $var) {
+		if(function_exists('zu_snippets')) zu_snippets()->logd($info, $var);
+	}
+}
+if(!function_exists('zu_log_location')) {
+	function zu_log_location($path, $priority = 1) {
+		if(function_exists('zuplus')) return zuplus()->dlog_location($path, $priority);
+		return null;
 	}
 }
