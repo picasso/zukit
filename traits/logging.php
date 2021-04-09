@@ -78,6 +78,16 @@ trait zukit_Logging {
 		return var_export($log, true);
 	}
 
+	protected function logfile_clean() {
+		$log_location = ini_get('error_log');
+		$handle = fopen($log_location, 'w');
+		if($handle !== false) {
+			fclose($handle);
+			return $log_location;
+		}
+		return null;
+	}
+
 	// private helpers --------------------------------------------------------]
 
 	private function skip_log() {
