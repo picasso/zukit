@@ -160,16 +160,17 @@ trait zukit_Logging {
 		// return $names;
 	}
 
-	private function log_internal($info , $val = '$undefined', $use_export = true) {
+	// this is debug for debugging - always writes to 'error_log' to avoid confusion
+	private function log_internal($info , $val = '$undefined', $use_print_r = false) {
 		if($val === '$undefined') {
 			$val = $info;
 			$info = '';
 		}
 		$marker = sprintf('[* {%s} internal debugging *]', static::class);
-		$value = $use_export ? var_export($val, true) : print_r($val, true);
+		$value = $use_print_r ? print_r($val, true) : var_export($val, true);
 		$log = PHP_EOL.$marker.PHP_EOL.'┌'.str_repeat('~', strlen($marker) - 1).PHP_EOL;
 		$log .= sprintf(' %s = %s', $info, preg_replace('/\n$/', '', $value));
 		$log .= PHP_EOL.str_repeat('~', strlen($marker)).'┘'.PHP_EOL;
-		$this->file_log($log);
+		error_log($log);
 	}
 }
