@@ -128,8 +128,8 @@ class zukit_Addon {
 	protected function logc($context, ...$params) {
 		$this->plugin->log_with(0, $context, ...$params);
 	}
-	protected function logd($info, $value, $use_export = true) {
-		$this->plugin->logd($info, $value);
+	protected function logd(...$params) {
+		$this->plugin->logd(...$params);
 	}
 
 	// Common interface to plugin methods with availability check -------------]

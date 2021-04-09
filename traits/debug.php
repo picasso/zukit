@@ -83,15 +83,15 @@ trait zukit_Debug {
         else parent::log_with(0, $context, ...$params);
     }
 
-	// protected function logfile_clean() {
-	// 	return function_exists('zuplus') ? zuplus()->dlog_clean() : parent::logfile_clean();
-	// }
+	protected function logfile_clean() {
+		return function_exists('zuplus') ? zuplus()->dlog_clean() : parent::logfile_clean();
+	}
 
 	// Debug Ajax Actions -----------------------------------------------------]
 
 	public function debug_ajax_test() {
 		return $this->create_notice('info', sprintf(
-			'Plugin "**%2$s**" [ %3$s ] was available via Ajax on `%1$s`',
+			'Plugin "**%2$s**" [*%3$s*] was available via Ajax on `%1$s`',
 			date('H:i d.m.y',  $this->timestamp()),
 			$this->data['Name'],
 			$this->version
@@ -130,8 +130,8 @@ if(!function_exists('zu_log_if')) {
     }
 }
 if(!function_exists('zu_logd')) {
-	function zu_logd($info, $var) {
-		if(function_exists('zu_snippets')) zu_snippets()->logd($info, $var);
+	function zu_logd(...$params) {
+		if(function_exists('zu_snippets')) zu_snippets()->logd(...$params);
 	}
 }
 if(!function_exists('zu_log_location')) {
