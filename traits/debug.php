@@ -9,16 +9,18 @@ trait zukit_Debug {
 	private function debug_def_options() {
 		return [
 			'refresh'	=> [
-				'label'		=> __('Always Refresh Scripts', 'zukit'),
+				'label'		=> __('Prevent Script Caching', 'zukit'),
 				'value'		=> false,
 			],
 		];
 	}
 
 	private function debug_def_actions() {
+		$clear_label = __('Clear Error Log', 'zukit');
+		if(function_exists('zuplus') && zuplus()->is_debug()) $clear_label = __('Clear Debug Log', 'zukit');
 	 	return [
 			[
-				'label'		=> __('Clear Debug Log', 'zukit'),
+				'label'		=> $clear_label,
 				'value'		=> 'clear_log',
 				'icon'		=> 'trash',
 				'color'		=> 'error',
