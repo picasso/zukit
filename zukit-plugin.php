@@ -122,6 +122,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	public function admin_init() {}
 
 	public function zukit_ver() { return self::$zukit_version; }
+	public function get_plugin_data() { return $this->data; }
 
 	// Translations -----------------------------------------------------------]
 
