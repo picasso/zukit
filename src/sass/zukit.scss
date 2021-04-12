@@ -259,6 +259,10 @@ $divider-component-class: zukit-divider;
 					margin-left: 0;
 					text-align: left;
 				}
+			}
+
+			// markdown css
+			.components-base-control__help, .__zu_markdown {
 				span {
 					letter-spacing: 0.5px;
 					color: darken($admin-magenta-color, 10%);
