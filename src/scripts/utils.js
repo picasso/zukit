@@ -9,10 +9,17 @@ const { __ } = wp.i18n;
 const { Path, G, SVG } = wp.components;
 const { getCategories, setCategories, registerBlockCollection } = wp.blocks;
 
+let extData = null;
 // Gets JSON data from PHP
 export function externalData(key, defaultValues = null) {
 	const { data = {} } =  window[key] || {};
-	return _.isEmpty(defaultValues) ? data : _.defaults(data, defaultValues);
+	extData = _.isEmpty(defaultValues) ? data : _.defaults(data, defaultValues);
+	return extData;
+}
+// Allows multiple access to external data after calling 'externalData' function
+export function getExternalData(key = null, defaultValue = null) {
+	if(key === null) return extData;
+	return _.get(extData, key, defaultValue);
 }
 
 // Just a more familiar name
@@ -376,6 +383,7 @@ export const blocksSet = {
 	registerCategory,
 	registerCollection,
 	externalData,
+	getExternalData,
 	mergeClasses,
 	hexToRGB,
 	hexToRGBA,
