@@ -12,8 +12,6 @@ import { setRestRouter } from './fetch.js';
 import ZukitSkeleton from './components/skeleton.js'
 import ZukitDivider from './components/divider.js'
 
-// const debugPanelKey = '_debug';
-
 export function renderPage(pageId, settings = {}) {
 
 	const pageData = externalData(`${pageId}_settings`);
