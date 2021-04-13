@@ -58,7 +58,7 @@ trait zukit_Admin {
 
 	// Wordpress Admin Page ---------------------------------------------------]
 
-	protected function info() {
+	public function info() {
 		$domain = $this->text_domain();
 		$link = $this->data['AuthorURI'];
 		$desc = $this->data['Description'];
