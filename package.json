@@ -1,7 +1,7 @@
 {
     "name": "zukit",
     "version": "1.2.0",
-    "requiresWP": "5.7.0",
+    "testedWP": "5.7.0",
     "requiresPHP": ">=7.1.0",
     "repository": {
         "type": "git",
