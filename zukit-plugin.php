@@ -14,7 +14,7 @@ require_once('traits/debug.php');
 
 class zukit_Plugin extends zukit_SingletonScripts {
 
-	private static $zukit_version = '1.1.6';
+	private static $zukit_version = '1.2.0'; // (modified)';
 
 	public $config;
 
