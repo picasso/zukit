@@ -8,6 +8,7 @@ class zukit_Addon {
 	protected $name;
 	protected $options;
 	protected $options_key;
+	private $nonce;
 
 	public function register($plugin) {
 
@@ -17,6 +18,7 @@ class zukit_Addon {
 		} else {
 			$this->config = array_merge($this->config_defaults(), $this->config());
 			$this->name = $this->get('name') ?? 'zuaddon';
+			$this->nonce = $this->get('nonce') ?? $this->name.'_ajax_nonce';
 
 			$this->options_key = $this->name.'_options';
 			$this->init_options();
@@ -114,7 +116,7 @@ class zukit_Addon {
 		return $this->plugin->check_error($error, $ajax, $report);
 	}
 	protected function ajax_nonce($create = false) {
-		return $this->plugin->ajax_nonce($create);
+		return $this->plugin->ajax_nonce($create, $this->nonce);
 	}
 	protected function ajax_send($result) {
 		return $this->plugin->ajax_send($result);
