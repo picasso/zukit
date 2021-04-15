@@ -7,8 +7,8 @@ if(!class_exists('Zukit')) {
 	class Zukit {
 
 		private static $requires = array(
-			'min_php'	=> '7.0.0',
-			'min_wp'	=> '5.1.0',
+			'min_php'	=> '7.2.0',
+			'min_wp'	=> '5.3.0',
 		);
 
 		// The constructor should always be private to prevent direct

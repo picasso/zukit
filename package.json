@@ -2,7 +2,7 @@
     "name": "zukit",
     "version": "1.2.0",
     "testedWP": "5.7.0",
-    "requiresPHP": ">=7.1.0",
+    "requiresPHP": ">=7.2.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/picasso/zukit.git"
