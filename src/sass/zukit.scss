@@ -19,9 +19,10 @@ $divider-component-class: zukit-divider;
 
 .zukit-settings {
 
-	#wpfooter {
+	#wpfooter, #update-nag, .update-nag {
 		display: none;
 	}
+
 	.interface-interface-skeleton__body,
 	.block-editor-editor-skeleton__body {
 		padding: 0;
