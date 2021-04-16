@@ -42,7 +42,7 @@ const ZukitSidebar = ({
 }) => {
 
 	const panels = availablePanels(getPanel(), options);
-	const moreItems = omitBy(more, isNil);
+	const moreItems = omitBy(more, item => isNil(item) || get(item, 'value', null) === null);
 	const pluginActions = pickBy(omitBy(actions, isNil), action => checkDependency(action, options));
 
 	const hasMoreItems = !isEmpty(moreItems);
