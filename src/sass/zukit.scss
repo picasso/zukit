@@ -116,37 +116,24 @@ $divider-component-class: zukit-divider;
 				}
 
 				span {
-					letter-spacing: 0.5px;
-					color: darken($admin-magenta-color, 10%);
-					font-weight: 500;
-					background-color: rgba($admin-magenta-color, 0.05);
-					padding: 0 3px 1px;
-					margin: 0 2px;
-					border-radius: $admin-border-radius;
+					@extend %markdown_basic;
+					@extend %markdown_code;
 				}
 				strong {
-					letter-spacing: 0.5px;
+					@extend %markdown_strong;
 				}
 				em {
+					@extend %markdown_basic;
+					@extend %markdown_em;
 					font-style: normal;
-					letter-spacing: 0.5px;
-					color: darken($wp-admin-blue-color, 10%);
-					font-weight: 500;
-					background-color: rgba($wp-admin-blue-color, 0.1);
-					padding: 0 3px 1px;
-					margin: 0 2px;
-					border-radius: $admin-border-radius;
 					@include in('^.is-success') {
-						color: darken($green-color, 10%);
-						background-color: rgba($green-color, 0.1);
+						@extend %markdown_green;
 					}
 					@include in('^.is-error') {
-						color: darken($red-color, 10%);
-						background-color: rgba($red-color, 0.1);
+						@extend %markdown_red;
 					}
 					@include in('^.is-warning') {
-						color: darken($orange-bright-color, 10%);
-						background-color: rgba($orange-bright-color, 0.1);
+						@extend %markdown_gold;
 					}
 				}
 				.zukit-data {
@@ -262,28 +249,21 @@ $divider-component-class: zukit-divider;
 				}
 			}
 
-			// markdown css
-			.components-base-control__help, .__zu_markdown {
+			// markdown css in help elements
+			.components-base-control__help {
 				span {
-					letter-spacing: 0.5px;
-					color: darken($admin-magenta-color, 10%);
-					font-weight: 500;
-					background-color: rgba($admin-magenta-color, 0.05);
-					padding: 0 3px 1px;
-					margin: 0 2px;
-					border-radius: $admin-border-radius;
+					@extend %markdown_basic;
+					@extend %markdown_code;
+					@include in('^.is-green') { @extend %markdown_green; }
+					@include in('^.is-red') { @extend %markdown_red; }
+					@include in('^.is-gold') { @extend %markdown_gold; }
 				}
 				strong {
-					letter-spacing: 0.5px;
+					@extend %markdown_strong;
 				}
 				em {
-					letter-spacing: 0.5px;
-					color: darken($wp-admin-blue-color, 10%);
-					font-weight: 500;
-					background-color: rgba($wp-admin-blue-color, 0.1);
-					padding: 0 3px 1px;
-					margin: 0 2px;
-					border-radius: $admin-border-radius;
+					@extend %markdown_basic;
+					@extend %markdown_em;
 				}
 			}
 
@@ -345,6 +325,15 @@ $divider-component-class: zukit-divider;
 					margin-top: 12px;
 				}
 			}
+			// .__plugin_info {
+			// 	.components-panel__row {
+			// 		span {
+			// 			span {
+			//
+			// 			}
+			// 		}
+			// 	}
+			// }
 
 			@include breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
 				display: none;
@@ -353,6 +342,7 @@ $divider-component-class: zukit-divider;
 
 		// Settings Common Rules ----------------------------------------------]
 
+		// flex blocks
 		.__flex {
 			display: flex;
 			align-items: center;
@@ -368,6 +358,24 @@ $divider-component-class: zukit-divider;
 			&.__side {
 				justify-content: space-between;
 				& > * { margin: 0; }
+			}
+		}
+
+		// simple markdown css
+		.__zu_markdown {
+			span {
+				@extend %markdown_basic;
+				@extend %markdown_code;
+				@include in('^.is-green') { @extend %markdown_green; }
+				@include in('^.is-red') { @extend %markdown_red; }
+				@include in('^.is-gold') { @extend %markdown_gold; }
+			}
+			strong {
+				@extend %markdown_strong;
+			}
+			em {
+				@extend %markdown_basic;
+				@extend %markdown_em;
 			}
 		}
 
