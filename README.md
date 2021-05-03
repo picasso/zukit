@@ -17,7 +17,7 @@ To _use_ __Zukit__ framework in your project, you need to load its classes befor
 
 ## Documentation
 
-The best way to learn a framework is to look at working examples of its use. This can be done in plugins that I have already adapted for the new framework: [Zu Contact](https://github.com/picasso/zu-contact) и [Zu Media](https://github.com/picasso/zumedia).
+The best way to learn a framework is to look at working examples of its use. This can be done in plugins that I have already adapted for the new framework: [Zu Contact](https://github.com/picasso/zu-contact), [Zu Media](https://github.com/picasso/zumedia) and [Zu Plus](https://github.com/picasso/zu-plus).
 
 Documentation is available on the [GitHub wiki](https://github.com/picasso/zukit/wiki). There I described the main points of working with the framework.
 
