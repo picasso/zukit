@@ -146,7 +146,7 @@ const ZukitTable = ({
 				<div className="head" style={ getRowStyles('head', colors) }>
 					{ map(head, ({ content, align, style }, cellIndex) =>
 						<div
-							className={ mergeClasses('cell', 'head', withClass(cellIndex, align)) }
+							className={ mergeClasses('cell', 'head', withClass(null, cellIndex, align)) }
 							key={ cellIndex }
 							aria-label="Header label"
 							style={ withStyle(cellIndex, style) }
