@@ -115,7 +115,7 @@ $divider-component-class: zukit-divider;
 					background-color: rgba($orange-bright-color, 0.1);
 				}
 
-				span {
+				.__code {
 					@extend %markdown_basic;
 					@extend %markdown_code;
 				}
@@ -126,15 +126,9 @@ $divider-component-class: zukit-divider;
 					@extend %markdown_basic;
 					@extend %markdown_em;
 					font-style: normal;
-					@include in('^.is-success') {
-						@extend %markdown_green;
-					}
-					@include in('^.is-error') {
-						@extend %markdown_red;
-					}
-					@include in('^.is-warning') {
-						@extend %markdown_gold;
-					}
+					@include in('^.is-success') { @extend %markdown_green; }
+					@include in('^.is-error') { @extend %markdown_red_on_red; }
+					@include in('^.is-warning') { @extend %markdown_gold; }
 				}
 				.zukit-data {
 					height: auto;
@@ -251,7 +245,7 @@ $divider-component-class: zukit-divider;
 
 			// markdown css in help elements
 			.components-base-control__help {
-				span {
+				.__code {
 					@extend %markdown_basic;
 					@extend %markdown_code;
 					@include in('^.is-green') { @extend %markdown_green; }
@@ -325,15 +319,6 @@ $divider-component-class: zukit-divider;
 					margin-top: 12px;
 				}
 			}
-			// .__plugin_info {
-			// 	.components-panel__row {
-			// 		span {
-			// 			span {
-			//
-			// 			}
-			// 		}
-			// 	}
-			// }
 
 			@include breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
 				display: none;
@@ -363,7 +348,7 @@ $divider-component-class: zukit-divider;
 
 		// simple markdown css
 		.__zu_markdown {
-			span {
+			.__code {
 				@extend %markdown_basic;
 				@extend %markdown_code;
 				@include in('^.is-green') { @extend %markdown_green; }
