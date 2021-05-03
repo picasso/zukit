@@ -125,10 +125,14 @@ class zukit_Addon {
 		return $this->plugin->create_notice($status, $message, $actions);
 	}
 	protected function log(...$params) {
-        $this->plugin->log_with(0, null, ...$params);
+		$this->plugin->debug_line_shift(1);
+        $this->plugin->log(...$params);
+		$this->plugin->debug_line_shift(0);
     }
 	protected function logc($context, ...$params) {
-		$this->plugin->log_with(0, $context, ...$params);
+		$this->plugin->debug_line_shift(1);
+		$this->plugin->logc($context, ...$params);
+		$this->plugin->debug_line_shift(0);
 	}
 	protected function logd(...$params) {
 		$this->plugin->logd(...$params);
