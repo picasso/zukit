@@ -1,3 +1,7 @@
+#### 1.2.3 / 2021-05-03
+* fixed bug with headers in `ZukitTable` component
+* fixed bug for `Prevent Script Caching` when dealing with `zukit.min.js`
+
 #### 1.2.2 / 2021-05-03
 * implemented dynamic cells for `ZukitTable` component
 * implemented support for `GitHub` __uri__ in `info` method
