@@ -96,9 +96,15 @@ $modal-component-class: zukit-modal;
 	color: darken($green-color, 10%);
 	background-color: rgba($green-color, 0.1);
 }
+
 %markdown_red {
 	color: darken($red-color, 10%);
 	background-color: rgba($red-color, 0.1);
+}
+
+%markdown_red_on_red {
+	color: darken($red-color, 30%);
+	background-color: rgba($orange-bright-color, 0.2);
 }
 
 %markdown_gold {
