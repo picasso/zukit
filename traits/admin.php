@@ -78,7 +78,7 @@ trait zukit_Admin {
 			'link'			=> __($data['AuthorURI'], $domain),
 			'description'	=> __($data['Description'], $domain),
 			'uri'			=> $data['PluginURI'],
-			'github'		=> $github === $defaultFill ? $data['GitHubPluginURI'] : $github,
+			'github'		=> (empty($github) || $github === $defaultFill) ? $data['GitHubPluginURI'] : $github,
 			'icon'			=> $this->get('appearance.icon'),
 			'colors'		=> $this->get('appearance.colors'),
 			'more' 			=> $this->extend_info(),
