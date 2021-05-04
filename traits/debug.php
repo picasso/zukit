@@ -82,13 +82,11 @@ trait zukit_Debug {
 
 	// overriding the 'log', 'logc' and 'logfile_clear' methods from the Zu+ plugin, if available
 	public function log(...$params) {
-
 		if(function_exists('zuplus')) zuplus()->dlog($params, static::class);
         else parent::log_with(self::$log_shift, null, ...$params);
     }
 
 	public function logc($context, ...$params) {
-		$this->logd('params', $params);
 		if(function_exists('zuplus')) zuplus()->dlogc($context, $params, static::class);
         else parent::log_with(self::$log_shift, $context, ...$params);
     }
