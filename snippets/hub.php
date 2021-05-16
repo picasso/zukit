@@ -43,6 +43,8 @@ if(!function_exists('zu_snippets')) {
 
 if(!function_exists('zu_sprintf')) {
 	function zu_sprintf($format, ...$params) {
+		// remove HTML comments first
+		$format = preg_replace('/<!--[^>]*?>/m', '', $format);
 		// remove multiple space inside tags
 		if(preg_match_all('/(<[^>]+?>)/', $format, $matches)) {
 			  foreach($matches[1] as $tag) {
@@ -64,6 +66,15 @@ if(!function_exists('zu_sprintf')) {
 	function zu_printf(...$params) {
 		$output = call_user_func_array('zu_sprintf', $params);
 		print($output);
+	}
+
+	function println($output = '') {
+		print($output . "\n");
+	}
+
+	function zu_printfln(...$params) {
+		$output = call_user_func_array('zu_sprintf', $params);
+		println($output);
 	}
 }
 
