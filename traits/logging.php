@@ -88,6 +88,24 @@ trait zukit_Logging {
 		return null;
 	}
 
+	// Profile methods --------------------------------------------------------]
+
+	protected function pstart($context) {
+		do_action('qm/start', $this->get_profile_timer($context));
+	}
+
+	protected function plap($context) {
+		do_action('qm/lap', $this->get_profile_timer($context));
+	}
+
+	protected function pstop($context) {
+		do_action('qm/stop', $this->get_profile_timer($context));
+	}
+
+	private function get_profile_timer($context) {
+		return sprintf('%s [%s]', $context, static::class);
+	}
+
 	// private helpers --------------------------------------------------------]
 
 	private function skip_log() {
