@@ -35,6 +35,10 @@ trait zusnippets_Content {
         return $html;
     }
 
+    function remove_p($html) {
+        return preg_replace('/<p\b[^>]*>(.*?)<\/p>/i', '$1', $html);
+    }
+
 	public function remove_empty_p($html) {
 
 		// clean up p tags around block elements
