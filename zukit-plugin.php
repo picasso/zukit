@@ -14,7 +14,7 @@ require_once('traits/debug.php');
 
 class zukit_Plugin extends zukit_SingletonScripts {
 
-	private static $zukit_version = '1.2.3'; //.' (modified)';
+	private static $zukit_version = '1.2.3'.' (modified)';
 
 	public $config;
 
@@ -34,7 +34,6 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	use zukit_Admin, zukit_AdminMenu, zukit_Ajax, zukit_Debug;
 
 	function config_singleton($file) {
-
 		if(isset($file)) {
 			$this->is_plugin = strpos($file, 'wp-content/plugins/') !== false;
 
@@ -350,10 +349,11 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	}
 
 	private function script_defaults() {
-
 		// for admin handle will be '<prefix>' and for frontend -> '<prefix>-<suffix>'
+		// for the theme and main stylesheet will be '<prefix>-main'
 		$admin_handle = $this->get('prefix');
 		$frontend_handle = $this->prefix_it($this->get('suffix'));
+		$main_style_handle = $this->prefix_it('main');
 
 		return [
 			// front-end script & style
@@ -368,7 +368,12 @@ class zukit_Plugin extends zukit_SingletonScripts {
 				'handle'	=> $frontend_handle,
 				'refresh'	=> $this->refresh_scripts,
 			],
-
+			'main_style'	=> [
+				'deps'		=> [],
+				'handle'	=> $main_style_handle,
+				'absolute'	=> true,
+				'refresh'	=> $this->refresh_scripts,
+			],
 			// plugin/theme settings page script & style
 			'settings_script'	=> [
 				'deps'		=> ['zukit'],
@@ -452,7 +457,19 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		return $handles;
 	}
 
+	public function enqueue_main_style() {
+		$params = $this->get('main_style', [], $this->script_defaults());
+		if(is_child_theme() && $this->is_option('load_parent_css')) {
+			$parent_params = $params;
+			$parent_params['handle'] = $this->prefix_it('parent');
+			$this->enqueue_style($this->sprintf_uri('style.css'), $params);
+			$params['deps'][] = $parent_params['handle'];
+		}
+		$this->enqueue_style(get_stylesheet_uri(), $params);
+	}
+
 	public function frontend_enqueue() {
+		if(!$this->is_plugin) $this->enqueue_main_style();
 		if($this->should_load_css(true, null)) $this->enqueue_style(null, $this->css_params_validated(true));
 		if($this->should_load_js(true, null)) $this->enqueue_script(null, $this->js_params_validated(true));
 		$this->enqueue_more(true, null);
