@@ -15,6 +15,8 @@ trait zusnippets_Thumbnails {
 
     public function get_post_thumbnail($post_id = null, $size = 'full') {
 		if(has_post_thumbnail($post_id)) {
+            // when $size is null - we only need to check if the `thumbnail` exists
+            if($size === null) return true;
 			$imgsrc = wp_get_attachment_image_src(get_post_thumbnail_id($post_id), $size);
 			return $imgsrc[0];
 		} else
