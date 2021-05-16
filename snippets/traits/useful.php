@@ -64,10 +64,10 @@ trait zusnippets_Useful {
 		}
 
 		if($strip_xml) {
-			$svg = preg_replace('/.+<svg/ims', '<svg', $svg);
-			$svg = preg_replace('/<svg[^>]+viewBox="([^\"]+)[^>]*/ims', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="$1"', $svg);
+			$svg = preg_replace('/\n/m', '', $svg);
+			$svg = preg_replace('/^.*?<svg/i', '<svg', $svg);
+			$svg = preg_replace('/^<svg[^>]+viewBox="([^\"]+)[^>]*/', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="$1"', $svg);
 		}
-
 		return $this->remove_space_between_tags($svg);
 	}
 
