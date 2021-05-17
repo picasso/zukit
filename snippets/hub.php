@@ -25,7 +25,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.1.9';
+        $this->version = '1.2.0';
 		$this->init_advanced_style();
 	}
 }
@@ -45,13 +45,6 @@ if(!function_exists('zu_sprintf')) {
 	function zu_sprintf($format, ...$params) {
 		// remove HTML comments first
 		$format = preg_replace('/<!--[^>]*?>/m', '', $format);
-		// remove multiple space inside tags
-		if(preg_match_all('/(<[^>]+?>)/', $format, $matches)) {
-			  foreach($matches[1] as $tag) {
-			      $tag_compressed = preg_replace('/\s+/', ' ', $tag);
-			      $format = str_replace($tag, $tag_compressed, $format);
-			  }
-		  }
 		// remove empty space between tags
 		$format = preg_replace('/>\s+</', '><', $format);
 		// remove empty space after format directive and before opening tag
@@ -60,7 +53,17 @@ if(!function_exists('zu_sprintf')) {
 		$format = preg_replace('/>\s+\%/', '>%', $format);
 
 		array_unshift($params, $format);
-		return call_user_func_array('sprintf', $params);
+		$output = call_user_func_array('sprintf', $params);
+
+		// remove multiple space inside tags
+		if(preg_match_all('/(<[^>]*?>)/', $output, $matches)) {
+			  foreach($matches[1] as $tag) {
+				  $tag_compressed = preg_replace('/\s+/', ' ', $tag);
+				  $tag_compressed = preg_replace('/\s+>/', '>', $tag_compressed);
+				  $output = str_replace($tag, $tag_compressed, $output);
+			  }
+		  }
+		  return $output;
 	}
 
 	function zu_printf(...$params) {
