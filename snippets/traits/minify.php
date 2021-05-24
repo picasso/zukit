@@ -1,6 +1,65 @@
 <?php
 trait zusnippets_Minify {
 
+	// Simple JS minifier -----------------------------------------------------]
+	// https://gist.github.com/taufik-nurrohman/d7b310dea3b33e4732c0
+	
+	public function minify_js($input) {
+		if(!is_string($input)) return $input;
+		// normalize line–break(s)
+		$input = str_replace(["\r\n", "\r"], "\n", trim($input));
+	    if(!$input) return $input;
+
+		$output = ''; //  = $prev
+	    foreach($this->split_patterns($input) as $part) {
+	        if(trim($part) === '') continue;
+			// remove comments
+	        if(strpos($part, '//') === 0 || strpos($part, '/*') === 0 && substr($part, -2) === '*/') continue;
+			// keep regex
+	        if($part[0] === '/' && (substr($part, -1) === '/' || preg_match('#\/[gimuy]*$#', $part))) {
+	            $output .= $part;
+	        } else if(
+	            $part[0] === '"' && substr($part, -1) === '"' ||
+	            $part[0] === "'" && substr($part, -1) === "'" ||
+	            $part[0] === '`' && substr($part, -1) === '`' // ES6
+	        ) {
+	            // TODO: Remove quote(s) where possible …
+	            $output .= $part;
+	        } else {
+	            $output .= preg_replace([
+			        // Remove white–space(s) around punctuation(s) [^1]
+			        '#\s*([!%&*\(\)\-=+\[\]\{\}|;:,.<>?\/])\s*#',
+			        // Remove the last semi–colon and comma [^2]
+			        '#[;,]([\]\}])#',
+			        // Replace `true` with `!0` and `false` with `!1` [^3]
+			        '#\btrue\b#', '#\bfalse\b#', '#\b(return\s?)\s*\b#',
+			        // Replace `new Array(x)` with `[x]` … [^4]
+			        '#\b(?:new\s+)?Array\((.*?)\)#', '#\b(?:new\s+)?Object\((.*?)\)#'
+			    ], [
+			        // [^1]
+			        '$1',
+			        // [^2]
+			        '$1',
+			        // [^3]
+			        '!0', '!1', '$1',
+			        // [^4]
+			        '[$1]', '{$1}'
+			    ], $part);
+	        }
+	        // $prev = $part;
+	    }
+	    return $output;
+	}
+
+	private function split_patterns($input) {
+		$minify_comment_css = '/\*[\s\S]*?\*/';
+		$minify_string = '"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\'|`(?:[^`\\\]|\\\.)*`';
+		$minify_comment_js = '//[^\n]*';
+		$minify_pattern_js = '/[^\n]+?/[gimuy]*';
+		$patterns = [$minify_comment_css, $minify_string, $minify_comment_js, $minify_pattern_js];
+	    return preg_split('#(' . implode('|', $patterns) . ')#', $input, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+	}
+
 	// Simple HTML minifier ---------------------------------------------------]
 	// https://stackoverflow.com/questions/6225351/how-to-minify-php-page-html-output
 
