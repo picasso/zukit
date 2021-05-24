@@ -1,28 +1,40 @@
 <?php
-trait zusnippets_InlineStyle {
+trait zusnippets_Inline {
 
-    private $advanced_style = [];
+    private $inline_style = [];
 	private $admin_style = [];
-	private $fonts = [];
-    private $without_minify = false; // set 'true' for debuging
+    private $inline_script = [];
+	private $admin_script = [];
 
-    private function init_advanced_style() {
-        if(is_admin()) add_action('admin_footer', [$this, 'maybe_add_advanced_styles']);
-		else add_action('wp_footer', [$this, 'maybe_add_advanced_styles']);
+	private $fonts = [];
+    // set 'true' for debuging
+    private $without_minify = false;
+
+    private function init_inline_style_scripts() {
+        if(is_admin()) {
+            add_action('admin_footer', [$this, 'maybe_add_inline_style']);
+            add_action('admin_footer', [$this, 'maybe_add_inline_script']);
+        } else {
+            add_action('wp_footer', [$this, 'maybe_add_inline_style']);
+            add_action('wp_footer', [$this, 'maybe_add_inline_script']);
+        }
     }
 
-    // Inline styles to the footer if needed ----------------------------------]
+    // Inline styles to the footer --------------------------------------------]
 
-	public function add_advanced_style($name, $style) {
+	public function add_inline_style($name, $style, $css_file = null, $is_admin = false) {
+        if($css_file && file_exists($css_file)) {
+    		$style = file_get_contents($css_file);
+        }
+
 		if(!empty($name)) {
-			$this->advanced_style[] = ['name' => $name, 'style' => $style];
+            if($is_admin) $this->admin_style[] = ['name' => $name, 'style' => $style];
+			else $this->inline_style[] = ['name' => $name, 'style' => $style];
 		}
 	}
 
-	public function add_admin_style($name, $style) {
-		if(!empty($name)) {
-			$this->admin_style[] = ['name' => $name, 'style' => $style];
-		}
+	public function add_admin_inline_style($name, $style, $css_file = null) {
+        $this->add_inline_style($name, $style, $css_file, true);
 	}
 
 	public function add_fonts_style($font_list, $dir, $uri) {
@@ -37,28 +49,42 @@ trait zusnippets_InlineStyle {
         ], $this->fonts);
 	}
 
-	public function add_style_from_file($css_file) {
-
-		if(!file_exists($css_file)) return;
-		$style = file_get_contents($css_file);
-
-		if(!empty($style)) $this->add_advanced_style('_responsive', $style);
+	public function add_inline_style_from_file($css_file) {
+		$this->add_inline_style('_responsive', null, $css_file);
 	}
 
-	public function maybe_add_advanced_styles() {
+    // Inline script to the footer --------------------------------------------]
 
-		$advanced_style = '';
+	public function add_inline_script($script_code, $js_file = null, $is_admin = false) {
+        if($js_file && file_exists($js_file)) {
+            $script_code = file_get_contents($js_file);
+        }
+        if(!empty($script_code)) {
+            if($is_admin) $this->admin_script[] = $script_code;
+			else $this->inline_script[] = $script_code;
+		}
+	}
+
+	public function add_admin_inline_script($script_code, $js_file = null) {
+        $this->add_inline_script($script_code, $js_file, true);
+	}
+
+    // Print inline styles & scripts ------------------------------------------]
+
+	public function maybe_add_inline_style() {
+
+		$inline_style = '';
 
 		foreach($this->admin_style as $style_data) {
 			// if '_responsive' then insert CSS without processing
-			if(stripos($style_data['name'], '_responsive') !== false) $advanced_style .= $style_data['style'];
-			else $advanced_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
+			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
 		}
 
-		foreach($this->advanced_style as $style_data) {
+		foreach($this->inline_style as $style_data) {
 			// if '_responsive' then insert CSS without processing
-			if(stripos($style_data['name'], '_responsive') !== false) $advanced_style .= $style_data['style'];
-			else $advanced_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
+			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
 		}
 
 		if(!empty($this->fonts)) {
@@ -66,16 +92,36 @@ trait zusnippets_InlineStyle {
 				if(is_page($page)) {
 					$filename = $this->fonts['dir'].$file;
 					if(file_exists($filename)) {
-						$advanced_style .= preg_replace('/%%path%%/i', $this->fonts['uri'], file_get_contents($filename));
+						$inline_style .= preg_replace('/%%path%%/i', $this->fonts['uri'], file_get_contents($filename));
 					}
 				}
 			}
 		}
 
-    	if(!empty(trim($advanced_style))) {
+    	if(!empty(trim($inline_style))) {
     		printf(
-                '<style type="text/css" id="zu-advanced-styles">%1$s</style>',
-                $this->without_minify ? $advanced_style : $this->minify_css($advanced_style)
+                '<style type="text/css" id="zu-inline-style">%1$s</style>',
+                $this->without_minify ? $inline_style : $this->minify_css($inline_style)
+            );
+    	}
+    }
+
+    public function maybe_add_inline_script() {
+		$scripts = [];
+
+		foreach($this->admin_script as $script_code) {
+			$scripts[] = sprintf("%s\n", $script_code);
+		}
+
+		foreach($this->inline_script as $script_code) {
+            $scripts[] = sprintf("%s\n", $script_code);
+		}
+
+    	if(!empty($scripts)) {
+            $scripts = sprintf('document.addEventListener("DOMContentLoaded", function() {%s})', implode('', $scripts));
+    		printf(
+                '<script type="text/javascript" id="zu-inline-script">%1$s</script>',
+                $this->without_minify ? $scripts : $this->minify_js($scripts)
             );
     	}
     }

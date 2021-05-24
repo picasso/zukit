@@ -15,7 +15,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 	use zusnippets_Classes,
 		zusnippets_Content,
 		zusnippets_Date,
-		zusnippets_InlineStyle,
+		zusnippets_Inline,
 		zusnippets_Lang,
 		zusnippets_Loader,
 		zusnippets_Minify,
@@ -25,8 +25,8 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.2.0';
-		$this->init_advanced_style();
+        $this->version = '1.2.1';
+		$this->init_inline_style_scripts();
 	}
 }
 
