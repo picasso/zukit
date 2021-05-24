@@ -8,6 +8,9 @@ class zukit_Addon {
 	protected $name;
 	protected $options;
 	protected $options_key;
+	protected $dir;
+    protected $uri;
+
 	private $nonce;
 
 	public function register($plugin) {
@@ -16,6 +19,9 @@ class zukit_Addon {
 		if(empty($this->plugin)) {
 			_doing_it_wrong(__FUNCTION__, '"Addon" cannot be used without plugin!');
 		} else {
+			$this->dir = $this->plugin->dir;
+			$this->uri = $this->plugin->uri;
+
 			$this->config = array_merge($this->config_defaults(), $this->config());
 			$this->name = $this->get('name') ?? 'zuaddon';
 			$this->nonce = $this->get('nonce') ?? $this->name.'_ajax_nonce';
@@ -77,7 +83,7 @@ class zukit_Addon {
 		return $this->plugin->set_option($this->options_key, $this->options, true);
 	}
 
-	protected function is_plugin_option($key, $check_value = true) {
+	protected function is_parent_option($key, $check_value = true) {
 		return $this->plugin->is_option($key, $check_value);
 	}
 
