@@ -74,29 +74,31 @@ trait zusnippets_Inline {
 	public function maybe_add_inline_style() {
 
 		$inline_style = '';
+        if(is_admin()) {
+    		foreach($this->admin_style as $style_data) {
+    			// if '_responsive' then insert CSS without processing
+    			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
+    			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+    		}
+        } else {
 
-		foreach($this->admin_style as $style_data) {
-			// if '_responsive' then insert CSS without processing
-			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
-			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
-		}
+    		foreach($this->inline_style as $style_data) {
+    			// if '_responsive' then insert CSS without processing
+    			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
+    			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+    		}
 
-		foreach($this->inline_style as $style_data) {
-			// if '_responsive' then insert CSS without processing
-			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
-			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
-		}
-
-		if(!empty($this->fonts)) {
-			foreach($this->fonts['list'] as $page => $file) {
-				if(is_page($page)) {
-					$filename = $this->fonts['dir'].$file;
-					if(file_exists($filename)) {
-						$inline_style .= preg_replace('/%%path%%/i', $this->fonts['uri'], file_get_contents($filename));
-					}
-				}
-			}
-		}
+    		if(!empty($this->fonts)) {
+    			foreach($this->fonts['list'] as $page => $file) {
+    				if(is_page($page)) {
+    					$filename = $this->fonts['dir'].$file;
+    					if(file_exists($filename)) {
+    						$inline_style .= preg_replace('/%%path%%/i', $this->fonts['uri'], file_get_contents($filename));
+    					}
+    				}
+    			}
+    		}
+        }
 
     	if(!empty(trim($inline_style))) {
     		printf(
@@ -108,14 +110,15 @@ trait zusnippets_Inline {
 
     public function maybe_add_inline_script() {
 		$scripts = [];
-
-		foreach($this->admin_script as $script_code) {
-			$scripts[] = sprintf("%s\n", $script_code);
-		}
-
-		foreach($this->inline_script as $script_code) {
-            $scripts[] = sprintf("%s\n", $script_code);
-		}
+        if(is_admin()) {
+    		foreach($this->admin_script as $script_code) {
+    			$scripts[] = sprintf("%s\n", $script_code);
+    		}
+        } else {
+    		foreach($this->inline_script as $script_code) {
+                $scripts[] = sprintf("%s\n", $script_code);
+    		}
+        }
 
     	if(!empty($scripts)) {
             $scripts = sprintf('document.addEventListener("DOMContentLoaded", function() {%s})', implode('', $scripts));
