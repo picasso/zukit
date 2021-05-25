@@ -17,6 +17,15 @@ trait zusnippets_Useful {
 		);
 	}
 
+	public function array_flatten($array) {
+		$flatten = [];
+		foreach($array as $value) {
+			if(is_array($value)) $flatten = array_merge($flatten, $this->array_flatten($value));
+			else $flatten[] = $value;
+		}
+		return $flatten;
+	}
+
 	public function format_bytes($bytes, $precision = 0, $approximately_sign = false, $template = null) {
 	    $units = array('Bytes', 'KB', 'MB', 'GB', 'TB');
 		$sign = $approximately_sign && $bytes !== 0 ? '~' : '';
