@@ -63,7 +63,8 @@ if(!function_exists('zu_sprintf')) {
 				  $output = str_replace($tag, $tag_compressed, $output);
 			  }
 		  }
-		  return $output;
+		  // replace an intentional 'whitespace' with a space 
+		  return str_replace(['<whitespace/>', '<whitespace>'], ' ', $output);
 	}
 
 	function zu_printf(...$params) {
