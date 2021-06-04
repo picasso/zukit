@@ -3,6 +3,7 @@
 trait zusnippets_Thumbnails {
 
     private $random_attachment_id = null;
+    private $default_dominant_color = '#333333';
 
     public function get_attachment_id($post_or_attachment_id = null) {
 		if(get_post_type($post_or_attachment_id) === 'attachment') return $post_or_attachment_id;
@@ -76,7 +77,6 @@ trait zusnippets_Thumbnails {
 	}
 
 	public function get_featured_from_posts($posts) {
-
 		$ids = [];
 		if(empty($posts)) return $ids;
 
@@ -91,7 +91,6 @@ trait zusnippets_Thumbnails {
 	public function get_featured_attachment_id($post_id = null) {
 		// if there is no featured_attachment - use it from $this->random_attachment_id
 		// if $post_id = -1 then simply return 'random_attachment_id'
-
 		if($post_id == -1) return $this->random_attachment_id;
 
 		$attachment_id = get_post_thumbnail_id($post_id);
@@ -100,7 +99,6 @@ trait zusnippets_Thumbnails {
 	}
 
 	public function set_random_featured_attachment_id($post_id = null, $gallery = null, $only_landscape = false) {
-
 		$gallery = empty($gallery) ? $this->get_post_gallery($post_id) : $gallery;
 		$ids = empty($gallery) ? [] : (isset($gallery['ids']) ? wp_parse_id_list($gallery['ids']) : $gallery);
 
@@ -115,7 +113,6 @@ trait zusnippets_Thumbnails {
 				$this->random_attachment_id = (int)$ids[rand(0, count($ids) - 1)];
 			}
 		}
-
 		return $this->random_attachment_id;
 	}
 
@@ -126,9 +123,13 @@ trait zusnippets_Thumbnails {
 		return $image_bg;
 	}
 
-	public function get_background_color($post_or_attachment_id = null) {
-		$color = function_exists('zumedia') ? zumedia()->get_dominant_by_id($post_or_attachment_id) : 'black';
-		$color_bg = empty($color) ? '' : 'background-color:'.$color.';';
+    public function get_default_background_color() {
+         return $this->default_dominant_color;
+    }
+
+	public function get_background_color($post_or_attachment_id = null, $with_important = false) {
+		$color = function_exists('zumedia') ? zumedia()->get_dominant_by_id($post_or_attachment_id) : $this->default_dominant_color;
+		$color_bg = empty($color) ? '' : sprintf('background-color:%1$s%2$s;', $color, $with_important ? ' !important' : '');
 		return $color_bg;
 	}
 }
