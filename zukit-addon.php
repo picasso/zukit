@@ -65,7 +65,7 @@ class zukit_Addon {
 		return $this->options;
 	}
 
-	protected function get_option($key, $default = '') {
+	protected function get_option($key, $default = null) {
 		return $this->plugin->get_option($key, $default, $this->options);
 	}
 
@@ -145,7 +145,14 @@ class zukit_Addon {
 	}
 
 	// Common interface to plugin methods with availability check -------------]
-	// NOTE: only public functions can be called with this helper
+	// NOTE: only public functions and property can be called with this helper
+	protected function with_another($prop, $func, ...$params) {
+		if(property_exists($this->plugin, $prop)) {
+			$another = $this->plugin->{$prop};
+			if(method_exists($another, $func)) return call_user_func_array([$another, $func], $params);
+		}
+		return null;
+	}
 
 	protected function call($func, ...$params) {
 		if(method_exists($this->plugin, $func)) return call_user_func_array([$this->plugin, $func], $params);
