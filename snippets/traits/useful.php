@@ -3,18 +3,22 @@ trait zusnippets_Useful {
 
 	// Useful functions -------------------------------------------------------]
 
-	public function array_prefix($array, $prefix, $use_keys = false) {
+	public function array_prefix($array, $prefix, $suffix = '', $use_keys = false) {
 		return array_map(
-				function($v) use($prefix) { return $prefix.$v; },
+				function($v) use($prefix, $suffix) { return $prefix.$v.$suffix; },
 				$use_keys ? array_keys($array) : $array
 		);
 	}
 
-	public function array_prefix_keys($array, $prefix) {
+	public function array_prefix_keys($array, $prefix, $suffix = '') {
 		return array_combine(
-			$this->array_prefix($array, $prefix, true),
+			$this->array_prefix($array, $prefix, $suffix, true),
 			$array
 		);
+	}
+
+	public function array_without_keys($array, $keys) {
+		return array_diff_key($array, array_flip($keys));
 	}
 
 	public function array_flatten($array) {
@@ -115,7 +119,6 @@ trait zusnippets_Useful {
 		        )
 		    )
 		);
-
 		return $intval === false ? $min : $intval;
 	}
 
