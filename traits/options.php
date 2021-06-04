@@ -89,7 +89,7 @@ trait zukit_Options {
 	}
 
 	// If 'key' contains 'path' - then resolve it before get
-	public function get_option($key, $default = '', $addon_options = null) {
+	public function get_option($key, $default = null, $addon_options = null) {
 		$options = is_null($addon_options) ? $this->options : $addon_options;
 
 		// gets a value in a nested array based on path (if presented)
@@ -107,13 +107,13 @@ trait zukit_Options {
 		}
 
 		if(!isset($set[$key])) return $default;
-
+		// if default was not set, or we have a complex type, then return without any cast
+		if(is_null($default) || is_array($default)) return $set[$key];
 		// return and cast to default value type
 		if(is_bool($default)) return filter_var($set[$key], FILTER_VALIDATE_BOOLEAN);
 		if(is_int($default)) return intval($set[$key]);
-		if(is_string($default))	return strval($set[$key]);
 
-		return $set[$key];
+		return strval($set[$key]);
 	}
 
 	public function is_option($key, $check_value = true, $addon_options = null) {
