@@ -26,8 +26,8 @@ trait zusnippets_Inline {
         if($css_file && file_exists($css_file)) {
     		$style = file_get_contents($css_file);
         }
-
-		if(!empty($name)) {
+        // if there is no selector or empty $style then do nothing
+		if(!empty($name) && !empty(trim($style))) {
             if($is_admin) $this->admin_style[] = ['name' => $name, 'style' => $style];
 			else $this->inline_style[] = ['name' => $name, 'style' => $style];
 		}
@@ -59,6 +59,7 @@ trait zusnippets_Inline {
         if($js_file && file_exists($js_file)) {
             $script_code = file_get_contents($js_file);
         }
+        // if there is no code then do nothing
         if(!empty($script_code)) {
             if($is_admin) $this->admin_script[] = $script_code;
 			else $this->inline_script[] = $script_code;
