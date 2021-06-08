@@ -87,8 +87,11 @@ class zukit_Addon {
 		return $this->plugin->is_option($key, $check_value);
 	}
 
-	// Redirect to plugin methods ---------------------------------------------]
+	// Redirect to parent methods ---------------------------------------------]
 
+	public function is_origin($get_root = false) {
+		return $this->plugin->is_origin($get_root);
+	}
 	protected function sprintf_dir(...$params) {
 		return call_user_func_array([$this->plugin, 'sprintf_dir'], $params);
 	}
