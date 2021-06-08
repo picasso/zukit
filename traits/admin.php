@@ -60,14 +60,14 @@ trait zukit_Admin {
 
 	public function info() {
 		$defaultFill = '?';
-		$expectedKeys = ['AuthorURI', 'Description', 'Name', 'Author', 'PluginURI', 'GitHubPluginURI', 'GitHubURI'];
+		$expectedKeys = ['AuthorURI', 'Description', 'Name', 'Author', 'URI', 'GitHubURI'];
 		$data = array_merge(array_combine(
 		    $expectedKeys,
 		    array_fill(0, count($expectedKeys), $defaultFill)),
   			$this->data
 		);
 		$domain = $this->text_domain();
-		$github = strpos($data['PluginURI'], 'github') !== false ? $data['PluginURI'] : $data['GitHubURI'];
+		$github = preg_replace('/\.git$/', '', $data['GitHubURI']);
 
 		return [
 			'version'		=> $this->version,
@@ -77,8 +77,8 @@ trait zukit_Admin {
 			'author'		=> __($data['Author'], $domain),
 			'link'			=> __($data['AuthorURI'], $domain),
 			'description'	=> __($data['Description'], $domain),
-			'uri'			=> $data['PluginURI'],
-			'github'		=> (empty($github) || $github === $defaultFill) ? $data['GitHubPluginURI'] : $github,
+			'uri'			=> $data['URI'],
+			'github'		=> $github ?: $defaultFill,
 			'icon'			=> $this->get('appearance.icon'),
 			'colors'		=> $this->get('appearance.colors'),
 			'more' 			=> $this->extend_info(),
