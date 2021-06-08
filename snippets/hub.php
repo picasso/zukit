@@ -25,7 +25,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.2.1';
+        $this->version = '1.2.2';
 		$this->init_inline_style_scripts();
 	}
 }
@@ -63,7 +63,7 @@ if(!function_exists('zu_sprintf')) {
 				  $output = str_replace($tag, $tag_compressed, $output);
 			  }
 		  }
-		  // replace an intentional 'whitespace' with a space 
+		  // replace an intentional 'whitespace' with a space
 		  return str_replace(['<whitespace/>', '<whitespace>'], ' ', $output);
 	}
 
