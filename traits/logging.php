@@ -191,4 +191,22 @@ trait zukit_Logging {
 		$log .= PHP_EOL.str_repeat('~', strlen($marker)).'┘'.PHP_EOL;
 		error_log($log);
 	}
+
+	public static function trace_summary($title, $class_name = 'Zukit') {
+		$trace = str_replace(',', PHP_EOL, wp_debug_backtrace_summary());
+		$ajax = wp_doing_ajax() ? 'DOING AJAX' : 'NOT AJAX';
+		$cron = wp_doing_cron() ? 'DOING CRON' : 'NOT CRON';
+		$exists = class_exists('Zukit') ? 'class exists' : 'class NOT exists';
+		$log = sprintf(
+			'### %7$s ### : %1$s, %2$s, "%5$s" %6$s%4$s%3$s%4$s',
+			$ajax,
+			$cron,
+			$trace,
+			PHP_EOL,
+			$class_name,
+			$exists,
+			$title
+		);
+		error_log($log);
+	}
 }
