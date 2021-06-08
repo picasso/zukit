@@ -16,8 +16,9 @@ trait zukit_Scripts {
 
     // Scripts management -----------------------------------------------------]
 
-    public function is_origin() {
-        return dirname(self::$zukit_root) === ($this->dir.'/zukit');
+    public function is_origin($get_root = false) {
+        $root_dirname = dirname(self::$zukit_root);
+        return $get_root ? $root_dirname : $root_dirname === ($this->dir.'/zukit');
 	}
 
     public function zukit_dirname($subdir = null) {
