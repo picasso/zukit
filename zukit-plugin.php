@@ -29,7 +29,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	private static $zukit_translations = false;
 	private $translations_loaded = null;
-	private $is_plugin = true;
+	private $is_plugin = false;
 	private $refresh_scripts = false;
 
 	// Options, admin basics, menu management and REST API support
@@ -37,15 +37,14 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	function config_singleton($file) {
 		if(isset($file)) {
-			$this->is_plugin = strpos($file, 'wp-content/plugins/') !== false;
+			$this->data = Zukit::get_file_metadata($file);
+			$this->is_plugin = $this->data['Kind'] === 'Plugin';
+			$this->version = $this->data['Version'];
 
 			if($this->is_plugin) {
 				$this->dir = untrailingslashit(plugin_dir_path($file));
 				$this->uri = untrailingslashit(plugin_dir_url($file));
 			}
-
-			$this->data = Zukit::plugin_data($file);
-			$this->version = $this->data['Version'];
 		}
 
 		$this->config = array_replace_recursive([
