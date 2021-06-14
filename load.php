@@ -84,7 +84,7 @@ if(!class_exists('Zukit')) {
 			$meta = get_file_data($file, $default_headers, $is_theme ? 'theme' : 'plugin');
 			$meta['Kind'] = $is_theme ? 'Theme' : 'Plugin';
 			$meta['URI'] = $is_theme ? $meta['ThemeURI'] : $meta['PluginURI'];
-			$meta['GitHubURI'] = $meta['GitHubURI'] ?: ($is_theme ? $meta['GitHubThemeURI'] : $meta['GitHubPluginURI']);
+			$meta['GitHubURI'] = $meta['GitHubURI'] ? $meta['GitHubURI'] : ($is_theme ? $meta['GitHubThemeURI'] : $meta['GitHubPluginURI']);
 			set_transient($cache_id, $meta, self::$cache_time);
 			return $meta;
 		}
