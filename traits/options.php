@@ -4,14 +4,13 @@
 
 trait zukit_Options {
 
-	// Options management -----------------------------------------------------]
-	// !! Should not use these functions in construct_more() !!
-	//
-	public function options() {
-		$options = get_option($this->options_key);
-		// Check whether we need to install an option, used during installation of plugin
-		if($options === false || $this->get('debug_options')) $options = $this->reset_options(false);
-		$this->options = $options;
+	public function options($with_check = false) {
+		if($with_check) {
+			$options = get_option($this->options_key);
+			// Check whether we need to install an option, used during installation of plugin
+			if($options === false || $this->get('debug_options')) $options = $this->reset_options(false);
+			$this->options = $options;
+		}
 		return $this->options;
 	}
 
@@ -47,7 +46,6 @@ trait zukit_Options {
 	// If we set value for the options belonging to the add-on, then after the operation
 	// we do not update the options - add-on will take care of this
 	public function set_option($key, $value, $rewrite_array = false, $addon_options = null) {
-
 		// $value cannot be undefined or null!
 		if(!isset($value) || is_null($value)) return $options;
 
@@ -58,7 +56,6 @@ trait zukit_Options {
 			// sets a value in a nested array based on path (if presented)
 			$pathParts = explode('.', $key);
 			$pathCount = count($pathParts);
-
 			if($pathCount === 1) {
 				$options[$key] = $value;
 			} else {

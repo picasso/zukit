@@ -10,6 +10,7 @@ require_once('traits/admin.php');
 require_once('traits/admin-menu.php');
 require_once('traits/ajax.php');
 require_once('traits/debug.php');
+require_once('traits/exchange.php');
 
 // Basic Plugin Class ---------------------------------------------------------]
 
@@ -84,8 +85,8 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		$this->config['prefix'] = $this->prefix;
 		$this->config['options_key'] = $this->options_key;
 
-		// Load 'options' before any other methods & actions
-		$this->options();
+		// Load 'options' before any other methods & actions and check for install
+		$this->options(true);
 
 		add_action('init', [$this, 'init'], 10);
 		add_action('init', function() { $this->do_addons('init'); }, 11);
@@ -267,6 +268,10 @@ class zukit_Plugin extends zukit_SingletonScripts {
 				'refresh'	=> $this->refresh_scripts,
 			],
 		];
+	}
+
+	public function get_file_version($filepath) {
+		return $this->get_version($filepath, $this->refresh_scripts);
 	}
 
 	public function enforce_defaults($is_style, $is_frontend, $params) {
