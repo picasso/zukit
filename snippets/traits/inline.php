@@ -37,7 +37,7 @@ trait zusnippets_Inline {
         $this->add_inline_style($name, $style, $css_file, true);
 	}
 
-	public function add_fonts_style($font_list, $dir, $uri) {
+	public function add_inline_fonts_style($font_list, $dir, $uri) {
 		if(is_array($font_list)) $this->fonts['list'] = $font_list;
 		if(!empty($dir)) $this->fonts['dir'] = $dir;
 		if(!empty($uri)) $this->fonts['uri'] = $uri;
