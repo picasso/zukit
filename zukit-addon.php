@@ -10,6 +10,7 @@ class zukit_Addon {
 	protected $options_key;
 	protected $dir;
     protected $uri;
+	protected $version;
 
 	private $nonce;
 
@@ -21,6 +22,7 @@ class zukit_Addon {
 		} else {
 			$this->dir = $this->plugin->dir;
 			$this->uri = $this->plugin->uri;
+			$this->version = $this->plugin->version;
 
 			$this->config = array_merge($this->config_defaults(), $this->config());
 			$this->name = $this->get('name') ?? 'zuaddon';
@@ -87,6 +89,10 @@ class zukit_Addon {
 		return $this->plugin->is_option($key, $check_value);
 	}
 
+	protected function get_parent_option($key, $default = null) {
+		return $this->plugin->get_option($key, $default);
+	}
+
 	// Redirect to parent methods ---------------------------------------------]
 
 	public function is_origin($get_root = false) {
@@ -114,6 +120,9 @@ class zukit_Addon {
 	protected function admin_enqueue_script($file, $params = []) {
 		$params_with_defaults = $this->plugin->enforce_defaults(false, false, $params);
 		return $this->plugin->admin_enqueue_script($this->filename($file, $params), $params_with_defaults);
+	}
+	protected function get_file_version($filepath) {
+		$this->plugin->get_file_version($filepath);
 	}
 	protected function ends_with_slug($hook, $slug = null) {
 		return $this->plugin->ends_with_slug($hook, $slug);
