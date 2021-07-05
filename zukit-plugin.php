@@ -493,7 +493,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	public function snippets($func, ...$params) {
 		if(!function_exists('zu_snippets')) return null;
 		$snippets = zu_snippets();
-		if(method_exists($snippets, $func)) return call_user_func_array([$snippets, $func], $params);
+		if($snippets->method_exists($func)) return call_user_func_array([$snippets, $func], $params);
 		else {
 			if($this->debug_mode) $this->logc('!Snippet called was not found!', $func);
 			return null;
