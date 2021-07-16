@@ -114,8 +114,17 @@ trait zukit_Options {
 	}
 
 	public function is_option($key, $check_value = true, $addon_options = null) {
-		$value = $this->get_option($key, $this->def_value($check_value), $addon_options);
-		return $value === $check_value;
+		// can be the array of keys and then they will be checked by condition '&&'
+		$keys = is_array($key) ? $key : [$key];
+		$is_option = true;
+		foreach($keys as $k) {
+			// if key starts with '!' then negate the value
+			$negate = substr($k, 0, 1) === '!';
+	        $clean_key = str_replace('!', '', $k);
+			$value = $this->get_option($clean_key, $this->def_value($check_value), $addon_options);
+			$is_option = $is_option && (($negate ? !$value : $value) === $check_value);
+		}
+		return $is_option;
 	}
 
 	private function def_value($type) {
