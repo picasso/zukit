@@ -499,4 +499,10 @@ class zukit_Plugin extends zukit_SingletonScripts {
 			return null;
 		}
 	}
+
+	public function register_snippet($func) {
+		if(!function_exists('zu_snippets')) return false;
+		zu_snippets()->register_method($func, $this);
+		return true;
+	}
 }
