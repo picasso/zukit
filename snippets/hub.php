@@ -1,6 +1,7 @@
 <?php
 include_once('traits/classes.php');
 include_once('traits/content.php');
+include_once('traits/curve.php');
 include_once('traits/date.php');
 include_once('traits/extend.php');
 include_once('traits/inline.php');
@@ -15,6 +16,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	use zusnippets_Classes,
 		zusnippets_Content,
+		zusnippets_Curve,
 		zusnippets_Date,
 		zusnippets_Extend,
 		zusnippets_Inline,
@@ -27,7 +29,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.3.1';
+        $this->version = '1.3.2';
 		$this->init_inline_style_scripts();
 	}
 }
