@@ -1,5 +1,7 @@
 <?php
 
+// NOTE: All methods for Exchange must be public!
+
 // Plugin Exchange Trait ------------------------------------------------------]
 
 trait zukit_Exchange {
@@ -20,7 +22,7 @@ trait zukit_Exchange {
 	private function get_default($name, $params) {
 		$default_value = $this->defaults[$name] ?? null;
 		if(is_string($default_value)) {
-			// argument index begins with zero - therefore minus 1 
+			// argument index begins with zero - therefore minus 1
 			$index = preg_match('/\$(\d+)/', $default_value, $matches) ? absint($matches[1] - 1) : false;
 			if($index !== false) $default_value = $params[$index] ?? null;
 		}
@@ -34,12 +36,13 @@ trait zukit_Exchange {
 
 	public function call_provider($name, ...$params) {
 		$default_value = $this->get_default($name, $params);
-		// zu_log_if($name === 'try_cdn', $name, $this->method_exists($name), $default_value);
+		// $test = 'get_tags';
+		// zu_log_if($name === $test, $name, $this->method_exists($name), $default_value);
 		if($this->method_exists($name)) {
 			$func = $this->methods[$name];
-			// zu_log_if($name === 'try_cdn', $func[1], is_callable($func), $params);
+			// zu_log_if($name === $test, $func, $func[1], is_callable($func), $params);
 			$res = is_callable($func) ? call_user_func_array($func, $params) : $default_value;
-			// zu_log_if($name === 'try_cdn', $res);
+			// zu_log_if($name === $test, $res);
 			return $res;
 		}
 		return $default_value;
