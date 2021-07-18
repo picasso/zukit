@@ -3,6 +3,14 @@ trait zusnippets_Useful {
 
 	// Useful functions -------------------------------------------------------]
 
+	public function array_md5($array) {
+		// https://stackoverflow.com/questions/2254220/php-best-way-to-md5-multi-dimensional-array
+	    // since we're inside a function (which uses a copied array, not
+	    // a referenced array), you shouldn't need to copy the array
+	    array_multisort($array);
+	    return md5(json_encode($array ?? []));
+	}
+
 	public function array_prefix($array, $prefix, $suffix = '', $use_keys = false) {
 		return array_map(
 				function($v) use($prefix, $suffix) { return $prefix.$v.$suffix; },
