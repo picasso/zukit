@@ -80,7 +80,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		], $this->config() ?? []);
 
 		$this->prefix = $this->get('prefix') ?? $this->prefix;
-		$this->options_key = $this->get('options_key') ?? $this->prefix.'_options';
+		$this->options_key = $this->get('options_key') ?? $this->prefix_it('options', '_');
 		// keep updated values in config (there they can be available for add-ons)
 		$this->config['prefix'] = $this->prefix;
 		$this->config['options_key'] = $this->options_key;
@@ -490,19 +490,28 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	// Common Interface to Zu Snippets helpers with availability check --------]
 
-	public function snippets($func, ...$params) {
-		if(!function_exists('zu_snippets')) return null;
-		$snippets = zu_snippets();
-		if($snippets->method_exists($func)) return call_user_func_array([$snippets, $func], $params);
-		else {
-			if($this->debug_mode) $this->logc('!Snippet called was not found!', $func);
-			return null;
-		}
-	}
-
 	public function register_snippet($func) {
 		if(!function_exists('zu_snippets')) return false;
 		zu_snippets()->register_method($func, $this);
 		return true;
+	}
+
+	public function snippets($func, ...$params) {
+		return $this->call_snippet(false, $func, $params);
+	}
+
+	// use this method to supress error logging
+	public function _snippets($func, ...$params) {
+		return $this->call_snippet(true, $func, $params);
+	}
+
+	private function call_snippet($quiet, $func, $params) {
+		if(!function_exists('zu_snippets')) return null;
+		$snippets = zu_snippets();
+		if($snippets->method_exists($func)) return call_user_func_array([$snippets, $func], $params);
+		else {
+			if($this->debug_mode && !$quiet) $this->logc('!Snippet called was not found!', $func);
+			return null;
+		}
 	}
 }

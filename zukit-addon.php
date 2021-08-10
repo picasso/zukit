@@ -157,6 +157,7 @@ class zukit_Addon {
 	}
 
 	// Common interface to plugin methods with availability check -------------]
+	
 	// NOTE: only public functions and property can be called with this helper
 	protected function with_another($prop, $func, ...$params) {
 		if(property_exists($this->plugin, $prop)) {
@@ -173,6 +174,10 @@ class zukit_Addon {
 
 	protected function snippets(...$params) {
 		return call_user_func_array([$this->plugin, 'snippets'], $params);
+	}
+
+	protected function _snippets(...$params) {
+		return call_user_func_array([$this->plugin, '_snippets'], $params);
 	}
 
 	// Helpers ----------------------------------------------------------------]
