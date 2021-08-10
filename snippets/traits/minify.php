@@ -3,7 +3,7 @@ trait zusnippets_Minify {
 
 	// Simple JS minifier -----------------------------------------------------]
 	// https://gist.github.com/taufik-nurrohman/d7b310dea3b33e4732c0
-	
+
 	public function minify_js($input) {
 		if(!is_string($input)) return $input;
 		// normalize line–break(s)
@@ -63,7 +63,7 @@ trait zusnippets_Minify {
 	// Simple HTML minifier ---------------------------------------------------]
 	// https://stackoverflow.com/questions/6225351/how-to-minify-php-page-html-output
 
-	public function minify_html($buffer, $remove_ending_tags = true) {
+	public function minify_html($buffer, $remove_ending_tags = true, $strip_comments = true) {
 
 		//remove redundant (white-space) characters
 		$replace = [
@@ -101,6 +101,8 @@ trait zusnippets_Minify {
 		    '</option>', '</li>', '</dt>', '</dd>', '</tr>', '</th>', '</td>'
 		);
 		$buffer = $remove_ending_tags ? str_ireplace($remove, '', $buffer) : $buffer;
+		// strip HTML comments (it strips conditional comments too, be careful!)
+		$buffer = $strip_comments ? preg_replace('/(?=<!--)([\s\S]*?)-->/', '', $buffer) : $buffer;
 
 		return $buffer;
 	}
