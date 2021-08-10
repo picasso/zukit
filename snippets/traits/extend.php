@@ -22,8 +22,12 @@ trait zusnippets_Extend {
 				'ex_methods'	=> $this->ex_methods,
 			]);
 			if($this->soft_exception === false) throw new BadMethodCallException();
-			return null;		
+			return null;
 		}
 		return call_user_func_array($this->ex_methods[$method], $args);
+	}
+
+	private function maybe_call($method, ...$args) {
+		return $this->method_exists($method) ? call_user_func_array($this->ex_methods[$method], $args) : null;
 	}
 }
