@@ -3,6 +3,11 @@ trait zusnippets_Useful {
 
 	// Useful functions -------------------------------------------------------]
 
+	// to determine whether an array has some 'string' keys (associative array)
+	public function is_assoc_array($array) {
+		return count(array_filter(array_keys($array ?? []), 'is_string')) > 0;
+	}
+
 	public function array_md5($array) {
 		// https://stackoverflow.com/questions/2254220/php-best-way-to-md5-multi-dimensional-array
 	    // since we're inside a function (which uses a copied array, not
@@ -161,8 +166,18 @@ trait zusnippets_Useful {
 		return $values;
 	}
 
-	public function shortcode_atts_with_cast($atts, $pairs, $types, $shortcode = '') {
-		return shortcode_atts($pairs, $this->cast($atts, $types), $shortcode);
+	// if keys are given that need to be converted to the boolean type
+	public function cast_bool($values, $keys) {
+		if(!empty($keys)) {
+			if(is_string($keys)) $keys = [$keys];
+			return $this->cast($values, array_fill_keys($keys, 'bool'));
+		}
+		return $values;
+	}
+
+	public function shortcode_atts_with_cast($pairs, $atts, $types, $shortcode = '') {
+		$fixed_atts = $this->is_assoc_array($types) ? $this->cast($atts, $types) : $this->cast_bool($atts, $types);
+		return shortcode_atts($pairs, $fixed_atts, $shortcode);
 	}
 
 	public function blank_data_uri_img() {
