@@ -131,7 +131,7 @@ trait zukit_Scripts {
             // and boolean values to be interpreted as strings
             // https://wpbeaches.com/using-wp_localize_script-and-jquery-values-including-strings-booleans-and-integers/
             if(!$is_style && !empty($data)) {
-                $jsdata_name = $data['jsdata_name'] ?? $this->prefix.'_jsdata';
+                $jsdata_name = $data['jsdata_name'] ?? $this->prefix_it('jsdata', '_');
                 if(isset($data['jsdata_name'])) unset($data['jsdata_name']);
                 wp_localize_script($handle, $jsdata_name, ['data' => $data]);
             }

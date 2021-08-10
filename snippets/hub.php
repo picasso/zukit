@@ -31,7 +31,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.3.3';
+        $this->version = '1.3.4';
 		$this->init_inline_style_scripts();
 	}
 }

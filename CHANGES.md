@@ -1,3 +1,46 @@
+#### 1.3.0 / 2021-08-10
+* supports `version` property
+* implemented `Extend` trait to dynamically extend snippets with new methods
+* added `Exchange` trait to support communication between add-ons
+* implemented extended logging for debug `Exchange` methods
+* added SVG curves
+* added support for main stylesheet (_themes only_)
+* added `$dir` and `$uri` properties in `zukit_Addon` class
+
+* implemented snippets for working with arrays: `array_without_keys`, `array_without_null`, `array_pick_keys`, `array_with_defaults`, `array_flatten`, `is_assoc_array`, `array_md5`
+* implemented snippets: `cast_bool`, `human_time_diff`, `remove_p`, `minify_js`, `get_default_background_color`
+* added `_snippets` method to call snippets without warning if the snippet does not exist
+* added `maybe_call` method to call snippets that can be added from plugins
+* added static `trace_summary` method for `zukit_Logging` trait
+* added `register_snippet`, `get_parent_option` and `is_origin` methods
+* added `with_another` method to cross-call add-on methods
+* added `println` and `zu_printfln` functions
+* added profiling methods (with __QueryMonitor__)
+
+* methods for `featured` have been moved to a separate trait
+* methods for `options` have been moved to a separate trait
+* refactoring inline methods
+* refactoring `plugin_data` method to work with themes
+* renaming to `get_file_metadata`
+* refactoring `info` method based on recent changes
+* improved `split_classes` method with `array_flatten`
+* method `is_option` now supports array for `$key` argument and `!` symbol to negate check
+* added check for `null` array in array helpers
+* improved interaction with `options`
+* improved `zu_log_if` function
+* support for intentional `whitespace` in `zu_sprintf` function
+* improved `zu_sprintf` function to clean up more empty spaces
+* strip HTML comments in `minify_html` method
+* renaming `add_fonts_style` to `add_inline_fonts_style`
+
+* do not use PHP 7.* features in load.php!
+* performance optimization for `insert_svg_from_file`
+* fixed bug with mixing admin and front-end inlines
+* fixed bug in `get_option` when value is array
+* fixed: `add_admin_inline_style` is called only once now
+* fixed bug with `GitHub` uri
+* small improvements
+
 #### 1.2.3 / 2021-05-03
 * fixed bug with headers in `ZukitTable` component
 * fixed bug for `Prevent Script Caching` when dealing with `zukit.min.js`
