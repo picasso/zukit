@@ -36,16 +36,31 @@ trait zukit_Exchange {
 
 	public function call_provider($name, ...$params) {
 		$default_value = $this->get_default($name, $params);
-		// $test = 'get_tags';
-		// zu_log_if($name === $test, $name, $this->method_exists($name), $default_value);
 		if($this->method_exists($name)) {
 			$func = $this->methods[$name];
-			// zu_log_if($name === $test, $func, $func[1], is_callable($func), $params);
-			$res = is_callable($func) ? call_user_func_array($func, $params) : $default_value;
-			// zu_log_if($name === $test, $res);
-			return $res;
+			return is_callable($func) ? call_user_func_array($func, $params) : $default_value;
 		}
 		return $default_value;
+	}
+
+	public function check_provider($name, ...$params) {
+		$method = $this->methods[$name] ?? null;
+		return [
+			'exists'	=> $this->method_exists($name) ? 'yes' : 'no',
+			'func'		=> $method[1] ?? '?',
+			'defaults'	=> $this->get_default($name, $params),
+			'class'		=> is_object($method[0] ?? null) ? get_class($method[0]) : null,
+		];
+	}
+
+	public function log_providers() {
+		if(wp_doing_cron() || wp_doing_ajax()) return;
+		$methods = $this->methods;
+		foreach($methods as $key => $value) {
+			$name = is_object($value[0]) ? get_class($value[0]) : false;
+			if($name !== false) $methods[$key][0] = "instance of $name";
+		}
+		zu_logc('*Exchange providers', $methods);
 	}
 }
 
@@ -53,13 +68,43 @@ trait zukit_Exchange {
 
 trait zukit_Provider {
 
+	static private $output_providers = true;
+	static private $logged_providers = [];
+	protected function debug_providers() {}
+
 	protected function register_provider($name) {
-		return $this->plugin->register_provider($name, $this, 'origin');
+		return $this->plugin->register_provider($name, $this); //, 'origin');
 	}
-	protected function register_provider_suffix($name, $suffix = null) {
-		return $this->plugin->register_provider($name, $this, $suffix);
+
+	private function log_calls($method, $args) {
+		$debug = $this->debug_providers() ?? [];
+		// skip logging if array is empty or contains '!all' element
+		if(empty($debug) || in_array('!all', $debug)) return;
+		if(in_array($method, $debug) || in_array('all', $debug)) {
+			// with a large volume of Exchange - it is a very resource-intensive operation,
+			// so log all providers only once at the very beginning
+			if(self::$output_providers) {
+				$this->plugin->log_providers();
+				self::$output_providers = false;
+			}
+			$check = $this->plugin->check_provider($method, ...$args);
+			$context = 'Check provider';
+			// if there is a key 'missing' then log only non-existent methods
+			if(in_array('missing', $debug)) {
+			  $check = $check['exists'] === 'yes' ? null : $check;
+			  if($check !== null) $context = '?Missing provider';
+			}
+			// exclude method logging if it is present in the array with a minus sign
+			// do not log information for each call, only once
+			if($check && !in_array("-$method", $debug) && !in_array($method, self::$logged_providers)) {
+				zu_logc("$context [$method]", $check);
+				self::$logged_providers[] = $method;
+			}
+		}
 	}
-	protected function call_provider($name, ...$params) {
-		return $this->plugin->call_provider($name, ...$params);
+
+	public function __call($method, $args) {
+		$this->log_calls($method, $args);
+		return $this->plugin->call_provider($method, ...$args);
 	}
 }
