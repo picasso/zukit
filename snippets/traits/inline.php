@@ -7,8 +7,8 @@ trait zusnippets_Inline {
 	private $admin_script = [];
 
 	private $fonts = [];
-    // set 'true' for debuging
-    private $without_minify = false;
+    // set 'false' for debuging
+    private $minify_fonts = true;
 
     private function init_inline_style_scripts() {
         if(is_admin()) {
@@ -22,19 +22,19 @@ trait zusnippets_Inline {
 
     // Inline styles to the footer --------------------------------------------]
 
-	public function add_inline_style($name, $style, $css_file = null, $is_admin = false) {
+	public function add_inline_style($name, $style, $css_file = null, $minify = true, $is_admin = false) {
         if($css_file && file_exists($css_file)) {
     		$style = file_get_contents($css_file);
         }
         // if there is no selector or empty $style then do nothing
 		if(!empty($name) && !empty(trim($style))) {
-            if($is_admin) $this->admin_style[] = ['name' => $name, 'style' => $style];
-			else $this->inline_style[] = ['name' => $name, 'style' => $style];
+            if($is_admin) $this->admin_style[] = ['name' => $name, 'style' => $style, 'minify' => $minify];
+			else $this->inline_style[] = ['name' => $name, 'style' => $style, 'minify' => $minify];
 		}
 	}
 
-	public function add_admin_inline_style($name, $style, $css_file = null) {
-        $this->add_inline_style($name, $style, $css_file, true);
+	public function add_admin_inline_style($name, $style, $css_file = null, $minify = true) {
+        $this->add_inline_style($name, $style, $css_file, $minify, true);
 	}
 
 	public function add_inline_fonts_style($font_list, $dir, $uri) {
@@ -55,19 +55,19 @@ trait zusnippets_Inline {
 
     // Inline script to the footer --------------------------------------------]
 
-	public function add_inline_script($script_code, $js_file = null, $is_admin = false) {
+	public function add_inline_script($script_code, $js_file = null, $minify = true, $is_admin = false) {
         if($js_file && file_exists($js_file)) {
             $script_code = file_get_contents($js_file);
         }
         // if there is no code then do nothing
         if(!empty($script_code)) {
-            if($is_admin) $this->admin_script[] = $script_code;
-			else $this->inline_script[] = $script_code;
+            if($is_admin) $this->admin_script[] = ['script' => $script_code, 'minify' => $minify];
+			else $this->inline_script[] = ['script' => $script_code, 'minify' => $minify];
 		}
 	}
 
-	public function add_admin_inline_script($script_code, $js_file = null) {
-        $this->add_inline_script($script_code, $js_file, true);
+	public function add_admin_inline_script($script_code, $js_file = null, $minify = true) {
+        $this->add_inline_script($script_code, $js_file, $minify, true);
 	}
 
     // Print inline styles & scripts ------------------------------------------]
@@ -78,55 +78,52 @@ trait zusnippets_Inline {
         if(is_admin()) {
     		foreach($this->admin_style as $style_data) {
     			// if '_responsive' then insert CSS without processing
-    			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
-    			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+    			if(stripos($style_data['name'], '_responsive') !== false) $style = $style_data['style'];
+    			else $style = sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+                $inline_style .= $style_data['minify'] ? $this->minify_css($style) : $style;
     		}
         } else {
 
     		foreach($this->inline_style as $style_data) {
     			// if '_responsive' then insert CSS without processing
-    			if(stripos($style_data['name'], '_responsive') !== false) $inline_style .= $style_data['style'];
-    			else $inline_style .= sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+    			if(stripos($style_data['name'], '_responsive') !== false) $style = $style_data['style'];
+    			else $style = sprintf('%1$s { %2$s}', $style_data['name'], $style_data['style']);
+                $inline_style .= $style_data['minify'] ? $this->minify_css($style) : $style;
     		}
 
     		if(!empty($this->fonts)) {
+                $fonts_style = '';
     			foreach($this->fonts['list'] as $page => $file) {
     				if(is_page($page)) {
     					$filename = $this->fonts['dir'].$file;
     					if(file_exists($filename)) {
-    						$inline_style .= preg_replace('/%%path%%/i', $this->fonts['uri'], file_get_contents($filename));
+    						$fonts_style .= preg_replace('/%%path%%/i', $this->fonts['uri'], file_get_contents($filename));
     					}
     				}
     			}
+                $inline_style .= $this->minify_fonts ? $this->minify_css($fonts_style) : $fonts_style;
     		}
         }
 
     	if(!empty(trim($inline_style))) {
-    		printf(
-                '<style type="text/css" id="zu-inline-style">%1$s</style>',
-                $this->without_minify ? $inline_style : $this->minify_css($inline_style)
-            );
+    		printf('<style type="text/css" id="zu-inline-style">%1$s</style>', $inline_style);
     	}
     }
 
     public function maybe_add_inline_script() {
 		$scripts = [];
         if(is_admin()) {
-    		foreach($this->admin_script as $script_code) {
-    			$scripts[] = sprintf("%s\n", $script_code);
+    		foreach($this->admin_script as $data) {
+    			$scripts[] = sprintf("%s\n", $data['minify'] ? $this->minify_js($data['script']) : $data['script']);
     		}
         } else {
-    		foreach($this->inline_script as $script_code) {
-                $scripts[] = sprintf("%s\n", $script_code);
+    		foreach($this->inline_script as $data) {
+                $scripts[] = sprintf("%s\n", $data['minify'] ? $this->minify_js($data['script']) : $data['script']);
     		}
         }
-
     	if(!empty($scripts)) {
             $scripts = sprintf('document.addEventListener("DOMContentLoaded", function() {%s})', implode('', $scripts));
-    		printf(
-                '<script type="text/javascript" id="zu-inline-script">%1$s</script>',
-                $this->without_minify ? $scripts : $this->minify_js($scripts)
-            );
+    		printf('<script type="text/javascript" id="zu-inline-script">%1$s</script>', $scripts);
     	}
     }
 }
