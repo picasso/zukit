@@ -1,4 +1,5 @@
 <?php
+include_once('traits/arrays.php');
 include_once('traits/classes.php');
 include_once('traits/content.php');
 include_once('traits/curve.php');
@@ -15,7 +16,8 @@ include_once('traits/useful.php');
 
 class zukit_Snippets extends zukit_SingletonLogging {
 
-	use zusnippets_Classes,
+	use zusnippets_Arrays,
+		zusnippets_Classes,
 		zusnippets_Content,
 		zusnippets_Curve,
 		zusnippets_Date,
@@ -31,7 +33,7 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.3.4';
+        $this->version = '1.3.5';
 		$this->init_inline_style_scripts();
 	}
 }
@@ -66,7 +68,7 @@ if(!function_exists('zu_sprintf')) {
 		// %2$s
 		// that is, if the format directives are divided by spaces - it is intentionally,
 		// and if they are simply located on different rows - then  it's just resulting from the 'human-readable' template
-		$format = preg_replace('/\$s\n\s+\%/', '$s%', $format);
+		$format = preg_replace('/\$s\n\s+\%/', '$s %', $format);
 		array_unshift($params, $format);
 		$output = call_user_func_array('sprintf', $params);
 
