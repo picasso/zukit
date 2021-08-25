@@ -2,6 +2,7 @@
 trait zusnippets_Extend {
 
 	private $ex_methods = [];
+	private $ex_defaults = [];
 	private $soft_exception = true;
 
     // Dynamically Extend snippets with new methods ---------------------------]
@@ -10,8 +11,9 @@ trait zusnippets_Extend {
 		return method_exists($this, $name) || array_key_exists($name, $this->ex_methods);
 	}
 
-	public function register_method($name, $instance) {
+	public function register_method($name, $instance, $default = null) {
 		$this->ex_methods[$name] = [$instance, $name];
+		$this->ex_defaults[$name] = $default;
 	}
 
 	public function __call($method, $args) {
@@ -24,10 +26,17 @@ trait zusnippets_Extend {
 			if($this->soft_exception === false) throw new BadMethodCallException();
 			return null;
 		}
-		return call_user_func_array($this->ex_methods[$method], $args);
+
+		return $this->get_call_or_default($method, $args);
+	}
+
+	private function get_call_or_default($method, $args) {
+		$func = $this->ex_methods[$method] ?? null;
+		// zu_log($method, $func, is_callable($func), $this->ex_defaults[$method]);
+		return is_callable($func) ? call_user_func_array($func, $args) : ($this->ex_defaults[$method] ?? null);
 	}
 
 	private function maybe_call($method, ...$args) {
-		return $this->method_exists($method) ? call_user_func_array($this->ex_methods[$method], $args) : null;
+		return $this->method_exists($method) ? $this->get_call_or_default($method, $args) : null;
 	}
 }
