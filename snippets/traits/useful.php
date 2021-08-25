@@ -73,8 +73,8 @@ trait zusnippets_Useful {
 		return filter_var($test_url, FILTER_VALIDATE_URL) !== false;
 	}
 
-	public function to_bool($value) {
-		return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+	public function to_bool($value, $null_on_failure = false) {
+		return filter_var($value, FILTER_VALIDATE_BOOLEAN, $null_on_failure ? FILTER_NULL_ON_FAILURE : null);
 	}
 
 	public function to_float($value) {
