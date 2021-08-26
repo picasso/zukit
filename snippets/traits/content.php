@@ -101,7 +101,7 @@ trait zusnippets_Content {
 	public function get_excerpt($post_id = null, $amount = 270, $force_from_content = false) {
 		global $post;
 
-		if(is_null($post_id)) $post_id = $post->ID;
+		if(is_null($post_id)) $post_id = is_object($post) ? $post->ID : null;
 
 		if(!$force_from_content && has_excerpt($post_id)) {
 			$raw_excerpt = apply_filters('the_excerpt', get_post_field('post_excerpt', $post_id));
