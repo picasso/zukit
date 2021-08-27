@@ -85,14 +85,15 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		$this->config['prefix'] = $this->prefix;
 		$this->config['options_key'] = $this->options_key;
 
-		// Load 'options' before any other methods & actions and check for install
+		// Load 'options' before any other methods & actions ('true' - check if installation is required)
 		$this->options(true);
 
-		add_action('init', [$this, 'init'], 10);
-		add_action('init', function() { $this->do_addons('init'); }, 11);
+		// divide the 'init' for plugins and themes: ($is_admin, $for_plugins)
+		add_action('init', function() { $this->init_action(false, true); }, 9);
+		add_action('init', function() { $this->init_action(false, false); }, 10);
 
-		add_action('admin_init', [$this, 'admin_init'], 10);
-		add_action('admin_init', function() { $this->do_addons('admin_init'); }, 11);
+		add_action('admin_init', function() { $this->init_action(true, true); }, 9);
+		add_action('admin_init', function() { $this->init_action(true, false); }, 10);
 
 		add_action('wp_enqueue_scripts', [$this, 'frontend_enqueue'], 10);
 		add_action('wp_enqueue_scripts', function() { $this->do_addons('enqueue'); }, 11);
@@ -123,10 +124,25 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	protected function config() {}
 	protected function status() {}
 
-	public function init() {}
-	public function admin_init() {}
-
 	public function zukit_ver() { return self::$zukit_version; }
+
+	// divide the 'init' for plugins and themes
+	// the 'init' for plugins will be called before the themes
+	public function init_action($is_admin, $for_plugins) {
+		$plugin_related = $this->is_plugin && $for_plugins;
+		$theme_related = !$this->is_plugin && !$for_plugins;
+		if(!$is_admin && ($plugin_related || $theme_related)) {
+			$this->init();
+			$this->do_addons('init');
+		}
+		if($is_admin && ($plugin_related || $theme_related)) {
+			$this->admin_init();
+			$this->do_addons('admin_init');
+		}
+	}
+
+	protected function init() {}
+	protected function admin_init() {}
 
 	// Translations -----------------------------------------------------------]
 
