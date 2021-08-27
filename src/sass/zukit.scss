@@ -151,6 +151,23 @@ $divider-component-class: zukit-divider;
 				@supports ((position: -webkit-sticky) or (position: sticky)) {
 				      flex-basis: 100%;
 				}
+				&.editor-styles-wrapper {
+					font-family: inherit;
+					font-size: inherit;
+					line-height: inherit;
+					ul, ol {
+					    margin: inherit;
+					    padding: inherit;
+					    list-style-type: none;
+					    box-sizing: inherit;
+						li {
+							margin-bottom: 6px;
+						}
+					}
+					select {
+						font-family: inherit;
+					}
+				}
 			}
 
 			.block-editor-block-list__block {
@@ -162,8 +179,13 @@ $divider-component-class: zukit-divider;
 				box-shadow: 0 1px 1px rgba(black, 0.04);
 			}
 
+			.components-panel__body-title .components-button {
+				font-size: $panel-title-font-size;
+				font-weight: $panel-title-font-weight;
+			}
+
 			.components-base-control,
-				.components-button:not(.zukit-select-item__button):not(.__plugin_actions):not(.__exclude) {
+				.components-button:not(.zukit-select-item__button):not(.__plugin_actions):not(.__exclude):not(.components-panel__body-toggle) {
 				font-size: $basic-font-size !important;
 				color: $admin-grey-blue-color;
 			}
