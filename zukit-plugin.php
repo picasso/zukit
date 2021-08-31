@@ -343,7 +343,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	protected function should_load_js($is_frontend, $hook) { return false; }
 	protected function enqueue_more($is_frontend, $hook) {}
 
-	public function frontend_handles() {
+	public function frontend_handles($handle = null) {
 		$handles = ['script' => null, 'style' => null];
 		if($this->should_load_js(true, null)) $handles['script'] = $this->enqueue_script(
 			null,
@@ -355,7 +355,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 			$this->css_params_validated(true),
 			true
 		);
-		return $handles;
+		return $handle ? ($handles[$handle] ?? null) : $handles;
 	}
 
 	public function enqueue_main_style() {
@@ -448,6 +448,8 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	}
 
 	public function prefix_it($str, $divider = '-') {
+		// if '$str' starts with '!' then do not prefix it (could be an absolute path)
+		if(substr($str, 0, 1) === '!') return $str;
 		return sprintf('%1$s%2$s%3$s', $this->prefix, $divider, $str);
 	}
 
