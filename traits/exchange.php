@@ -103,7 +103,7 @@ trait zukit_Provider {
 		}
 	}
 
-	public function __call($method, $args) {
+	public function call_addon_provider($method, $args) {
 		$this->log_calls($method, $args);
 		return $this->plugin->call_provider($method, ...$args);
 	}

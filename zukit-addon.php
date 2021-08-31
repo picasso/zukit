@@ -95,17 +95,45 @@ class zukit_Addon {
 
 	// Redirect to parent methods ---------------------------------------------]
 
-	public function is_origin($get_root = false) {
-		return $this->plugin->is_origin($get_root);
+	protected function extend_parent_redirects() {}
+
+	public function __call($method, $args) {
+		$available_methods = [
+			'is_origin',
+			'get_file_version',
+			'register_only',
+			'enqueue_only',
+			'ajax_error',
+			'ajax_nonce',
+			'ajax_send',
+			'create_notice',
+			'ends_with_slug',
+			'is_error',
+			'logd',
+			'sprintf_dir',
+			'sprintf_uri',
+			'prefix_it',
+			'snippets',
+			'_snippets',
+		];
+		if(!in_array($method, array_merge($available_methods, $this->extend_parent_redirects() ?? []))) {
+			// if we have 'zukit_Exchange' trait - then transfer processing further
+			if(method_exists($this, 'call_addon_provider')) {
+				return $this->call_addon_provider($method, $args);
+			}
+			$this->logc('?Trying to call an unavailable parent method', [
+				'method'		=> $method,
+				'args'			=> $args,
+				'available'		=> $available_methods,
+			]);
+			return null;
+		}
+		$func = [$this->plugin, $method];
+		return is_callable($func) ? call_user_func_array($func, $args) : null;
 	}
-	protected function sprintf_dir(...$params) {
-		return call_user_func_array([$this->plugin, 'sprintf_dir'], $params);
-	}
-	protected function sprintf_uri(...$params) {
-		return call_user_func_array([$this->plugin, 'sprintf_uri'], $params);
-	}
+
 	protected function enqueue_style($file, $params = []) {
-		// $is_style, $is_frontend, $params
+		// enforce_defaults: $is_style, $is_frontend, $params
 		$params_with_defaults = $this->plugin->enforce_defaults(true, true, $params);
 		return $this->plugin->enqueue_style($this->filename($file, $params), $params_with_defaults);
 	}
@@ -121,27 +149,7 @@ class zukit_Addon {
 		$params_with_defaults = $this->plugin->enforce_defaults(false, false, $params);
 		return $this->plugin->admin_enqueue_script($this->filename($file, $params), $params_with_defaults);
 	}
-	protected function get_file_version($filepath) {
-		$this->plugin->get_file_version($filepath);
-	}
-	protected function ends_with_slug($hook, $slug = null) {
-		return $this->plugin->ends_with_slug($hook, $slug);
-	}
-	protected function ajax_error($error, $params = null) {
-		return $this->plugin->ajax_error($error, $params);
-	}
-	protected function check_error($error, $ajax = false, &$report = null) {
-		return $this->plugin->check_error($error, $ajax, $report);
-	}
-	protected function ajax_nonce($create = false) {
-		return $this->plugin->ajax_nonce($create, $this->nonce);
-	}
-	protected function ajax_send($result) {
-		return $this->plugin->ajax_send($result);
-	}
-	protected function create_notice($status, $message, $actions = []) {
-		return $this->plugin->create_notice($status, $message, $actions);
-	}
+	// we need an additional backtrace shift to compensate for the nested call
 	protected function log(...$params) {
 		$this->plugin->debug_line_shift(1);
         $this->plugin->log(...$params);
@@ -152,11 +160,8 @@ class zukit_Addon {
 		$this->plugin->logc($context, ...$params);
 		$this->plugin->debug_line_shift(0);
 	}
-	protected function logd(...$params) {
-		$this->plugin->logd(...$params);
-	}
 
-	// Common interface to plugin methods with availability check -------------]
+	// Common interface to parent methods with availability check -------------]
 
 	// NOTE: only public functions and property can be called with this helper
 	protected function with_another($prop, $func, ...$params) {
@@ -172,21 +177,7 @@ class zukit_Addon {
 		else return null;
 	}
 
-	protected function snippets(...$params) {
-		return call_user_func_array([$this->plugin, 'snippets'], $params);
-	}
-
-	protected function _snippets(...$params) {
-		return call_user_func_array([$this->plugin, '_snippets'], $params);
-	}
-
 	// Helpers ----------------------------------------------------------------]
-
-	protected function prefix_it($str, $divider = '-') {
-		// if $str starts with '!' then do not prefix it (could be an absolute path)
-		if(substr($str, 0, 1) === '!') return $str;
-		return $this->plugin->prefix_it($str, $divider);
-	}
 
 	protected function get($key, $from_plugin = false, $default_value = null) {
 		return $this->plugin->get($key, $default_value, $from_plugin ? null : $this->config);
