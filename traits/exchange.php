@@ -81,12 +81,6 @@ trait zukit_Provider {
 		// skip logging if array is empty or contains '!all' element
 		if(empty($debug) || in_array('!all', $debug)) return;
 		if(in_array($method, $debug) || in_array('all', $debug)) {
-			// with a large volume of Exchange - it is a very resource-intensive operation,
-			// so log all providers only once at the very beginning
-			if(self::$output_providers) {
-				$this->plugin->log_providers();
-				self::$output_providers = false;
-			}
 			$check = $this->plugin->check_provider($method, ...$args);
 			$context = 'Check provider';
 			// if there is a key 'missing' then log only non-existent methods
@@ -97,6 +91,12 @@ trait zukit_Provider {
 			// exclude method logging if it is present in the array with a minus sign
 			// do not log information for each call, only once
 			if($check && !in_array("-$method", $debug) && !in_array($method, self::$logged_providers)) {
+				// with a large volume of Exchange - it is a very resource-intensive operation,
+				// so log all providers only once at the very beginning
+				if(self::$output_providers) {
+					$this->plugin->log_providers();
+					self::$output_providers = false;
+				}
 				zu_logc("$context [$method]", $check);
 				self::$logged_providers[] = $method;
 			}
