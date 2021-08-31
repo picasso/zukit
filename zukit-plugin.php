@@ -496,11 +496,9 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	// Error handling ---------------------------------------------------------]
 
-	public function check_error($error, $ajax = false, &$report = null) {
+	public function is_error($error) {
 		if(is_wp_error($error)) {
-			if(isset($report) && isset($report['errors'])) $report['errors'] += 1;
-			if($ajax) $this->ajax_error($error, is_array($report) ? null : $report);
-			$this->logc('!WP_Error occurred', $error, $report);
+			zu_logc('!WP_Error occurred', $error->get_error_message());
 			return true;
 		}
 		return false;
