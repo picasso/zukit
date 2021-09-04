@@ -80,13 +80,10 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	public function init() {
-		if($this->blocks_available) {
-			$this->register_blocks();
-		}
+		$this->register_blocks();
 	}
 
 	public function register_blocks() {
-
 		// return early if not available
 		if(!$this->blocks_available) return;
 
@@ -115,21 +112,26 @@ class zukit_Blocks extends zukit_Addon {
 
 	// Scripts & Styles management --------------------------------------------]
 
-	private function script_defaults() {
-		return [
+	private function script_defaults($kind = null, $key = null) {
+		$defaults = [
 			// front-end script & style
 			'script'	=> [
 				'add_prefix'	=> false,
-				'deps'			=> ['wp-edit-post'],
+				'deps'			=> ['wp-block-library', 'wp-editor', 'wp-plugins'], // ['wp-edit-post'],
+				// данные депенденси выпали при замене, но нужны ли они были вообще?
+				// media-models,
+				// media-views,
+				// postbox,
 				'data'			=> [$this, 'jsdata_defaults'],
 				'handle'		=> $this->handle,
 			],
 			'style'		=> [
 				'add_prefix'	=> false,
-				'deps'			=> ['wp-edit-post'],
+				'deps'			=> ['wp-edit-blocks', 'wp-block-editor', 'wp-nux'],
 				'handle'		=> $this->handle,
 			],
 		];
+		return $kind && $key ? ($defaults[$kind][$key] ?? null) : $defaults;
 	}
 
 	private function jsdata_defaults() {
@@ -186,16 +188,6 @@ class zukit_Blocks extends zukit_Addon {
 
 	private function enqueue_zukit_blocks() {
 		if(self::$zukit_loaded === false && $this->is_blocks_config('load_zukit')) {
-			// dependencies for Zukit Blocks script & styles
-			$js_deps = ['wp-edit-post'];
-			// 	'wp-blocks',
-			// 	'wp-i18n',
-			// 	'wp-element',
-			// 	'wp-plugins',
-			// 	'wp-components',
-			// 	'wp-edit-post'
-
-			$css_deps = ['wp-edit-post'];
 			// params for 'zukit-blocks' script
 			$zukit_params = [
 				'absolute'		=> true,
@@ -204,11 +196,14 @@ class zukit_Blocks extends zukit_Addon {
 					'jsdata_name'	=> 'zukit_jsdata',
 					'colors'		=> $this->get_colors(),
 				],
-				'deps'			=> $js_deps,
+				'deps'			=> $this->script_defaults('script', 'deps'),
 				'handle'		=> self::$zukit_handle,
 			];
 			$this->admin_enqueue_script(self::$zukit_handle, $zukit_params);
-			$this->admin_enqueue_style(self::$zukit_handle, array_merge($zukit_params, ['deps' => $css_deps, 'data' => null]));
+			$this->admin_enqueue_style(self::$zukit_handle, array_merge($zukit_params, [
+				'deps' => $this->script_defaults('style', 'deps'),
+				'data' => null
+			]));
 			// Parameters: [$handle, $domain, $path]. WordPress will check for a file in that path
 			// with the format ${domain}-${locale}-${handle}.json as the source of translations
         	wp_set_script_translations('zukit', 'zukit', $this->plugin->zukit_dirname('lang'));
