@@ -55,20 +55,41 @@ trait zusnippets_Inline {
 
     // Inline script to the footer --------------------------------------------]
 
-	public function add_inline_script($script_code, $js_file = null, $minify = true, $is_admin = false) {
-        if($js_file && file_exists($js_file)) {
-            $script_code = file_get_contents($js_file);
+    private function collect_inline_scripts($codes, $files) {
+        $scripts = [];
+        $codes = is_array($codes ?? null) ? $codes : [$codes ?? null];
+        $files = is_array($files ?? null) ? $files : [$files ?? null];
+        foreach($files as $script) {
+            $scripts[] = $script && file_exists($script) ? file_get_contents($script) : null;
         }
-        // if there is no code then do nothing
+        $scripts = $this->array_zip_merge($codes, $scripts);
+        return trim(implode("\n", $scripts));
+    }
+
+    // arguments '$script_code' and '$js_file' can be strings or  array of strings
+    // method mixes arguments from two arrays one by one
+    // If it is required for 'file' with an index 2 to be before 'code' with an index 2,
+    // then instead of code at the second index, you need to place 'null',
+    // and the code itself to place at the index 3
+    // ['code1', null, 'code2'], ['file1', 'file2']
+    // as a result, fragments will be glued in this way:
+    // 'code1', 'file1', 'file2', 'code2',
+	public function add_inline_script($script_code, $js_file = null, $minify = true, $is_admin = false) {
+        $script_code = $this->collect_inline_scripts($script_code, $js_file);
         if(!empty($script_code)) {
             if($is_admin) $this->admin_script[] = ['script' => $script_code, 'minify' => $minify];
 			else $this->inline_script[] = ['script' => $script_code, 'minify' => $minify];
 		}
 	}
 
-	public function add_admin_inline_script($script_code, $js_file = null, $minify = true) {
+    public function add_admin_inline_script($script_code, $js_file = null, $minify = true) {
         $this->add_inline_script($script_code, $js_file, $minify, true);
 	}
+
+    public function add_inline_script_now($script_code, $js_file = null, $minify = true) {
+        $script_code = $this->collect_inline_scripts($script_code, $js_file);
+        $this->print_inline_script($script_code, true);
+    }
 
     // Print inline styles & scripts ------------------------------------------]
 
@@ -121,9 +142,17 @@ trait zusnippets_Inline {
                 $scripts[] = sprintf("%s\n", $data['minify'] ? $this->minify_js($data['script']) : $data['script']);
     		}
         }
-    	if(!empty($scripts)) {
-            $scripts = sprintf('document.addEventListener("DOMContentLoaded", function() {%s})', implode('', $scripts));
-    		printf('<script type="text/javascript" id="zu-inline-script">%1$s</script>', $scripts);
-    	}
+        $this->print_inline_script($scripts);
+    }
+
+    private function print_inline_script($scripts, $now = false) {
+        if(!empty($scripts)) {
+            $scripts = is_array($scripts) ? implode('', $scripts) : $scripts;
+    		printf(
+                '<script type="text/javascript"%2$s>%1$s</script>',
+                sprintf('document.addEventListener("DOMContentLoaded", function() {%s})', $scripts),
+                $now ? '' : ' id="zu-inline-script"'
+            );
+        }
     }
 }
