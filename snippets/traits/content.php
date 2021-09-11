@@ -75,26 +75,26 @@ trait zusnippets_Content {
 
 	public function fix_content($content, $add_p = false, $preserve_br = true) {
 		$replace_tags_from_to = array (
-			'<br />' => '',
-			"<br />\n" => '',
+			'<br />'     => '',
+			"<br />\n"   => '',
 		);
-
 		$preserve_tags_from_to = array (
-			'<br />' => '[_br_]',
-			"<br />\n" => '[_br_]',
+			'<br />'     => '[_br_]',
+			"<br />\n"   => '[_br_]',
 		);
-
-		$fixed = preg_replace('/^\s|\s$/', '', strtr(trim($content), $preserve_br ? $preserve_tags_from_to : $replace_tags_from_to));
+		$fixed = preg_replace(
+            '/^\s|\s$/', '',
+            strtr(trim($content), $preserve_br ? $preserve_tags_from_to : $replace_tags_from_to)
+        );
 		if($preserve_br) $fixed = str_replace('[_br_]', '<br />', trim($fixed));
 		// remove <br> right after <p> & right before </p>
 		if($add_p) $fixed = preg_replace([
 			'#<p>\s*<br\s*/>#i',
 			'#<br\s*/>\s*</p>#i'
-			],
-			[
+			], [
 			'<p>',
 			'</p>'
-		], sprintf('<p>%1$s</p>', $fixed));
+		], sprintf('<p>%s</p>', $fixed));
 		return trim($fixed);
 	}
 
