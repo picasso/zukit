@@ -8,6 +8,26 @@ trait zukit_Logging {
 	// To filter log messages to some classes only
     private $log_filter = [];
 
+	// static method for trace summary, use self::trace_summary() to call
+	// as the second parameter, you can specify the name of the class whose existence you want to check
+	public static function trace_summary($title = 'Trace Summary', $class_name = 'Zukit') {
+		$trace = str_replace(',', PHP_EOL, wp_debug_backtrace_summary());
+		$ajax = wp_doing_ajax() ? 'DOING AJAX' : 'NOT AJAX';
+		$cron = wp_doing_cron() ? 'DOING CRON' : 'NOT CRON';
+		$exists = class_exists($class_name) ? 'class exists' : 'class NOT exists';
+		$log = sprintf(
+			'### %7$s ### : %1$s, %2$s, "%5$s" %6$s%4$s%3$s%4$s',
+			$ajax,
+			$cron,
+			$trace,
+			PHP_EOL,
+			$class_name,
+			$exists,
+			$title
+		);
+		error_log($log);
+	}
+
 	// Basic error logging ----------------------------------------------------]
 
 	public function log(...$params) {
@@ -189,24 +209,6 @@ trait zukit_Logging {
 		$log = PHP_EOL.$marker.PHP_EOL.'┌'.str_repeat('~', strlen($marker) - 1).PHP_EOL;
 		$log .= sprintf(' %s = %s', $info, preg_replace('/\n$/', '', $value));
 		$log .= PHP_EOL.str_repeat('~', strlen($marker)).'┘'.PHP_EOL;
-		error_log($log);
-	}
-
-	public static function trace_summary($title, $class_name = 'Zukit') {
-		$trace = str_replace(',', PHP_EOL, wp_debug_backtrace_summary());
-		$ajax = wp_doing_ajax() ? 'DOING AJAX' : 'NOT AJAX';
-		$cron = wp_doing_cron() ? 'DOING CRON' : 'NOT CRON';
-		$exists = class_exists('Zukit') ? 'class exists' : 'class NOT exists';
-		$log = sprintf(
-			'### %7$s ### : %1$s, %2$s, "%5$s" %6$s%4$s%3$s%4$s',
-			$ajax,
-			$cron,
-			$trace,
-			PHP_EOL,
-			$class_name,
-			$exists,
-			$title
-		);
 		error_log($log);
 	}
 }
