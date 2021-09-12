@@ -6,6 +6,7 @@
 
 trait zukit_Exchange {
 
+	static private $providers_logged = false;
 	private $methods = [];
 	private $defaults = [];
 
@@ -55,12 +56,34 @@ trait zukit_Exchange {
 
 	public function log_providers() {
 		if(wp_doing_cron() || wp_doing_ajax()) return;
-		$methods = $this->methods;
-		foreach($methods as $key => $value) {
-			$name = is_object($value[0]) ? get_class($value[0]) : false;
-			if($name !== false) $methods[$key][0] = "instance of $name";
+		// with a large volume of Exchange - it is a very resource-intensive operation,
+		// so log all providers only once at the very beginning
+		if(self::$providers_logged === false) {
+			$methods = $this->methods;
+			foreach($methods as $key => $value) {
+				$name = is_object($value[0]) ? get_class($value[0]) : false;
+				if($name !== false) $methods[$key][0] = "instance of $name";
+			}
+			zu_logc('*Exchange providers', $methods);
+			self::$providers_logged = true;
 		}
-		zu_logc('*Exchange providers', $methods);
+	}
+}
+
+trait zukit_ExchangeWithMagic {
+
+	use zukit_Exchange;
+	
+	public function __call($method, $args) {
+		if(!$this->method_exists($method)) {
+			$this->log_providers();
+			$this->logc('?Trying to call an unavailable method', [
+				'method'		=> $method,
+				'args'			=> $args,
+			]);
+			return null;
+		}
+		return $this->call_provider($method, ...$args);
 	}
 }
 
@@ -68,7 +91,6 @@ trait zukit_Exchange {
 
 trait zukit_Provider {
 
-	static private $output_providers = true;
 	static private $logged_providers = [];
 	protected function debug_providers() {}
 
@@ -91,12 +113,7 @@ trait zukit_Provider {
 			// exclude method logging if it is present in the array with a minus sign
 			// do not log information for each call, only once
 			if($check && !in_array("-$method", $debug) && !in_array($method, self::$logged_providers)) {
-				// with a large volume of Exchange - it is a very resource-intensive operation,
-				// so log all providers only once at the very beginning
-				if(self::$output_providers) {
-					$this->plugin->log_providers();
-					self::$output_providers = false;
-				}
+				$this->plugin->log_providers();
 				zu_logc("$context [$method]", $check);
 				self::$logged_providers[] = $method;
 			}
