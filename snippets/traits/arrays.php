@@ -35,11 +35,11 @@ trait zusnippets_Arrays {
 	}
 
 	public function array_without_keys($array, $keys) {
-		return array_diff_key($array ?? [], array_flip($keys));
+		return array_diff_key($array ?? [], array_flip($this->cast_array($keys)));
 	}
 
 	public function array_pick_keys($array, $keys) {
-		return array_intersect_key($array ?? [], array_flip($keys));
+		return array_intersect_key($array ?? [], array_flip($this->cast_array($keys)));
 	}
 
 	public function array_with_defaults($array, $defaults, $only_default_keys = true, $clean = true) {
@@ -60,6 +60,11 @@ trait zusnippets_Arrays {
 		$output = array_map(null, ...$arrays);
 		return array_values(array_filter($this->array_flatten($output)));
 	}
+
+	public function cast_array($array) {
+		return is_array($array) ? $array : (is_null($array) ? [] : [$array]);
+	}
+
     // 	$output = [];
     // 	// the loop incrementer takes each array out of the loop as it gets emptied by 'array_shift'
     // 	for($args = $arrays; count($args); $args = array_merge([], $args)) { // array_merge() to make copy of array $args = array_filter($args)
