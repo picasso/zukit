@@ -64,15 +64,4 @@ trait zusnippets_Arrays {
 	public function cast_array($array) {
 		return is_array($array) ? $array : (is_null($array) ? [] : [$array]);
 	}
-
-    // 	$output = [];
-    // 	// the loop incrementer takes each array out of the loop as it gets emptied by 'array_shift'
-    // 	for($args = $arrays; count($args); $args = array_merge([], $args)) { // array_merge() to make copy of array $args = array_filter($args)
-    // 		// '&$arg' allows 'array_shift' to change the original
-    // 		foreach($args as &$arg) {
-    // 			$output[] = array_shift($arg);
-    // 		}
-    // 	}
-    // 	return  array_filter($output);
-    // }
 }
