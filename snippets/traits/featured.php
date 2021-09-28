@@ -37,9 +37,11 @@ trait zusnippets_Featured {
                 // because if the ZuMedia plugin did not register the 'get_all_landscaped' method it will return null
 				$landscaped = array_values(array_intersect($ids, $this->get_all_landscaped() ?? $ids));
 				if(empty($landscaped)) $landscaped = $ids;
-				$this->random_attachment_id = (int)$landscaped[rand(0, count($landscaped) - 1)];
+                $index = rand(0, count($landscaped) - 1);
+				$this->random_attachment_id = (int) ($landscaped[$index] ?? 0);
 			} else {
-				$this->random_attachment_id = (int)$ids[rand(0, count($ids) - 1)];
+                $index = rand(0, count($ids) - 1);
+				$this->random_attachment_id = (int) ($ids[$index] ?? 0);
 			}
 		}
 		return $this->random_attachment_id;
