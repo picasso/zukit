@@ -62,6 +62,12 @@ class zukit_Addon {
 		}
 	}
 
+	public function extend_parent_options($parent_options) {
+		$options = $this->get('options');
+		$parent_options[$this->options_key] = $options;
+		return $parent_options;
+	}
+
 	public function options($options = null) {
 		if(!is_null($options)) $this->options = $options[$this->options_key] ?? [];
 		return $this->options;

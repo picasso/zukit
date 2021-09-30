@@ -18,11 +18,18 @@ trait zukit_Options {
 		return update_option($this->options_key, $options ?? $this->options);
 	}
 
-	public function reset_options($withAddons = true) {
+	public function initial_options($with_addons = true) {
+		$options = $this->get('options') ?? [];
+		if($with_addons) $this->extend_from_addons($options);
+		// remove non-existing options from add-ons
+		return $this->snippets('array_without_null', $options);
+	}
+
+	public function reset_options($with_addons = true) {
 		$options = $this->get('options') ?? [];
 		$this->update_options($options);
 		$this->options = $options;
-		if($withAddons) $this->reset_addons();
+		if($with_addons) $this->reset_addons();
 		return $this->options;
 	}
 
