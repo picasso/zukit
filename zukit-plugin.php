@@ -200,10 +200,12 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		return $addon;
 	}
 
-	public function do_addons($action, $param = '') {
+	public function do_addons($action, $param = '', &$return = null, $swap_param_and_return = false) {
 		foreach($this->addons as $addon) {
-
-			if(method_exists($addon, $action)) call_user_func_array([$addon, $action], [$param]);
+			if(method_exists($addon, $action)) {
+				$return = call_user_func_array([$addon, $action], [$param]);
+				if($swap_param_and_return) $param = $return;
+			}
 			else $this->logc('Unknown addon method!', [
 				'action' => $action,
 				'param' => $param]
@@ -212,6 +214,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	}
 
 	public function reset_addons() { $this->do_addons('init_options'); }
+	public function extend_from_addons(&$options) { $this->do_addons('extend_parent_options', $options, $options, true); }
 	public function clean_addons() { $this->do_addons('clean'); }
 	public function ajax_addons($action, $value) {
 
