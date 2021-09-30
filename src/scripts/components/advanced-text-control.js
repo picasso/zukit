@@ -41,6 +41,7 @@ const AdvTextControl = ({
 		showTooltip = true,
 		tooltipPosition = 'top center',
 		withoutClear,
+		id,
 		label,
 		value,
 		help,
@@ -125,6 +126,7 @@ const AdvTextControl = ({
 			}
 		) }>
 			<TextControl
+				id={ id }
 				type={ controlType }
 				label={ label }
 				help={ help }
