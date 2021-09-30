@@ -125,12 +125,15 @@ function getHook(hooks, update) {
 	return [key, hook];
 }
 
-function hookOptionsUpdate(updateValues, hooks) {
+function hookOptionsUpdate(updateValues, hooks, afterAjaxCallback) {
 
 	const [updateKey, updateHook] = getHook(hooks, updateValues);
-	if(!_.isFunction(updateHook)) return _.noop;
-
-	return () => updateHook(updateKey, updateValues[updateKey]);
+	if(!_.isFunction(updateHook) && !_.isFunction(afterAjaxCallback)) return _.noop;
+	// const onUpdateCallback = ()
+	return () => {
+		if(_.isFunction(afterAjaxCallback)) afterAjaxCallback();
+		if(_.isFunction(updateHook)) updateHook(updateKey, updateValues[updateKey]);
+	};
 }
 
 function hookOptionsReset(options, hooks) {
@@ -162,7 +165,7 @@ export function ajaxDoAction(params, callback, createNotice, updateLoading) {
 	});
 }
 
-export function ajaxUpdateOptions(keys, values, createNotice, updateHooks) {
+export function ajaxUpdateOptions(keys, values, createNotice, updateHooks, onSuccessCallback) {
 
 	// если 'keys' is null - значит это options reset и просто проверяем все hooks
 	if(keys === null) {
@@ -183,7 +186,7 @@ export function ajaxUpdateOptions(keys, values, createNotice, updateHooks) {
 	};
 
 	postAndCatchWithOptions({ ...requestData,
-		onSuccess: hookOptionsUpdate(values, updateHooks),
+		onSuccess: hookOptionsUpdate(values, updateHooks, onSuccessCallback),
 		onError: onErrorAjax(createNotice),
 	});
 }
