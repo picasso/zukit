@@ -289,9 +289,14 @@ trait zukit_Ajax {
 	public function ajax_reset_options() {
 		$options = $this->reset_options();
 		return $this->create_notice('infodata', // combine 'info' with 'data'
-			sprintf( 'Plugin "**%1$s**" settings are reset to defaults', $this->data['Name']),
+			sprintf('Plugin "**%1$s**" settings are reset to defaults', $this->data['Name']),
 			$options
 		);
+	}
+
+	public function ajax_default_options() {
+		$options = $this->initial_options();
+		return $this->create_notice('data', null, $options);
 	}
 
 	public function ajax_more($action, $value) { return null; }
@@ -318,6 +323,10 @@ trait zukit_Ajax {
 
 				case 'reset_options':
 					$result = $router->ajax_reset_options();
+					break;
+
+				case 'default_options':
+					$result = $router->ajax_default_options();
 					break;
 
 				// default debug actions
