@@ -221,7 +221,15 @@ $divider-component-class: zukit-divider;
 				}
 			}
 
-			.__select_label {
+		.__note {
+			padding: 1em;
+			line-height: 1.7;
+			border: 1px solid $admin-gold-color;
+			border-radius: 5px;
+			margin-bottom: 2em;
+			background-color: rgba($admin-gold-color, 0.2);
+		}
+		.__select_label {
 				display: block;
 				margin-bottom: 4px;
 			}
