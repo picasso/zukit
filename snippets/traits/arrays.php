@@ -30,16 +30,19 @@ trait zusnippets_Arrays {
 		);
 	}
 
-	public function array_without_null($array) {
-		return array_filter($array ?? [], function($val) { return !is_null($val); });
+	public function array_without_null($array, $reindex = false) {
+		$array = array_filter($array ?? [], function($val) { return !is_null($val); });
+		return $reindex ? array_values($array) : $array;
 	}
 
-	public function array_without_keys($array, $keys) {
-		return array_diff_key($array ?? [], array_flip($this->cast_array($keys)));
+	public function array_without_keys($array, $keys, $reindex = false) {
+		$array = array_diff_key($array ?? [], array_flip($this->cast_array($keys)));
+		return $reindex ? array_values($array) : $array;
 	}
 
-	public function array_pick_keys($array, $keys) {
-		return array_intersect_key($array ?? [], array_flip($this->cast_array($keys)));
+	public function array_pick_keys($array, $keys, $reindex = false) {
+		$array = array_intersect_key($array ?? [], array_flip($this->cast_array($keys)));
+		return $reindex ? array_values($array) : $array;
 	}
 
 	public function array_with_defaults($array, $defaults, $only_default_keys = true, $clean = true) {
