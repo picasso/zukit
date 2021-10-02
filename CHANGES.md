@@ -1,3 +1,5 @@
+The Wiki was last updated on Apr 16 2021.
+
 #### 1.3.0 / 2021-08-10
 * supports `version` property
 * implemented `Extend` trait to dynamically extend snippets with new methods
