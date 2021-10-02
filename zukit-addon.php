@@ -105,22 +105,22 @@ class zukit_Addon {
 
 	public function __call($method, $args) {
 		$available_methods = [
-			'is_origin',
-			'get_file_version',
-			'register_only',
-			'enqueue_only',
 			'ajax_error',
 			'ajax_nonce',
 			'ajax_send',
+			'array_with_defaults',
 			'create_notice',
 			'ends_with_slug',
+			'enqueue_only',
+			'get_file_version',
 			'is_error',
 			'logd',
-			'sprintf_dir',
-			'sprintf_uri',
 			'prefix_it',
+			'register_only',
 			'snippets',
 			'_snippets',
+			'sprintf_dir',
+			'sprintf_uri',
 		];
 		if(!in_array($method, array_merge($available_methods, $this->extend_parent_redirects() ?? []))) {
 			// if we have 'zukit_Exchange' trait - then transfer processing further

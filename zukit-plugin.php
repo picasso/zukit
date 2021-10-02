@@ -450,6 +450,11 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		return $data;
 	}
 
+	// redefined this method from snippets for convenience (it's very often used)
+	public function array_with_defaults($array, $defaults, $only_default_keys = true, $clean = true) {
+		return $this->snippets('array_with_defaults', $array, $defaults, $only_default_keys, $clean);
+	}
+
 	public function prefix_it($str, $divider = '-') {
 		// if '$str' starts with '!' then do not prefix it (could be an absolute path)
 		if(substr($str, 0, 1) === '!') return $str;
