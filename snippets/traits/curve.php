@@ -54,7 +54,7 @@ trait zusnippets_Curve {
 			'padding'	=> 0,
 			'margin'	=> 0,
 			'position'	=> 'relative',
-			'top'		=> 0,
+			'top'		=> '-1px',
 			'fill'		=> 'currentColor',
 			'stroke'	=> 'transparent',
 		], $style);
@@ -82,7 +82,7 @@ trait zusnippets_Curve {
 			'<div%1$s class="%2$s" style="height:%3$spx">%4$s</div>',
 			empty($id) ? '' : sprintf(' id="%1$s"', $id),
 			$this->merge_classes([$defaultClassName, $className, $inverseClass]),
-			($height - 1),
+			$height, //($height - 1),
 			$curve
 		);
 	}
