@@ -84,9 +84,9 @@ trait zusnippets_Thumbnails {
          return $this->default_dominant_color;
     }
 
-	public function get_background_color($post_or_attachment_id = null, $with_important = false) {
+	public function get_background_color($post_or_attachment_id = null, $with_important = false, $as_array = false) {
 		$color = $this->maybe_call('get_dominant_by_id', $post_or_attachment_id) ?? $this->default_dominant_color;
 		$color_bg = empty($color) ? '' : sprintf('background-color:%1$s%2$s;', $color, $with_important ? ' !important' : '');
-		return $color_bg;
+		return $as_array ? [$color, $color_bg] : $color_bg;
 	}
 }
