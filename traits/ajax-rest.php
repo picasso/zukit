@@ -7,7 +7,7 @@
 // const EDITABLE = 'POST, PUT, PATCH'
 // const DELETABLE = 'DELETE'
 
-trait zukit_Ajax {
+trait zukit_AjaxREST {
 
 	private $zukit_api_root = 'zukit';
 	private $zukit_api_version = 1;

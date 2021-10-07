@@ -8,7 +8,7 @@ require_once('zukit-table.php');
 require_once('traits/options.php');
 require_once('traits/admin.php');
 require_once('traits/admin-menu.php');
-require_once('traits/ajax.php');
+require_once('traits/ajax-rest.php');
 require_once('traits/debug.php');
 require_once('traits/exchange.php');
 
@@ -34,7 +34,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	private $refresh_scripts = false;
 
 	// Options, admin basics, menu management and REST API support
-	use zukit_Options, zukit_Admin, zukit_AdminMenu, zukit_Ajax, zukit_Debug;
+	use zukit_Options, zukit_Admin, zukit_AdminMenu, zukit_AjaxREST, zukit_Debug;
 
 	function config_singleton($file) {
 		if(isset($file)) {
