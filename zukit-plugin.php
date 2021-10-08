@@ -26,7 +26,6 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	protected $data = [];
 	protected $addons = [];
 	protected $blocks = null;
-	protected $debug_reset_options = false;
 
 	private static $zukit_translations = false;
 	private $translations_loaded = null;
@@ -74,8 +73,10 @@ class zukit_Plugin extends zukit_SingletonScripts {
 			// custom blocks
 			'blocks'		=> zukit_Blocks::defaults(),
 
-			// miscellaneous
-			'debug_options'	=> false,
+			// MISCELLANEOUS:
+
+			// if set to true then options will always be taken from default values
+			'debug_defaults'	=> false,
 
 		], $this->config() ?? []);
 
@@ -126,7 +127,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	public function zukit_ver() { return self::$zukit_version; }
 
-	// divide the 'init' for plugins and themes
+	// split the 'init' for plugins and themes
 	// the 'init' for plugins will be called before the themes
 	public function init_action($is_admin, $for_plugins) {
 		$plugin_related = $this->is_plugin && $for_plugins;
@@ -496,9 +497,11 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	private function blocks_config() {
 		$blocks = $this->get('blocks.blocks');
 		if(!empty($blocks)) {
-			$this->blocks = $this->get('blocks.instance');
-			if(is_null($this->blocks)) $this->blocks = new zukit_Blocks;
+			$instance = $this->get('blocks.instance');
+			if(is_null($instance)) $this->blocks = new zukit_Blocks;
+			elseif(is_string($instance) && class_exists($instance)) $this->blocks = new $instance();
 			if($this->blocks instanceof zukit_Blocks) $this->register_addon($this->blocks);
+			else zu_logc('!Your class must inherit from the "zukit_Blocks" class',  $instance);
 		}
 	}
 
