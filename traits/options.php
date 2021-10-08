@@ -8,7 +8,7 @@ trait zukit_Options {
 		if($with_check) {
 			$options = get_option($this->options_key);
 			// Check whether we need to install an option, used during installation of plugin
-			if($options === false || $this->get('debug_options')) $options = $this->reset_options(false);
+			if($options === false || $this->get('debug_defaults')) $options = $this->reset_options(false);
 			$this->options = $options;
 		}
 		return $this->options;
