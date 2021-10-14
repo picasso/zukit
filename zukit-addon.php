@@ -30,6 +30,7 @@ class zukit_Addon {
 
 			$this->options_key = $this->name.'_options';
 			$this->init_options();
+			$this->construct_more_inner();
 			$this->construct_more();
 		}
 	}
@@ -41,6 +42,9 @@ class zukit_Addon {
 
 	// 'construct_more' is only called after the add-on is registered by the plugin!
 	protected function construct_more() {}
+	// 'construct_more_inner' is needed for classes that will inherit from 'zukit_Addon'
+	// but to keep 'construct_more' free for users of the framework
+	protected function construct_more_inner() {}
 
 	public function init() {}
 	public function admin_init() {}
