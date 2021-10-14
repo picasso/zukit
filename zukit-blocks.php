@@ -19,9 +19,9 @@ class zukit_Blocks extends zukit_Addon {
 	// We can only have one 'zukit-blocks' script loaded and therefore
     // store its status in a static property so that we can avoid repeated 'enqueue' calls.
     private static $zukit_loaded = false;
-
+	// handler for Zukit common JS with utilities and components
 	private static $zukit_handle = 'zukit-blocks';
-
+	// filename with common colors that should be available in JS
 	private static $colors_filename = 'zukit-colors';
 
 	// Add functions for blocks with attributes
@@ -30,10 +30,13 @@ class zukit_Blocks extends zukit_Addon {
 	// Add meta keys for blocks
 	use zukit_BlockMeta;
 
-	protected function construct_more() {
+	protected function construct_more_inner() {
+		// if the class config contains the 'blocks' key (which can only happen
+		// if the class was inherited from 'zukit_Blocks') then merge this data with the default data
+		$this->config = array_replace_recursive(['blocks' => $this->get('blocks', true)], $this->config());
 		$this->blocks_available = function_exists('register_block_type');
-		$this->handle = $this->get('blocks.handle', true) ?? $this->prefix_it('blocks');
-		$this->namespace = $this->get('blocks.namespace', true) ?? $this->get('prefix', true);
+		$this->handle = $this->get('blocks.handle') ?? $this->prefix_it('blocks');
+		$this->namespace = $this->get('blocks.namespace') ?? $this->get('prefix', true);
 		if($this->blocks_available) {
 			// add_action('init', [$this, 'register_blocks'], 99);
 			add_action('enqueue_block_editor_assets', [$this, 'editor_assets']);
@@ -65,7 +68,7 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	protected function is_blocks_config($key) {
-		$value = $this->get('blocks.'.$key, true);
+		$value = $this->get('blocks.'.$key);
 		return $value === true;
 	}
 
@@ -141,13 +144,13 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	protected function js_params($defaults = null) {
-		$params = $this->plugin->get(is_null($defaults) ? 'blocks.script' : 'script', [], $defaults);
+		$params = is_null($defaults) ? $this->get('blocks.script') : $this->plugin->get('script', [], $defaults);
 		$params['data'] = is_callable($params['data'] ?? null) ? call_user_func($params['data'], false) : $params['data'] ?? null;
 		return $params;
 	}
 
 	protected function css_params($defaults = null) {
-		return $this->plugin->get(is_null($defaults) ? 'blocks.style' : 'style', [], $defaults);
+		return is_null($defaults) ? $this->get('blocks.style') : $this->plugin->get('style', [], $defaults);
 	}
 
 	// 'editor_assets' will be called only in the WordPress Block Editor (Gutenberg)
@@ -164,8 +167,8 @@ class zukit_Blocks extends zukit_Addon {
 	public function block_assets() {
 		if(is_admin()) {
 			$this->plugin->force_frontend_enqueue(
-				$this->get('blocks.load_frontend_css', true),
-				$this->get('blocks.load_frontend_js', true)
+				$this->get('blocks.load_frontend_css'),
+				$this->get('blocks.load_frontend_js')
 			);
 			$this->plugin->blocks_enqueue_more(false, null, null);
 		}
@@ -276,7 +279,7 @@ class zukit_Blocks extends zukit_Addon {
 	// create a list of _full_ block names
 	private function get_blocks() {
 		if($this->block_names === null) {
-			$blocks = $this->get('blocks.blocks', true);
+			$blocks = $this->get('blocks.blocks');
 			$this->block_names = [];
 			foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
 				$this->block_names[] = $this->full_name($block);
@@ -288,7 +291,7 @@ class zukit_Blocks extends zukit_Addon {
 	// create a list of _full_ block names available on the front-end
 	private function get_frontend_blocks() {
 		if($this->frontend_names === null) {
-			$frontend_blocks = $this->get('blocks.frontend_blocks', true) ?? $this->get_blocks();
+			$frontend_blocks = $this->get('blocks.frontend_blocks') ?? $this->get_blocks();
 			$this->frontend_names = [];
 			foreach((is_array($frontend_blocks) ? $frontend_blocks : [$frontend_blocks]) as $block) {
 				$this->frontend_names[] = $this->full_name($block);

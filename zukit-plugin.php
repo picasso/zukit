@@ -35,7 +35,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	// Options, admin basics, menu management and REST API support
 	use zukit_Options, zukit_Admin, zukit_AdminMenu, zukit_AjaxREST, zukit_Debug;
 
-	function config_singleton($file) {
+	function singleton_config($file) {
 		if(isset($file)) {
 			$this->data = Zukit::get_file_metadata($file);
 			$this->is_plugin = $this->data['Kind'] === 'Plugin';
@@ -480,7 +480,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	}
 
 	public function params_validated($params, $defaults = []) {
-		$params_not_null = array_filter($params, function($val) { return !is_null($val); });
+		$params_not_null = array_filter($params ?? [], function($val) { return !is_null($val); });
 		return array_replace_recursive($defaults, $params_not_null);
 	}
 
@@ -496,8 +496,8 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	private function blocks_config() {
 		$blocks = $this->get('blocks.blocks');
-		if(!empty($blocks)) {
-			$instance = $this->get('blocks.instance');
+		$instance = $this->get('blocks.instance');
+		if(!empty($blocks) || !empty($instance)) {
 			if(is_null($instance)) $this->blocks = new zukit_Blocks;
 			elseif(is_string($instance) && class_exists($instance)) $this->blocks = new $instance();
 			if($this->blocks instanceof zukit_Blocks) $this->register_addon($this->blocks);
