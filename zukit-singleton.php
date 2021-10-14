@@ -29,8 +29,8 @@ class zukit_Singleton {
         $this->version = $theme->get('Version');
         $this->debug = false;
 
-        if(method_exists($this, 'config_singleton_scripts')) $this->config_singleton_scripts();
-        $this->config_singleton($params);
+        if(method_exists($this, 'singleton_config_scripts')) $this->singleton_config_scripts();
+        $this->singleton_config($params);
         $this->construct_more();
         $this->created = true;
     }
@@ -60,7 +60,7 @@ class zukit_Singleton {
         return self::$instances[$calledClass];
     }
 
-    protected function config_singleton($params) {}
+    protected function singleton_config($params) {}
     protected function construct_more() {}
 }
 

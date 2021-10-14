@@ -7,7 +7,7 @@ trait zukit_Scripts {
     // We needed the ability to async or defer our scripts
     private $async_defer = [];
 
-    protected function config_singleton_scripts() {
+    protected function singleton_config_scripts() {
         $this->dir = get_stylesheet_directory();
         $this->uri = get_stylesheet_directory_uri();
         // maybe add attributes for asynchronously loading or deferring scripts.
