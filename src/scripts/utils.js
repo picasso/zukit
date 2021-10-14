@@ -136,16 +136,15 @@ export function messageWithError(message, value = null) {
 // Returns SVG with a reference to an already loaded SVG set
 export function svgRef(id, icon = false, moreClasses = '', iconsSize = 24) {
 
-	const size = iconsSize;	// change viewBox values according to Icons Set
 	return (
 		<svg
 			className={ classnames('zu-svg', { icon }, `icon-${id}`, moreClasses) }
 			role="img"
 			aria-labelledby="title"
-			viewBox={ `0 0 ${size} ${size}` }
+			viewBox={ `0 0 ${iconsSize} ${iconsSize}` }
 			preserveAspectRatio="xMidYMin slice"
 		>
-			<use xlinkHref={ `#${id}` }/>
+			<use href={ `#${id}` }/>
 		</svg>
 	);
 }
@@ -310,8 +309,8 @@ export const emptyGif = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAA
 const { colors: zukitColors = {}} = externalData('zukit_jsdata');
 
 // Returns one of predefined in SASS files colors
-export function getColor(key) {
-	return _.get(zukitColors, key, '#cc1818');
+export function getColor(key, defaultColor = '#cc1818') {
+	return _.get(zukitColors, key, defaultColor);
 }
 
 // Brand assets ---------------------------------------------------------------]
