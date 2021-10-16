@@ -22,6 +22,10 @@ trait zusnippets_Inline {
 
     // Inline styles to the footer --------------------------------------------]
 
+    public function build_style($style) {
+        return is_array($style) ? str_replace('=', ':', http_build_query($style, '', ';')) : '';
+    }
+
 	public function add_inline_style($name, $style, $css_file = null, $minify = true, $is_admin = false) {
         if($css_file && file_exists($css_file)) {
     		$style = file_get_contents($css_file);

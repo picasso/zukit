@@ -58,7 +58,7 @@ trait zusnippets_Curve {
 			'fill'		=> 'currentColor',
 			'stroke'	=> 'transparent',
 		], $style);
-		$style = str_replace('=', ':', http_build_query($style, '', ';'));
+		$style = $this->build_style($style);
 		$inverseClass = in_array($look, ['downleft', 'downright', 'lessdownleft', 'lessdownright']) ? 'inverse' : null;
 
 		$curve = zu_sprintf(
