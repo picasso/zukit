@@ -1,4 +1,54 @@
-The Wiki was last updated on Apr 16 2021.
+#### 1.4.0 / 2021-10-16
+* adapted to WP 5.8.1
+
+##### Core
+* implemented `zukit_ExchangeWithMagic` trait
+* refactoring redirect to parent methods with PHP `__call`
+* added `construct_more_inner` method to free `construct_more` for users
+* implemented `initial_options` method
+* renaming `config_singleton` to `singleton_config`
+* renaming `call` method to `call_parent`
+* redefined `array_with_defaults` method from snippets for convenience
+* improved `extend snippets`, `frontend_handles`, `trace_summary` and `prefix_it` methods
+* split the `init` for plugins and themes
+* added logic to the `do_addons` method for passing the return value and for swap between the parameter and the return value
+* arguments `$script_code` and `$js_file` can be arrays
+* simplified the error checking method
+* fixed bug when closing tag has no space after attribute value in `zu_sprintf`
+* refactoring dependencies for scripts and styles to fix errors in WP 5.8 (widgets.php)
+
+##### REST &  AJAX
+* renaming `ajax.php` trait to `ajax-rest.php`
+* implemented `default_options` AJAX response
+* logic of `set_options_ajax` method is changed - if at least one call returns `true`, then the overall result will also be `true`
+* refactoring `sanitize helpers`, added `rest_response` and `maybe_fix_sanitize` methods
+
+##### Blocks & Components
+* improved `SelectItemControl` component - added `fillNull` option and `smart style` support
+* refactoring `zukit_Blocks` to allow use `config` from the class that was inherited from `zukit_Blocks`
+* added the ability to create an instance of the `zukit_Blocks` class by name
+* added `id` prop to pass it to `<TextControl>`
+* implemented `resetOptions` callback and passed it to `<EditComponent>`
+* added `afterUpdateCallback` to `updateOptions` helper
+* renaming internal `resetOptions` callback to `resetAllOptions`
+* improved `svgRef` and `getColor` helpers
+
+##### CSS
+* refactoring SASS with `div()` function because using `/` for division is deprecated
+* small fixes for Safari browser
+* added `__note` global class
+
+##### Snippets
+* moving `arrays` methods to separate trait
+* added `cast_array`, `array_zip_merge`, `add_inline_script_now`, `build_style` methods
+* added `null_on_failure` arg for `to_bool` function
+* added `minify` argument for inline styles and scripts
+* added `as_array` argument for `get_background_color` method
+* added `$reindex` argument to `array_pick_keys`, `array_without_keys` and `array_without_null` methods
+* fixed bug in `get_excerpt` function
+
+#####
+* The Wiki was last updated on Apr 16 2021.
 
 #### 1.3.0 / 2021-08-10
 * supports `version` property
