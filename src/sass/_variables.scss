@@ -1,4 +1,4 @@
-
+@use 'sass:math';
 //-----------------------------------------------------------------------------]
 @import "instyle";
 //
@@ -90,8 +90,12 @@
 
 //-----------------------------------------------------------------------------]
 
-@function strip-units($number) {  @return $number / ($number * 0 + 1); }
-@function half($number)             {  @return floor($number / 2); }
+// using '/' for division is deprecated and will be removed in Dart Sass 2.0.0
+// this function is more convenient to use than math.div
+@function div($be-divided, $by) { @return math.div($be-divided, $by); }
+
+@function strip-units($number) {  @return div($number, ($number * 0 + 1)); }
+@function half($number)             {  @return floor(div($number, 2)); }
 @function twice($number)            {  @return floor($number * 2); }
 
 // Colors ---------------------------------------------------------------------]

@@ -3,7 +3,7 @@
   github.com/salsita/inStyle
   2016 | MIT
   ============================== */
-
+@use 'sass:math'
 // Configuration
 $__inTagAppend: '<' !default
 $__inTagInsert: '^' !default
@@ -120,7 +120,7 @@ $__inTagReplace: '@' !default
             $simple: __removeFromList($simple, nth($simple, length($simple)))
           @if index($parent, __listToString($simple)) and length($simple) > nth($depthMap, $parentIndex)
             // Relevancy scoring
-            $depthIndex: index(__reverseList($parent), __listToString($simple)) + (length($simple) / 1000)
+            $depthIndex: index(__reverseList($parent), __listToString($simple)) + math.div(length($simple), 1000)
             $depthMap: set-nth($depthMap, $parentIndex, $depthIndex)
   @return $depthMap
 
