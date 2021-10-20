@@ -114,6 +114,7 @@ class zukit_Addon {
 			'ajax_send',
 			'array_with_defaults',
 			'create_notice',
+			'do_with_instances',
 			'ends_with_slug',
 			'enqueue_only',
 			'get_file_version',

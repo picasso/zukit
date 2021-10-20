@@ -102,9 +102,29 @@ trait zukit_Admin {
 		return false;
 	}
 
+	// $router is $this->admin_slug()
 	protected function instance_by_router($router = null) {
-		// $router is $this->admin_slug()
 		return is_null($router) ? self::$zukit_items : (self::$zukit_items[$router] ?? null);
+	}
+
+	public function do_with_instances($method, $params = null, $addon = false, $flatten = true) {
+		$results = [];
+		foreach(self::$zukit_items as $instance) {
+			if($addon) {
+				$collected = $instance->do_addons($method, $params ?? [], ['collect' => true, 'single' => false]);
+				$results[] = $flatten ? $this->snippets('array_flatten', array_filter($collected)) : $collected;
+			} elseif(method_exists($instance, $method)) {
+				$results[] = call_user_func_array([$instance, $method], $params ?? []);
+			}
+			else {
+				$this->logc('Unknown "Zukit instance" method!', [
+					'method'	=> $method,
+					'params'	=> $params,
+					'instances'	=> self::$zukit_items,
+				]);
+			}
+		}
+		return empty($results) ? null : $results;
 	}
 
 	public function admin_menu() {
