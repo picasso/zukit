@@ -300,6 +300,23 @@ class zukit_Blocks extends zukit_Addon {
 		return $this->frontend_names;
 	}
 
+	// used to modify the default Zukit color palette
+	// the 'filter' key if presented - contains the names of the colors that need to be left in the palette
+	// key 'colors' if presented - contains descriptions of colors that need to be added to the palette
+	protected function extend_block_colors() {}
+
+	public function get_block_colors($colors) {
+		$custom_colors = $this->extend_block_colors() ?? [];
+		if(!isset($custom_colors['filter']) && !isset($custom_colors['colors'])) return null;
+		$colors = $this->snippets('array_pick_keys', $colors, $custom_colors['filter'] ?? []);
+		$custom_colors = $custom_colors['colors'] ?? [];
+		// if color is just an alias on an already existing color - just make a substitution
+		foreach($custom_colors as $name => $color) {
+			$custom_colors[$name] = $colors[$color] ?? $color;
+		}
+		return array_merge($colors, $custom_colors);
+	}
+
 	private function get_colors() {
 		$colors = [];
 		$filepath = $this->plugin->get_zukit_filepath(true, self::$colors_filename, false);
@@ -322,6 +339,10 @@ class zukit_Blocks extends zukit_Addon {
 				}
 				$colors[$short_name] = $color;
 			}
+		}
+		if(!empty($colors)) {
+			$results = array_filter($this->do_with_instances('get_block_colors', [$colors], true) ?? []);
+			$colors = array_merge($colors, count($results) > 0 ? array_merge([], ...$results) : []);
 		}
 		return $colors;
 	}
