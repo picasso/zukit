@@ -201,21 +201,32 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		return $addon;
 	}
 
-	public function do_addons($action, $param = '', &$return = null, $swap_param_and_return = false) {
+	public function do_addons($action, $param = '', $options = null, &$return = null) {
+		$swap_param_and_return = $options['swap'] ?? false;
+		$single_param = $options['single'] ?? true;
+		$collected = ($options['collect'] ?? false) ? [] : null;
 		foreach($this->addons as $addon) {
 			if(method_exists($addon, $action)) {
-				$return = call_user_func_array([$addon, $action], [$param]);
+				$return = call_user_func_array([$addon, $action], $single_param ? [$param] : ($param ?? []));
+				if(!is_null($collected)) $collected[get_class($addon)] = $return;
 				if($swap_param_and_return) $param = $return;
 			}
-			else $this->logc('Unknown addon method!', [
-				'action' => $action,
-				'param' => $param]
-			);
+			else {
+				if(!is_null($collected)) $collected[get_class($addon)] = null;
+				else $this->logc('Unknown addon method!', [
+					'addons'				=> $this->addons,
+					'action'				=> $action,
+					'param'					=> $param,
+					'swap_param_and_return'	=> $swap_param_and_return,
+					'single_param'			=> $single_param,
+					'collected'				=> $collected,
+				]);}
 		}
+		return $collected;
 	}
 
 	public function reset_addons() { $this->do_addons('init_options'); }
-	public function extend_from_addons(&$options) { $this->do_addons('extend_parent_options', $options, $options, true); }
+	public function extend_from_addons(&$options) { $this->do_addons('extend_parent_options', $options, ['swap' => true], $options); }
 	public function clean_addons() { $this->do_addons('clean'); }
 	public function ajax_addons($action, $value) {
 
