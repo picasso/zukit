@@ -44,7 +44,6 @@ $yellow-color: $some-orange-bright !default;
 $brown-color: $some-brown !default;
 $red-bright-color: $some-red-bright !default;
 
-
 // Wordpress basic vars -------------------------------------------------------]
 
 // Alert colors
@@ -176,10 +175,14 @@ $break-480: 480px;
 $break-768: 768px;
 $break-1800: 1800px;
 
-$break-layout: $break-1020;					// when all columns will be reverted to 100% width (and Normal Menu will be hidden and MX Menu will be shown)
-$topmenu-break-width: $break-1280;			// when Normal Menu will be reduced (small font and padding)
-$break-settings: $settings-max-width + $settings-sidebar-width + $settings-leftmenu-width;          // when settings area will reach 'max-width'
-$break-settings-sidebar: $settings-min-width + $settings-sidebar-width + $settings-leftmenu-width;  // when settings sidebar will be hidden
+// when all columns will be reverted to 100% width (and Normal Menu will be hidden and MX Menu will be shown)
+$break-layout: $break-1020;
+// when Normal Menu will be reduced (small font and padding)
+$topmenu-break-width: $break-1280;
+// when settings area will reach 'max-width'
+$break-settings: $settings-max-width + $settings-sidebar-width + $settings-leftmenu-width;
+// when settings sidebar will be hidden     
+$break-settings-sidebar: $settings-min-width + $settings-sidebar-width + $settings-leftmenu-width;
 
 @mixin breakpoint-width($point) {
     @if $point == LESS320 {

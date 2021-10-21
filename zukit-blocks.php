@@ -21,8 +21,10 @@ class zukit_Blocks extends zukit_Addon {
     private static $zukit_loaded = false;
 	// handler for Zukit common JS with utilities and components
 	private static $zukit_handle = 'zukit-blocks';
-	// filename with common colors that should be available in JS
+	// filename with common colors that could be available in JS
 	private static $colors_filename = 'zukit-colors';
+	private static $zukit_colors = null;
+	private static $basic_colors = ['red', 'orange', 'yellow', 'green', 'lime', 'blue', 'blue-sky', 'violet', 'brown', 'grey'];
 
 	// Add functions for blocks with attributes
 	use zukit_BlockAttributes;
@@ -140,7 +142,7 @@ class zukit_Blocks extends zukit_Addon {
 	private function jsdata_defaults() {
 		return array_merge([
 			'jsdata_name'	=> $this->prefix_it('blocks_data', '_'),
-		], $this->plugin->api_basics());
+		], $this->plugin->api_basics(), $this->get_colors());
 	}
 
 	protected function js_params($defaults = null) {
@@ -197,7 +199,7 @@ class zukit_Blocks extends zukit_Addon {
 				'add_prefix'	=> false,
 				'data'			=> [
 					'jsdata_name'	=> 'zukit_jsdata',
-					'colors'		=> $this->get_colors(),
+					'colors'		=> $this->get_colors(true),
 				],
 				'deps'			=> $this->script_defaults('script', 'deps'),
 				'handle'		=> self::$zukit_handle,
@@ -305,45 +307,53 @@ class zukit_Blocks extends zukit_Addon {
 	// key 'colors' if presented - contains descriptions of colors that need to be added to the palette
 	protected function extend_block_colors() {}
 
-	public function get_block_colors($colors) {
-		$custom_colors = $this->extend_block_colors() ?? [];
-		if(!isset($custom_colors['filter']) && !isset($custom_colors['colors'])) return null;
-		$colors = $this->snippets('array_pick_keys', $colors, $custom_colors['filter'] ?? []);
-		$custom_colors = $custom_colors['colors'] ?? [];
+	protected function get_colors($framework_only = false) {
+		$colors = $this->get_zukit_colors();
+		$params = $this->array_with_defaults($this->extend_block_colors() ?? [], [
+			'colors'	=> [],
+			'filter'	=> $framework_only ? self::$basic_colors : null,
+		], true, false);
+		extract($params, EXTR_PREFIX_ALL, 'custom');
+		if(empty($custom_filter) && empty($custom_colors)) return [];
+
 		// if color is just an alias on an already existing color - just make a substitution
 		foreach($custom_colors as $name => $color) {
-			$custom_colors[$name] = $colors[$color] ?? $color;
+			$colors[$name] = $colors[$color] ?? $color;
 		}
-		return array_merge($colors, $custom_colors);
+		$colors = $this->snippets('array_pick_keys', $colors, $custom_filter ?? array_keys($custom_colors));
+		return $framework_only ? $colors : ['colors' => $colors];
 	}
 
-	private function get_colors() {
-		$colors = [];
-		$filepath = $this->plugin->get_zukit_filepath(true, self::$colors_filename, false);
-		if(file_exists($filepath)) {
-			$content = file_get_contents($filepath);
-			if($content === false) return $colors;
-			foreach(explode('}', $content) as $line) {
-				if(empty(trim($line))) continue;
-				$name = preg_match('/.js_([^\{]+)/', $line, $matches) ? $matches[1] : 'error';
-				$color = preg_match('/color\:(.+)/', $line, $matches) ? $matches[1] : 'red';
-				$short_name = str_replace('_color', '', $name);
-				if(array_key_exists($short_name, $colors)) {
-					$this->logc('Duplicate name when creating Zukit Colors!', [
-						'line'			=> $line,
-		                'name'			=> $name,
-		                'color'			=> $color,
-		                'short_name'	=> $short_name,
-						'colors'		=> $colors,
-		            ]);
+	private function get_zukit_colors() {
+		if(is_null(self::$zukit_colors)) {
+			$colors = [];
+			$filepath = $this->plugin->get_zukit_filepath(true, self::$colors_filename, false);
+			if(file_exists($filepath)) {
+				$content = file_get_contents($filepath);
+				if($content === false) return $colors;
+				foreach(explode('}', $content) as $line) {
+					if(empty(trim($line))) continue;
+					$name = preg_match('/.js_([^\{]+)/', $line, $matches) ? $matches[1] : 'error';
+					$color = preg_match('/color\:(.+)/', $line, $matches) ? $matches[1] : 'red';
+					$short_name = str_replace(['_color', '_'], ['', '-'], $name);
+					if(array_key_exists($short_name, $colors)) {
+						$this->logc('Duplicate name when creating Zukit Colors!', [
+							'line'			=> $line,
+			                'name'			=> $name,
+			                'color'			=> $color,
+			                'short_name'	=> $short_name,
+							'colors'		=> $colors,
+			            ]);
+					}
+					$colors[$short_name] = $color;
 				}
-				$colors[$short_name] = $color;
 			}
+			// if(!empty($colors)) {
+			// 	$results = array_filter($this->do_with_instances('get_block_colors', [$colors], true) ?? []);
+			// 	$colors = array_merge($colors, count($results) > 0 ? array_merge([], ...$results) : []);
+			// }
+			self::$zukit_colors = $colors;
 		}
-		if(!empty($colors)) {
-			$results = array_filter($this->do_with_instances('get_block_colors', [$colors], true) ?? []);
-			$colors = array_merge($colors, count($results) > 0 ? array_merge([], ...$results) : []);
-		}
-		return $colors;
+		return self::$zukit_colors;
 	}
 }

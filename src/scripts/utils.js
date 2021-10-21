@@ -306,12 +306,34 @@ function node2comp(node, index) {
 
 export const emptyGif = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-const { colors: zukitColors = {}} = externalData('zukit_jsdata');
+const { colors: zukitRawColors = {}} = externalData('zukit_jsdata');
 
 // Returns one of predefined in SASS files colors
 export function getColor(key, defaultColor = '#cc1818') {
-	return _.get(zukitColors, key, defaultColor);
+	return _.get(zukitRawColors, key, defaultColor);
 }
+
+export function getColorOptions(colors, initialValue = [], mergeWithZukit = false) {
+	let options = _.reduce(colors, (values, color, colorName)  => {
+		values.push({
+			slug: colorName,
+			color: color,
+			name: _.startCase(_.replace(colorName, '_', ' ')),
+		});
+		return values;
+	}, initialValue);
+
+	// if we need to merge with zukitColors, then remove all options with the same 'slug'
+	if(mergeWithZukit) {
+		const slugs = _.map(options, 'slug');
+		const withoutSlugs = _.filter(zukitColors, val => !_.includes(slugs, val.slug));
+		return _.concat(withoutSlugs, options);
+	}
+	return options;
+}
+
+// creates Zikit Color Options
+const zukitColors = getColorOptions(zukitRawColors, [{ slug: 'none', color: 'white', name: 'None'}]);
 
 // Brand assets ---------------------------------------------------------------]
 
@@ -392,6 +414,7 @@ export const blocksSet = {
 	getKey,
 	getIds,
 	getColor,
+	getColorOptions,
 	toJSON,
 	uniqueValue,
 	svgRef,
