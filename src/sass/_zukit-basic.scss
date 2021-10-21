@@ -107,10 +107,10 @@ $modal-component-class: zukit-modal;
 
 %markdown_red_on_red {
 	color: darken($red-color, 30%);
-	background-color: rgba($orange-bright-color, 0.2);
+	background-color: rgba($yellow-color, 0.2);
 }
 
 %markdown_gold {
-	color: darken($orange-bright-color, 10%);
-	background-color: rgba($orange-bright-color, 0.1);
+	color: darken($yellow-color, 10%);
+	background-color: rgba($yellow-color, 0.1);
 }
