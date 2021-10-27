@@ -314,7 +314,7 @@ export function getColor(key, defaultColor = '#cc1818') {
 }
 
 export function getColorOptions(colors, initialValue = [], mergeWithZukit = false) {
-	let options = _.reduce(colors, (values, color, colorName)  => {
+	const options = _.reduce(colors, (values, color, colorName)  => {
 		values.push({
 			slug: colorName,
 			color: color,
@@ -324,10 +324,11 @@ export function getColorOptions(colors, initialValue = [], mergeWithZukit = fals
 	}, initialValue);
 
 	// if we need to merge with zukitColors, then remove all options with the same 'slug'
+	// if 'mergeWithZukit' is array - use it as list of slugs to be excluded
 	if(mergeWithZukit) {
-		const slugs = _.map(options, 'slug');
+		const slugs = _.concat(_.map(options, 'slug'), _.isArray(mergeWithZukit) ? mergeWithZukit :[]);
 		const withoutSlugs = _.filter(zukitColors, val => !_.includes(slugs, val.slug));
-		return _.concat(withoutSlugs, options);
+		return _.concat(options, withoutSlugs);
 	}
 	return options;
 }
