@@ -22,7 +22,7 @@ import zuPackage from './../../../package.json';
 //      Zubug.useTraceWithId(props);    - trace the changes of the props when there is 'clientId' among the props
 //      Zubug.akaMount()                - output information when a component has been mounted or unmounted
 //      Zubug.renderWithId(clientId)    - output information when the component was rendered
-//      Zubug.log(message, ...data)     - output message wit data
+//      Zubug.log(message, ...data)     - output message with data
 //
 // Ajax helpers:
 //      Zubug.request(route, options)   - output Ajax request information

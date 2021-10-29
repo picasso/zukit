@@ -4,6 +4,7 @@ import classnames from 'classnames';
 
 // WordPress dependencies
 
+
 const _ = lodash;
 const { __ } = wp.i18n;
 const { Path, G, SVG } = wp.components;
@@ -410,6 +411,7 @@ export const blocksSet = {
 	hexToRGB,
 	hexToRGBA,
 	isNum,
+	isWrongId,
 	toBool,
 	toRange,
 	getKey,
