@@ -193,9 +193,11 @@ trait zukit_AjaxREST {
 
 	public function api_basics() {
 		return [
-			'router'	=> $this->get_router_name(),
-			'root'		=> $this->api_root,
-			'verion'	=> $this->api_version,
+			'rest'	=> [
+				'router'	=> $this->get_router_name(),
+				'root'		=> $this->api_root,
+				'version'	=> $this->api_version,
+			],
 		];
 	}
 
