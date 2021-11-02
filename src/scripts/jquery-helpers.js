@@ -80,11 +80,11 @@ export function cssWithClientId(clientId, name, value, selector = '') {
 }
 
 export function setInputAndFocus(parent, value = '', selector = 'input') {
-	$(parent).find(selector).val(value).focus();
+	$(parent).find(selector).val(value).trigger('focus');
 }
 
 export function clickButton(parent, selector = 'button') {
-	$(parent).find(selector).click();
+	$(parent).find(selector).trigger('click');
 }
 
 export function setAttr(parent, selector, attributes) {
