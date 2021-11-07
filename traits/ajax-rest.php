@@ -430,15 +430,11 @@ trait zukit_AjaxREST {
 				]);
 				break;
 
-			// process 'zudata' from all loaded plugins/theme
+			// process 'zudata' from all loaded plugins/themes
 			default:
-				if($request_router !== null) {
-					$result = $request_router->extend_zudata($key, $params) ?? null;
-				} else {
-					foreach($this->instance_by_router() as $plugin_router) {
-						$result = $plugin_router->extend_zudata($key, $params) ?? null;
-						if(!empty($result)) break;
-					}
+				foreach($this->instance_by_router() as $plugin_router) {
+					$result = $plugin_router->extend_zudata($key, $params) ?? null;
+					if(!empty($result)) break;
 				}
 		}
 
