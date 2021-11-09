@@ -1,6 +1,6 @@
 // WordPress dependencies
 
-const { isArray, isPlainObject, isNil, forEach } = lodash;
+const { isArray, isPlainObject, isNil, isNaN, forEach, includes } = lodash;
 const $ = jQuery;
 
 //-----------------------------------------------------------------------------]
@@ -45,38 +45,73 @@ export function alterClassWithClientId(clientId, selector, removals, additions) 
 	$(`#block-${clientId} ${selector}`).alterClass(removals, additions);
 }
 
-// if we just have a pair of 'name' and 'value' and if 'value' === undefined then remove the attribute,
+// if we just have a pair of 'prop' and 'value' and if 'value' === undefined then remove the attribute,
 // otherwise, set it to the given 'value'
-// if 'name' is an array - remove all attributes with names from the array
-// if 'name' is an object - do 'forEach' for each property and process it
-// as a simple pair of 'name' and 'value'
-export function attrWithClientId(clientId, name, value, selector = '') {
+// if 'prop' is an array - remove all attributes with props from the array
+// if 'prop' is an object - do 'forEach' for each property and process it
+// as a simple pair of 'prop' and 'value'
+export function attrWithClientId(clientId, prop, value, selector = '') {
 	const $el = $(`#block-${clientId} ${selector}`);
 	if($el.length) {
 		const processAttr = (val, key) => val === undefined ? $el.removeAttr(key) : $el.attr(key, val);
-		if(isArray(name)) {
-			forEach(name, val => $el.removeAttr(val));
-		} else if(isPlainObject(name)) {
-			forEach(name, processAttr);
+		if(isArray(prop)) {
+			forEach(prop, val => $el.removeAttr(val));
+		} else if(isPlainObject(prop)) {
+			forEach(prop, processAttr);
 		} else {
-			processAttr(value, name);
+			processAttr(value, prop);
 		}
 	}
 }
 
+// get the attribute and try to convert it to an Integer (if requested)
+export function getAttrWithClientId(clientId, prop, selector = '', castInt = true) {
+	const $el = $(`#block-${clientId} ${selector}`);
+	if($el.length) {
+		const attrValue = $el.attr(prop);
+		if(castInt) {
+			const intValue = parseInt(attrValue, 10);
+			return isNaN(intValue) ? 0 : intValue;
+		}
+		return attrValue;
+	}
+	return null;
+}
+
 // similar to the previous description
-export function cssWithClientId(clientId, name, value, selector = '') {
+export function cssWithClientId(clientId, prop, value, selector = '') {
 	const $el = $(`#block-${clientId} ${selector}`);
 	if($el.length) {
 		const processCss = (val, key) => val === undefined ? $el.css(key, '') : $el.css(key, val);
-		if(isArray(name)) {
-			forEach(name, val => $el.css(val, ''));
-		} else if(isPlainObject(name)) {
-			forEach(name, processCss);
+		if(isArray(prop)) {
+			forEach(prop, val => $el.css(val, ''));
+		} else if(isPlainObject(prop)) {
+			forEach(prop, processCss);
 		} else {
-			processCss(value, name);
+			processCss(value, prop);
 		}
 	}
+}
+
+// get the CSS value and try to convert it to an Integer (if requested)
+export function getCssWithClientId(clientId, prop, selector = '', castInt = true) {
+	const $el = $(`#block-${clientId} ${selector}`);
+	if($el.length) {
+		const cssValue = $el.css(prop);
+		if(castInt) {
+			const intValue = parseInt(cssValue, 10);
+			return isNaN(intValue) ? 0 : intValue;
+		}
+		return cssValue;
+	}
+	return null;
+}
+
+const availableSizes = ['width', 'height', 'innerWidth', 'innerHeight', 'outerWidth', 'outerHeight'];
+export function sizeWithClientId(clientId, size, selector = '') {
+	if(!includes(availableSizes, size)) return null;
+	const $el = $(`#block-${clientId} ${selector}`);
+	return $el.length ? $el[size]() : null;
 }
 
 export function setInputAndFocus(parent, value = '', selector = 'input') {
