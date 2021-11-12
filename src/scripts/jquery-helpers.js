@@ -1,6 +1,6 @@
 // WordPress dependencies
 
-const { isArray, isPlainObject, isNil, isNaN, forEach, includes } = lodash;
+const { isArray, isPlainObject, isNil, isNaN, forEach, includes, trim } = lodash;
 const $ = jQuery;
 
 //-----------------------------------------------------------------------------]
@@ -19,19 +19,19 @@ $.fn.alterClass = function (removals, additions) {
 		return !additions ? self : self.addClass(additions);
 	}
 
-	var patt = new RegExp( '\\s' +
+	var patt = new RegExp('\\s' +
 			removals.
 				replace( /\*/g, '[A-Za-z0-9-_]+' ).
 				split( ' ' ).
 				join( '\\s|\\s' ) +
-			'\\s', 'g' );
+			'\\s', 'g');
 
 	self.each(function (_i, it) {
 		var cn = ' ' + it.className + ' ';
-		while ( patt.test( cn ) ) {
+		while(patt.test(cn)) {
 			cn = cn.replace(patt, ' ');
 		}
-		it.className = $.trim(cn);
+		it.className = trim(cn);
 	});
 
 	return !additions ? self : self.addClass(additions);
