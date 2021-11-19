@@ -203,6 +203,7 @@ export function simpleMarkdown(string, params) {
 		externalLink: true,
 		raw: false,
 		json: false,
+		container: false,
 	});
 
 	let linkReplace = '<a href="$2" target="_blank" rel="external noreferrer noopener">$1</a>';
@@ -231,12 +232,16 @@ export function simpleMarkdown(string, params) {
 	if(md.match(/<[^<]+>/gm) === null) return string;
 
 	const body = string2dom(md);
+	const markdown = (<>{ _.map(body.childNodes, node2comp) }</>);
 
-	return (
-		<>
-			{ _.map(body.childNodes, node2comp) }
-		</>
-	);
+	return mod.container ? <span className="__markdown">{ markdown }</span> : markdown;
+
+	// return (
+	// 	<>
+	// 		{ _.map(body.childNodes, node2comp) }
+	// 	</>
+	// );
+
 }
 
 function string2dom(string) {
