@@ -45,6 +45,11 @@ export function alterClassWithClientId(clientId, selector, removals, additions) 
 	$(`#block-${clientId} ${selector}`).alterClass(removals, additions);
 }
 
+export function findWithClientId(clientId, selector = '') {
+	const $el = $(`#block-${clientId}`).find(selector);
+	return $el.length ? $el : null;
+}
+
 // if we just have a pair of 'prop' and 'value' and if 'value' === undefined then remove the attribute,
 // otherwise, set it to the given 'value'
 // if 'prop' is an array - remove all attributes with props from the array
