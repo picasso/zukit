@@ -112,23 +112,35 @@ const SelectItemControl = ({
 	const defaultRecapOptions = { label: upperFirst(selectedItem), value: selectedItem, style: null, isDisabled: true };
 	const recapOptions = isPlainObject(recap) ? defaults(recap, defaultRecapOptions) : defaultRecapOptions;
 	const selectOptions = every(options, o => isPlainObject(o)) ? options : map(options, o => ({ label: upperFirst(o), value: o }));
+	const baseClassName = mergeClasses(
+		className,
+		'components-base-control',
+		cname,
+		`__${columns}columns`,
+		{ '__recap': recap }
+	);
 
 	return (
 		<ConditionalWrap
 			condition={ !withoutControl }
-			elseDiv
 			wrap={ BaseControl }
-			className={ mergeClasses(cname, `__${columns}columns`, 'components-base-control', { '__recap': recap }, className) }
+			className={ baseClassName }
 			label={ label }
 			help={ help }
 		>
-			<ButtonGroup aria-label={ label }>
-				{ beforeItem }
-				{ recap && makeItem(recapOptions) }
-				{ map(selectOptions, makeItem) }
-				{ map(missing, makeItem) }
-				{ afterItem }
-			</ButtonGroup>
+			<ConditionalWrap
+				condition={ withoutControl }
+				wrap="<div>"
+				className={ baseClassName }
+			>
+				<ButtonGroup aria-label={ label }>
+					{ beforeItem }
+					{ recap && makeItem(recapOptions) }
+					{ map(selectOptions, makeItem) }
+					{ map(missing, makeItem) }
+					{ afterItem }
+				</ButtonGroup>
+			</ConditionalWrap>
 		</ConditionalWrap>
 	);
 }
