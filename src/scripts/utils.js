@@ -235,13 +235,6 @@ export function simpleMarkdown(string, params) {
 	const markdown = (<>{ _.map(body.childNodes, node2comp) }</>);
 
 	return mod.container ? <span className="__markdown">{ markdown }</span> : markdown;
-
-	// return (
-	// 	<>
-	// 		{ _.map(body.childNodes, node2comp) }
-	// 	</>
-	// );
-
 }
 
 function string2dom(string) {
