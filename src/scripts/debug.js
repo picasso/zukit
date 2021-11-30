@@ -597,72 +597,61 @@ function parseWithColors(message, colors) {
     _.forEach(message, char => {
         if(char === _a) {
             if(isComplete) {
-                format += '%s%c';
-                items.push(token);
+                format += `${token}%c`;
                 items.push(accent);
                 token = '';
                 isComplete = false;
             } else {
-                format += '%s%c';
-                items.push(token);
+                format += `${token}%c`;
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
         } else if(char === _c) {
             if(isComplete) {
-                format += '%s%c';
-                items.push(token);
+                format += `${token}%c`;
                 items.push(colored);
                 token = '';
                 isComplete = false;
             } else {
-                format += '%s%c';
-                items.push(token);
+                format += `${token}%c`;
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
         } else if(char === _b) {
             if(isComplete) {
-                format += '%s%c';
-                items.push(token);
+                format += `${token}%c`;
                 items.push(bold);
                 token = '';
                 isComplete = false;
             } else {
-                format += '%s%c';
-                items.push(token);
+                format += `${token}%c`;
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
         } else if(char === _p[0]) {
-            format += '%s%c';
-            items.push(`${token}${_p[0]}`);
+            format += `${token}${_p[0]}%c`;
             items.push(params);
             token = '';
         } else if(char === _p[1]) {
-            format += '%s%c';
-            items.push(token);
+            format += `${token}%c`;
             items.push(normal);
             token = _p[1];
         } else if(char === _o[0]) {
-            format += '%s%c';
-            items.push(token);
+            format += `${token}%c`;
             items.push(opaque);
             token = '';
         } else if(char === _o[1]) {
-            format += '%s%c';
-            items.push(token);
+            format += `${token}%c`;
             items.push(normal);
             token = '';
         } else {
             token += char;
         }
     });
-    format += '%s';
-    items.push(token);
+    format += token;
     return { format, items };
 }
 
@@ -741,7 +730,7 @@ function logWasNow(was, now, keys) {
 
     if(changed && changed.length === 1) {
         const firstСhanged = _.first(changed);
-        const message = [`changed for ${_b}key${_b} ${_p[0]}${firstСhanged}${_p[1]}`];
+        const message = `changed for ${_b}key${_b} ${_p[0]}${firstСhanged}${_p[1]}`;
         if(isSimpleType(nowValue[firstСhanged])) {
             logAsOneString(message, wasValue[firstСhanged], arrowSymbol, nowValue[firstСhanged]);
         } else {
@@ -751,13 +740,13 @@ function logWasNow(was, now, keys) {
     } else {
         logAsOneString(`${_c}was${_c}`);
         logSmart(wasValue);
-        logAsOneString([changed ?
+        logAsOneString(changed ?
             `${_c}now${_c} changed for ${_b}keys${_b} ${_p[0]}${_.join(changed, ', ')}${_p[1]}` :
-            `${_c}now${_c}`]
+            `${_c}now${_c}`
         );
         logSmart(wasValue);
         if(_.isEqual(wasValue, nowValue)) {
-            logAsOneString([`${_o[0]}Attention!${_o[1]} ${_b}they are equal!${_b}`]);
+            logAsOneString(`${_o[0]}Attention!${_o[1]} ${_b}they are equal!${_b}`);
         }
     }
 }
