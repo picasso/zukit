@@ -56,14 +56,14 @@ const config = {
         info: false,
         data: false,
         render: false,
-        use: false,
+        mount: false,
     },
     markers: {
         accented: '*',
         bold: '_',
         colored: '~',
         param: ['[', ']'],
-        trouble: ['{', '}'],
+        opaque: ['{', '}'],
     },
     timing: false,
 };
@@ -72,29 +72,31 @@ let shortenMarkers = _.transform(config.markers, (a, v,k) => a[`_${k[0]}`] = v);
 
 
 let dcolors = {
-
     basic: '#a79635',
     name: '#e56a17',
 
+    alert: '#ff2020',
     render: '#1f993f',
-    use: '#0091ff',
+    mount: '#cc0096',
     info: '#0070c9',
     data: '#a79635',
     trace: '#1f993f',
 
-    attn: '#cc0096',
-    attnBg: '#ffbfee',
-    _data: '#00b3b0',
-
     white: '#ffffff',
-    grey: '#cccccc',
-    bright: '#ffd580',
-
     bold: '#cc0096',
     boldBg: '#fff3d9',
     colored: '#0f5d9a',
     coloredBg: '#ecffe5',
 
+
+
+
+    attn: '#cc0096',
+    attnBg: '#ffbfee',
+    _data: '#00b3b0',
+
+    grey: '#cccccc',
+    bright: '#ffd580',
 
     menu: '#00b3b0',
     player: '#0070c9',
@@ -259,11 +261,11 @@ function logWithColors(messages, messageColors,  ...data) {
 }
 
 function logWithColors2(message, ...data) {
-    const func = config.colors.info ? console.info : console.log
+    const func = config.colors.info ? console.info : console.log;
     const colors = getColors(colorBy(message));
 
     let { format, items } = parseWithColors(message, colors);
-    if(!_.isEmpty(data)) format = format + '   ';
+    if(!_.isEmpty(data)) format = format + '  ';
     _.forEach(data, item => {
         if(_.isString(item)) {
             const { format: newFormat, items: newItems } = parseWithColors(item, colors);
@@ -426,26 +428,30 @@ function logAsOneString(chunks, ...data) {
 
 // Debugging in components ----------------------------------------------------]
 
-function renderComponent(...data) {
-    config.colors.same = true;
+function renderComponent(maybeClientId) {
+    const { _b, _o } = shortenMarkers;
+    const [clientId, clientId2] = _.castArray(maybeClientId);
+    const component = componentName(clientId2 ? 'renderComponentWithId,renderComponent' : 'renderComponent');
+    const id = (clientId ?? clientId2)  ? ` with ${_b}${shortenId(clientId ?? clientId2)}${_b}` : '';
     config.colors.render = true;
-    log(`${componentName('renderComponent')} [render]`, ...data);
+    setOpaqueColors('green');
+    logAsOneString(`${_b}${component}${_b}${id} ${_o[0]}render${_o[1]}`);
 }
 
-function renderComponentWithId(clientId, ...data) {
-    config.colors.same = true;
-    config.colors.render = true;
-    log(`${componentName('renderComponentWithId')} [${shortenId({clientId})}]`, ...data);
+function renderComponentWithId(clientId) {
+    renderComponent(clientId);
 }
 
 function dataInComponent(data, marker = false) {
+    const { _a, _b, _c } = shortenMarkers;
     const component = componentName('dataInComponent');
     const keys = _.keys(data);
     const isSingleKey = keys.length === 1;
-    let key = isSingleKey ? _.first(keys) : _.join(keys, '*, *');
+    let key = isSingleKey ? _.first(keys) : _.join(keys, `${_a}, ${_a}`);
     let value = isSingleKey ? data[key] : data;
-    const altName = marker ? `:_${String(marker)}_` : '';
-    const message = `${component}${altName} ${arrowSymbol} value for *${key}*`;
+    const altName = marker ? `:${_c}${String(marker)}${_c}` : '';
+    const message = `${_b}${component}${_b}${altName} ${arrowSymbol} value for ${_a}${key}${_a}`;
+    config.colors.data = true;
     if(isSimpleType(value)) {
         logAsOneString(message, value);
     } else {
@@ -455,11 +461,12 @@ function dataInComponent(data, marker = false) {
 }
 
 function infoInComponent(messageData, ...data) {
+    const { _b } = shortenMarkers;
     const [message, clientId] = _.castArray(messageData);
-    const id = clientId ? ` with ${shortenId(clientId)}` : '';
+    const id = clientId ? ` with ${_b}${shortenId(clientId)}${_b}` : '';
     const component = componentName(clientId ? 'infoInComponentWithId,infoInComponent' : 'infoInComponent');
+    const info = `${_b}${component}${_b}${id} ${arrowSymbol} ${message}`;
     config.colors.info = true;
-    const info = `_${component}_${id} ${arrowSymbol} ${message}`;
     if(data.length === 0 || (data.length === 1 && isCompactType(data[0]))) {
         logAsOneString(info, ...data);
     } else {
@@ -474,16 +481,17 @@ function infoInComponentWithId(clientId, message, ...data) {
 
 // trace changes in Component props and state
 function useTraceUpdate(props, state = {}, trackClientId = false) {
-
+    const { _b } = shortenMarkers;
     const ref = useRef({
-        key: combineNames(componentName(trackClientId ? 'useTraceUpdate,useTraceUpdateWithId' : 'useTraceUpdate')),
-        id: trackClientId ? ` with ${shortenId(props)}` : '',
+        key: componentName(trackClientId ? 'useTraceUpdate,useTraceUpdateWithId' : 'useTraceUpdate'),
+        id: trackClientId ? ` with ${_b}${shortenId(props)}${_b}` : '',
     });
 
     const prevProps = usePrevious(props);
     const prevState = usePrevious(state);
 
     useEffect(() => {
+        const { _p } = shortenMarkers;
         const { id, key } = ref.current ?? {};
         const changedPropKeys = changedKeys(props, prevProps);
         const changedStateKeys = changedKeys(state, prevState);
@@ -491,77 +499,13 @@ function useTraceUpdate(props, state = {}, trackClientId = false) {
         const hasProps = !!changedPropKeys.length;
         const hasState = !!changedStateKeys.length;
 
-        if(hasProps && !hasState) log(`Traced changes${id} [${key} : props]`);
-        if(!hasProps && hasState) log(`Traced changes${id} [${key} : state]`);
-        if(hasProps && hasState) log(`Traced changes${id} [${key} : props & state]`);
+        if(hasProps && !hasState) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props${_p[1]}`);
+        if(!hasProps && hasState) logAsOneString(`Traced changes${id} ${_p[0]}${key} : state${_p[1]}`);
+        if(hasProps && hasState) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props & state${_p[1]}`);
 
         if(hasProps) logChanges(changedPropKeys, props, prevProps);
         if(hasState) logChanges(changedStateKeys, state, prevState);
     }, [props, prevProps, state, prevState]);
-
-
-    // const [prev, prevState] = propsAndState(key, compId);
-    //
-    // // useEffect(() => {
-    //     let changedProps = Object.entries(props).reduce((ps, [k, v]) => {
-    //         if(prev[k] !== v) {
-    //             ps[0][k] = v;
-    //             ps[1][`${k}`] = prev[k]; // _
-    //         }
-    //         return ps;
-    //     }, [{}, {}]);
-    //
-    //     let changedState = Object.entries(state).reduce((ss, [k, v]) => {
-    //         if (prevState[k] !== v) {
-    //             ss[0][k] = v;
-    //             ss[1][`${k}`] = prevState[k]; // _
-    //         }
-    //         return ss;
-    //     }, [{}, {}]);
-    //
-    //     const hasProps = Object.keys(changedProps[0]).length > 0;
-    //     const hasState = Object.keys(changedState[0]).length > 0;
-
-        // config.mods.consoleDir = true;
-        // config.colors.trace = hasProps || hasState;
-
-        // if(hasProps) {
-        //     changedProps = _.reduce(changedProps, (props, p, index) => {
-        //         const [, simplified] = simplify(index ? 'prevProps' : 'props', p);
-        //         if(isIterable(simplified)) props.push(...simplified);
-        //         else props.push(simplified);
-        //         return props;
-        //     }, []);
-        //     // special case - if we have single 'attributes' value - analyse it and remove all identical properties
-        //     if(changedProps.length === 4 && changedProps[0] === 'props.attributes') {
-        //         let next = {}, prev = {};
-        //         _.forEach(changedProps[1], (_val, key) => {
-        //             if(changedProps[1][key] !== changedProps[3][key]) {
-        //                 next[key] = changedProps[1][key];
-        //                 prev[key] = changedProps[3][key];
-        //             }
-        //         });
-        //         changedProps[0] += '*';
-        //         changedProps[1] = next;
-        //         changedProps[2] += '*';
-        //         changedProps[3] = prev;
-        //     }
-        // }
-        // if(hasState) {
-        //     changedState = _.reduce(changedState, (state, s, index) => {
-        //         const [, simplified] = simplify(index ? 'prevState' : 'state', s);
-        //         if(isIterable(simplified)) state.push(...simplified);
-        //         else state.push(simplified);
-        //         return state;
-        //     }, []);
-        // }
-        //
-        // if(hasProps && !hasState) log(`Traced changes${id} [${key} : props]`, ...changedProps);
-        // if(!hasProps && hasState) log(`Traced changes${id} [${key} : state]`, ...changedState);
-        // if(hasProps && hasState) log(`Traced changes${id} [${key} : props & state]`, ...changedProps, ...changedState);
-        //
-        // propsAndState(key, compId, props, state);
-    // });
 }
 
 // to trace several instances of one component on the page
@@ -570,18 +514,19 @@ function useTraceUpdateWithId(props, state = {}) {
 }
 
 // to log 'aka' Mounting and Unmounting events
-function useAkaMount() {
-    const name = combineNames(componentName('useAkaMount'));
+function useMountUnmount() {
+    const ref = useRef({
+        component: componentName('useMountUnmount'),
+    });
     useEffect(() => {
-        config.mods.consoleDir = true;
-        config.colors.info = true;
-        log(`#aka componentDidMount [${name}]`);
+        const { _b, _c, _o } = shortenMarkers;
+        const { component } = ref.current ?? {};
+        config.colors.mount = true;
+        logAsOneString(`${_b}${component}${_b} ${arrowSymbol} ${_c}componentDidMount${_c}`);
         return () => {
-            config.mods.consoleDir = true;
-            config.colors.info = true;
-            log(`#aka componentWillUnmount [${name}]`);
+            config.colors.mount = true;
+            logAsOneString(`${_b}${component}${_b} ${arrowSymbol} ${_o[0]}componentWillUnmount${_o[1]}`);
         }
-    // eslint-disable-next-line
     }, []);
 }
 
@@ -594,7 +539,8 @@ function colorBy(message) {
     if(config.colors.data) return dcolors.data;
     if(config.colors.trace) return dcolors.trace;
     if(config.colors.render) return dcolors.render;
-    if(config.colors.use) return dcolors.use;
+    if(config.colors.alert) return dcolors.alert;
+    if(config.colors.mount) return dcolors.mount;
     // remove any var names which may lead to false-positive test
     message = message.replace(/\[[^\]]+\]/,'').replace(/"[^"]+"/g, '');
     if(/token|logout|user/ig.test(message)) return /unsuccessful|error/ig.test(message) ? dcolors.keypoint2 : dcolors.keypoint1;
@@ -609,13 +555,23 @@ function getColors(mainColor = dcolors.basic) {
     const padding = 'padding: 0 2px 0 2px;';
     const paddingBg = 'padding: 1px 3px 1px 3px;';
     const rounded = 'border-radius: 3px;';
+    const opaque = config.colors.opaque || { color: dcolors.white, bg: dcolors.alert };
     return {
         normal: `${weightNormal} color: ${mainColor}`,
         accent: `${weightBold} ${paddingBg} ${rounded} color: ${dcolors.bold}; background: ${dcolors.boldBg}`,
         bold: `${weightBold} color: ${mainColor}`,
         params: `${weightBold} ${padding} color: ${dcolors.name}`,
         colored: `${weightBold} ${paddingBg} ${rounded} color: ${dcolors.colored}; background: ${dcolors.coloredBg}`,
+        opaque: `${weightBold} ${paddingBg} ${rounded} color: ${opaque.color}; background: ${opaque.bg}`,
     };
+}
+
+function setOpaqueColors(color) {
+    if(color === 'green') config.colors.opaque = { color: dcolors.white, bg: dcolors.render };
+    if(color === 'red') config.colors.opaque = { color: dcolors.white, bg: dcolors.alert };
+    if(color === 'violet') config.colors.opaque = { color: dcolors.white, bg: dcolors.mount };
+    if(color === 'orange') config.colors.opaque = { color: dcolors.white, bg: dcolors.name };
+    if(color === 'blue') config.colors.opaque = { color: dcolors.white, bg: dcolors.info };
 }
 
 // старая реализация через regex, сохранил тут для идей
@@ -627,8 +583,8 @@ function getColors(mainColor = dcolors.basic) {
 // string = string.replace( /\*([^*]+?)\*/g, '<$1>').replace( /_([^_]+?)_/g, '($1)').replace( /~([^~]+?)~/g, '{$1}');
 
 function parseWithColors(message, colors) {
-    const { normal, bold, params, accent, colored, trouble } = colors ?? getColors();
-    const { _a, _b, _c, _p, _t } = shortenMarkers;
+    const { normal, bold, params, accent, colored, opaque } = colors ?? getColors();
+    const { _a, _b, _c, _p, _o } = shortenMarkers;
     let isComplete = true;
     let format = '%c';
     let items = [normal];
@@ -636,6 +592,8 @@ function parseWithColors(message, colors) {
     // *text* as 'accented'
     // _text_ as 'bold'
     // ~text~ as 'colored'
+    // [text] as 'param'
+    // {text} as 'opaque'
     _.forEach(message, char => {
         if(char === _a) {
             if(isComplete) {
@@ -689,12 +647,12 @@ function parseWithColors(message, colors) {
             items.push(token);
             items.push(normal);
             token = _p[1];
-        } else if(char === _t[0]) {
+        } else if(char === _o[0]) {
             format += '%s%c';
             items.push(token);
-            items.push(trouble);
+            items.push(opaque);
             token = '';
-        } else if(char === _t[1]) {
+        } else if(char === _o[1]) {
             format += '%s%c';
             items.push(token);
             items.push(normal);
@@ -728,12 +686,8 @@ function changedKeys(next, prev) {
 
 function shortenId(props, forStorage = false) {
     const shortened = (props && props.clientId) ? props.clientId.slice(-4) : 0;
-    return forStorage ? shortened : (shortened === 0 ? '?' : `***-${shortened}`);
+    return forStorage ? shortened : (shortened === 0 ? '?' : `✷✷✷-${shortened}`);
 }
-
-// function isIterable(value) {
-//     return Symbol.iterator in Object(value);
-// }
 
 function cloneValue(value) {
     // do nothing for null & undefined
@@ -779,7 +733,7 @@ function logSimplified(val) {
 }
 
 function logWasNow(was, now, keys) {
-    const { _b, _c, _p, _t } = shortenMarkers;
+    const { _b, _c, _p, _o } = shortenMarkers;
     const firstKey = _.first(keys);
     const wasValue = keys.length === 1 ? was[firstKey] : was;
     const nowValue = keys.length === 1 ? now[firstKey] : now;
@@ -803,7 +757,7 @@ function logWasNow(was, now, keys) {
         );
         logSmart(wasValue);
         if(_.isEqual(wasValue, nowValue)) {
-            logAsOneString([`${_t}Attention!${_t} ${_b}they are equal!${_b}`]);
+            logAsOneString([`${_o[0]}Attention!${_o[1]} ${_b}they are equal!${_b}`]);
         }
     }
 }
@@ -856,11 +810,6 @@ function skipFrames(name, prev) {
     return prevFrames + frames;
 }
 
-function combineNames(names, asArray = false) {
-    const [component, funcVar = false] = _.split(names, '/');
-    return asArray ? [component, funcVar] : (funcVar ? `${component} : ${funcVar}` : component);
-}
-
 function componentName(prevFrames = 0, componentAlt = null) {
     const [name, altName] = findOnStack(skipFrames('componentName', prevFrames));
     // component name should start with UpperCase
@@ -894,11 +843,11 @@ export default {
     warn,
     error,
 
-    useTrace: useTraceUpdate,
     render: renderComponent,
     data: dataInComponent,
     info: infoInComponent,
-    akaMount: useAkaMount,
+    useTrace: useTraceUpdate,
+    useMU: useMountUnmount,
 
     useTraceWithId: useTraceUpdateWithId,
     renderWithId: renderComponentWithId,
