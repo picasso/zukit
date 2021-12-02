@@ -118,6 +118,7 @@ let dcolors = {
 };
 
 const arrowSymbol = ' ~⇢~ ';
+const chevronSymbol = ' » ';
 const compactKeysCount = 6;
 
 function logLevel(newLevel = '') {
@@ -428,6 +429,7 @@ function logAsOneString(chunks, ...data) {
 
 // Debugging in components ----------------------------------------------------]
 
+// just display the label every time the component is rendered
 function renderComponent(maybeClientId) {
     const { _b, _o } = shortenMarkers;
     const [clientId, clientId2] = _.castArray(maybeClientId);
@@ -438,10 +440,7 @@ function renderComponent(maybeClientId) {
     logAsOneString(`${_b}${component}${_b}${id} ${_o[0]}render${_o[1]}`);
 }
 
-function renderComponentWithId(clientId) {
-    renderComponent(clientId);
-}
-
+// display variables and their values, possibly simplifying the data
 function dataInComponent(data, marker = false) {
     const { _a, _b, _c } = shortenMarkers;
     const component = componentName('dataInComponent');
@@ -460,6 +459,7 @@ function dataInComponent(data, marker = false) {
     }
 }
 
+// display a formatted string and possibly some data
 function infoInComponent(messageData, ...data) {
     const { _b } = shortenMarkers;
     const [message, clientId] = _.castArray(messageData);
@@ -475,11 +475,7 @@ function infoInComponent(messageData, ...data) {
     }
 }
 
-function infoInComponentWithId(clientId, message, ...data) {
-    infoInComponent([message, clientId], ...data);
-}
-
-// trace changes in Component props and state
+// trace changes in component props and state
 function useTraceUpdate(props, state = {}, trackClientId = false) {
     const { _b } = shortenMarkers;
     const ref = useRef({
@@ -493,24 +489,19 @@ function useTraceUpdate(props, state = {}, trackClientId = false) {
     useEffect(() => {
         const { _p } = shortenMarkers;
         const { id, key } = ref.current ?? {};
-        const changedPropKeys = changedKeys(props, prevProps);
-        const changedStateKeys = changedKeys(state, prevState);
+        const propKeys = changedKeys(props, prevProps);
+        const stateKeys = changedKeys(state, prevState);
 
-        const hasProps = !!changedPropKeys.length;
-        const hasState = !!changedStateKeys.length;
+        const propsChanged = propKeys[0].length || propKeys[1] || propKeys[2];
+        const stateChanged = stateKeys[0].length || stateKeys[1] || stateKeys[2];
 
-        if(hasProps && !hasState) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props${_p[1]}`);
-        if(!hasProps && hasState) logAsOneString(`Traced changes${id} ${_p[0]}${key} : state${_p[1]}`);
-        if(hasProps && hasState) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props & state${_p[1]}`);
+        if(propsChanged && !stateChanged) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props${_p[1]}`);
+        if(!propsChanged && stateChanged) logAsOneString(`Traced changes${id} ${_p[0]}${key} : state${_p[1]}`);
+        if(propsChanged && stateChanged) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props & state${_p[1]}`);
 
-        if(hasProps) logChanges(changedPropKeys, props, prevProps);
-        if(hasState) logChanges(changedStateKeys, state, prevState);
+        if(propsChanged) logChanges(propKeys, prevProps, props);
+        if(stateChanged) logChanges(stateKeys, prevState, state);
     }, [props, prevProps, state, prevState]);
-}
-
-// to trace several instances of one component on the page
-function useTraceUpdateWithId(props, state = {}) {
-    useTraceUpdate(props, state, true);
 }
 
 // to log 'aka' Mounting and Unmounting events
@@ -528,6 +519,20 @@ function useMountUnmount() {
             logAsOneString(`${_b}${component}${_b} ${arrowSymbol} ${_o[0]}componentWillUnmount${_o[1]}`);
         }
     }, []);
+}
+
+// to trace several instances of one component on the page --------------------]
+
+function useTraceUpdateWithId(props, state = {}) {
+    useTraceUpdate(props, state, true);
+}
+
+function infoInComponentWithId(clientId, message, ...data) {
+    infoInComponent([message, clientId], ...data);
+}
+
+function renderComponentWithId(clientId) {
+    renderComponent(clientId);
 }
 
 // Helpers for colored console & components debuging --------------------------]
@@ -664,13 +669,18 @@ function isCompactType(val) {
 }
 
 function changedKeys(next, prev) {
-    const keys = [];
+    const updated = [];
     _.forEach(next, (val, key) => {
         if(prev && prev[key] !== val) {
-            keys.push(key);
+            updated.push(key);
         }
     });
-    return keys;
+    const nextKeys = _.keys(next);
+    const prevKeys = _.keys(prev);
+    const added = _.difference(nextKeys, prevKeys);
+    const removed = _.difference(prevKeys, nextKeys);
+    // 'added' keys will also be included in 'updated', so we exclude them
+    return [_.difference(updated, added), _.isEmpty(added) ? null : added, _.isEmpty(removed) ? null : removed];
 }
 
 function shortenId(props, forStorage = false) {
@@ -721,16 +731,34 @@ function logSimplified(val) {
     }
 }
 
+function logAddedRemoved(added, removed) {
+    const { _b, _p } = shortenMarkers;
+    const addedKeys = added ? (added.length > 1 ? 'keys' : 'key') : false;
+    const removedKeys = removed ? (removed.length > 1 ? 'keys' : 'key') : false;
+    let message = addedKeys || removedKeys ? chevronSymbol : '';
+    if(addedKeys) {
+        const keys = added.length > compactKeysCount ? _.concat(_.take(added, compactKeysCount), ['and more...']) : added;
+        message += `added ${_b}${addedKeys}${_b} ${_p[0]}${_.join(keys, ', ')}${_p[1]}${removedKeys ? ', ' : ''}`;
+    }
+    if(removedKeys) {
+        const keys = removed.length > compactKeysCount ? _.concat(_.take(removed, compactKeysCount), ['and more...']) : removed;
+        message += `removed ${_b}${removedKeys}${_b} ${_p[0]}${_.join(keys, ', ')}${_p[1]}`;
+    }
+    if(message) logAsOneString(message);
+}
+
 function logWasNow(was, now, keys) {
     const { _b, _c, _p, _o } = shortenMarkers;
     const firstKey = _.first(keys);
     const wasValue = keys.length === 1 ? was[firstKey] : was;
     const nowValue = keys.length === 1 ? now[firstKey] : now;
-    const changed = keys.length === 1 ? changedKeys(wasValue, nowValue) : false;
+    const [updated, added, removed] = keys.length === 1 ? changedKeys(nowValue, wasValue) : [];
+    const changed = keys.length === 1 ? updated ?? [] : false;
 
+    logAddedRemoved(added, removed);
     if(changed && changed.length === 1) {
         const firstСhanged = _.first(changed);
-        const message = `changed for ${_b}key${_b} ${_p[0]}${firstСhanged}${_p[1]}`;
+        const message = `${chevronSymbol}changed for ${_b}key${_b} ${_p[0]}${firstСhanged}${_p[1]}`;
         if(isSimpleType(nowValue[firstСhanged])) {
             logAsOneString(message, wasValue[firstСhanged], arrowSymbol, nowValue[firstСhanged]);
         } else {
@@ -744,45 +772,56 @@ function logWasNow(was, now, keys) {
             `${_c}now${_c} changed for ${_b}keys${_b} ${_p[0]}${_.join(changed, ', ')}${_p[1]}` :
             `${_c}now${_c}`
         );
-        logSmart(wasValue);
+        logSmart(nowValue);
         if(_.isEqual(wasValue, nowValue)) {
             logAsOneString(`${_o[0]}Attention!${_o[1]} ${_b}they are equal!${_b}`);
         }
     }
 }
 
-function logChanges(keys, values, prevValues) {
+function logChanges(keys, prevValues, values) {
     const { _a, _b, _p } = shortenMarkers;
-    _.forEach(keys, key => {
+    const [updated, added, removed] = keys;
+    // maybe there were additions and deletions?
+    logAddedRemoved(added, removed);
+    if(updated.length === 0) logWasNow(prevValues, values, updated);
+    // log in detail for changes
+    _.forEach(updated, key => {
         const value = values[key];
         config.colors.trace = true;
-        const message = ` » ${_a}${ key }${_a}`;
-        if(isSimpleType(value)) logAsOneString([message], prevValues[key], arrowSymbol, value);
+        const message = `${chevronSymbol}${_a}${key}${_a}`;
+        if(isSimpleType(value)) logAsOneString(message, prevValues[key], arrowSymbol, value);
         else {
             if(_.isFunction(value)) {
                 logAsOneString([message, `${_p[0]}[function]${_p[1]}`]);
             } else {
-                const changed = changedKeys(value, prevValues[key]);
+                const [changed, addedKeys, removedKeys] = changedKeys(value, prevValues[key]);
+                logAddedRemoved(addedKeys, removedKeys);
                 const firstKey = _.first(changed);
-                const keyMsg = `${message} @1@ ${_b}@2@${_b} ${_p[0]}${_.join(changed, ', ')}${_p[1]}`;
-                if(_.isArray(value)) {
-                    const arrayMsg = keyMsg.replace('@2@', changed.length === 1 ? 'index' : 'indexes').replace('@1@', 'at');
-                    if(changed.length === 1 && isSimpleType(value[firstKey])) {
-                        logAsOneString(arrayMsg, prevValues[key][firstKey], arrowSymbol, value[firstKey]);
-                    } else {
-                        logAsOneString(arrayMsg);
-                        logWasNow(prevValues[key], value, changed);
-                    }
+                if(!changed.length && !addedKeys?.length && !removedKeys?.length) {
+                    logAsOneString(`${message} ${arrowSymbol} changed itself but the keys unchanged {something is wrong!}`);
+                    logWasNow(prevValues[key], value, changed);
                 } else {
-                    if(_.has(value, '$$typeof')) {
-                        logAsOneString([message, `${_p[0]}React Component${_p[1]}`]);
-                    } else {
-                        const objMsg = keyMsg.replace('@2@', changed.length === 1 ? 'key' : 'keys').replace('@1@', 'for');
+                    const keyMsg = `${message} @1@ ${_b}@2@${_b} ${_p[0]}${_.join(changed, ', ')}${_p[1]}`;
+                    if(_.isArray(value)) {
+                        const arrayMsg = keyMsg.replace('@2@', changed.length === 1 ? 'index' : 'indexes').replace('@1@', 'at');
                         if(changed.length === 1 && isSimpleType(value[firstKey])) {
-                            logAsOneString(objMsg, prevValues[key][firstKey], arrowSymbol, value[firstKey]);
+                            logAsOneString(arrayMsg, prevValues[key][firstKey], arrowSymbol, value[firstKey]);
                         } else {
-                            logAsOneString(objMsg);
-                            logWasNow(_.pick(prevValues[key], changed), _.pick(value, changed), changed);
+                            logAsOneString(arrayMsg);
+                            logWasNow(prevValues[key], value, changed);
+                        }
+                    } else {
+                        if(_.has(value, '$$typeof')) {
+                            logAsOneString([message, `${_p[0]}React Component${_p[1]}`]);
+                        } else {
+                            const objMsg = keyMsg.replace('@2@', changed.length === 1 ? 'key' : 'keys').replace('@1@', 'for');
+                            if(changed.length === 1 && isSimpleType(value[firstKey])) {
+                                logAsOneString(objMsg, prevValues[key][firstKey], arrowSymbol, value[firstKey]);
+                            } else {
+                                logAsOneString(objMsg);
+                                logWasNow(_.pick(prevValues[key], changed), _.pick(value, changed), changed);
+                            }
                         }
                     }
                 }
@@ -799,13 +838,15 @@ function skipFrames(name, prev) {
     return prevFrames + frames;
 }
 
-function componentName(prevFrames = 0, componentAlt = null) {
-    const [name, altName] = findOnStack(skipFrames('componentName', prevFrames));
-    // component name should start with UpperCase
-    if(name[0] === name[0].toUpperCase()) return name;
-    // maybe we have something similar to component name?
-    if(_.isString(altName) && altName[0] === altName[0].toUpperCase() && altName.length > 2) componentAlt = altName;
-    return componentAlt ? `${componentAlt}.${name}()` : `${name}()`;
+function componentName(prevFrames = 0) {
+    const [name] = findOnStack(skipFrames('componentName', prevFrames));
+    // component name should start with UpperCase, replace simple underscore with "other" underscore
+    if(name[0] === name[0].toUpperCase()) return name.replace(/_/g, '⎽');
+    // maybe we have function?
+    // replace simple underscore with "other" underscore to avoid problems with 'colored' console
+    // (underscore is used for _bold text_)
+    const func = name.replace('/zu_blocks', '').replace(/_/g, '⎽').replace(/[/]/g, '.');
+    return `${func}()`;
 }
 
 function findOnStack(prevFrames) {
@@ -815,7 +856,8 @@ function findOnStack(prevFrames) {
 }
 
 function funcFromStack(frames, index = 0) {
-    return (_.get(_.split(frames[index], '@'), 0, '?') || '?').replace(/(\/<)/g, '');
+    // logColapsed(frames[0]);
+    return (_.get(_.split(frames[index], '@'), 0, '?') || '?').replace(/[<|/]+$/g, '');
 }
 
 export default {
@@ -841,7 +883,6 @@ export default {
     useTraceWithId: useTraceUpdateWithId,
     renderWithId: renderComponentWithId,
     infoWithId: infoInComponentWithId,
-    // cdata(data, className) { dataInComponent(data, false, className, 'cdata'); },    // for data inside class components
 
     request(route, options, method) { logRequestResponse('request', route, options, null, method); },
     response(route, data, method) { logRequestResponse('response', route, null, data, method); },
