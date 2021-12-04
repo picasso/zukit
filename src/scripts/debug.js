@@ -446,9 +446,9 @@ function dataInComponent(data, marker = false) {
     const component = componentName('dataInComponent');
     const keys = _.keys(data);
     const isSingleKey = keys.length === 1;
-    let key = isSingleKey ? _.first(keys) : _.join(keys, `${_a}, ${_a}`);
-    let value = isSingleKey ? data[key] : data;
-    const altName = marker ? `:${_c}${String(marker)}${_c}` : '';
+    const key = isSingleKey ? safe(_.first(keys)) : _.join(_.map(keys, safe), `${_a}, ${_a}`);
+    const value = isSingleKey ? data[_.first(keys)] : data;
+    const altName = marker ? `:${_c}${safe(String(marker))}${_c}` : '';
     const message = `${_b}${component}${_b}${altName} ${arrowSymbol} value for ${_a}${key}${_a}`;
     config.colors.data = true;
     if(isSimpleType(value)) {
@@ -465,7 +465,7 @@ function infoInComponent(messageData, ...data) {
     const [message, clientId] = _.castArray(messageData);
     const id = clientId ? ` with ${_b}${shortenId(clientId)}${_b}` : '';
     const component = componentName(clientId ? 'infoInComponentWithId,infoInComponent' : 'infoInComponent');
-    const info = `${_b}${component}${_b}${id} ${arrowSymbol} ${message}`;
+    const info = `${_b}${component}${_b}${id} ${arrowSymbol} ${safe(message)}`;
     config.colors.info = true;
     if(data.length === 0 || (data.length === 1 && isCompactType(data[0]))) {
         logAsOneString(info, ...data);
@@ -580,12 +580,13 @@ function setOpaqueColors(color) {
 }
 
 // старая реализация через regex, сохранил тут для идей
-// const fixed = { '<':'#1','>':'#2','(':'#3',')':'#4','{':'#5','}':'#6' };
-// const inverted = _.invert(fixed);
-// const restore = s => s.replace(/(#1|#2|#3|#4|#5|#6)/g, m => inverted[m]);
+// const fixed = { '*':'#1','_':'#2','~':'#3','{':'#4','}':'#5' };
+const fixed = { '*':'#1','_':'#2' };
+const inverted = _.invert(fixed);
 // replace the characters that will be used for formatting (then we will restore them)
-// let string = message.replace(/[<>(){}]/g, m => fixed[m]);
-// string = string.replace( /\*([^*]+?)\*/g, '<$1>').replace( /_([^_]+?)_/g, '($1)').replace( /~([^~]+?)~/g, '{$1}');
+const safe = s => s.replace(/[*_]/g, m => fixed[m]); // /[*_~{}]/g
+const restore = s => s.replace(/(#1|#2)/g, m => inverted[m]); // /(#1|#2|#3|#4|#5)/g
+const restoreToken = t => `${restore(t)}%c`;
 
 function parseWithColors(message, colors) {
     const { normal, bold, params, accent, colored, opaque } = colors ?? getColors();
@@ -602,61 +603,61 @@ function parseWithColors(message, colors) {
     _.forEach(message, char => {
         if(char === _a) {
             if(isComplete) {
-                format += `${token}%c`;
+                format += restoreToken(token);
                 items.push(accent);
                 token = '';
                 isComplete = false;
             } else {
-                format += `${token}%c`;
+                format += restoreToken(token);
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
         } else if(char === _c) {
             if(isComplete) {
-                format += `${token}%c`;
+                format += restoreToken(token);
                 items.push(colored);
                 token = '';
                 isComplete = false;
             } else {
-                format += `${token}%c`;
+                format += restoreToken(token);
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
         } else if(char === _b) {
             if(isComplete) {
-                format += `${token}%c`;
+                format += restoreToken(token);
                 items.push(bold);
                 token = '';
                 isComplete = false;
             } else {
-                format += `${token}%c`;
+                format += restoreToken(token);
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
         } else if(char === _p[0]) {
-            format += `${token}${_p[0]}%c`;
+            format += `${restore(token)}${_p[0]}%c`;
             items.push(params);
             token = '';
         } else if(char === _p[1]) {
-            format += `${token}%c`;
+            format += restoreToken(token);
             items.push(normal);
             token = _p[1];
         } else if(char === _o[0]) {
-            format += `${token}%c`;
+            format += restoreToken(token);
             items.push(opaque);
             token = '';
         } else if(char === _o[1]) {
-            format += `${token}%c`;
+            format += restoreToken(token);
             items.push(normal);
             token = '';
         } else {
             token += char;
         }
     });
-    format += token;
+    format += restoreToken(token);
     return { format, items };
 }
 
@@ -685,7 +686,7 @@ function changedKeys(next, prev) {
 
 function shortenId(props, forStorage = false) {
     const shortened = (props && props.clientId) ? props.clientId.slice(-4) : 0;
-    return forStorage ? shortened : (shortened === 0 ? '?' : `✷✷✷-${shortened}`);
+    return forStorage ? shortened : (shortened === 0 ? '?' : safe(`✷✷✷-${shortened}`));
 }
 
 function cloneValue(value) {
@@ -716,7 +717,7 @@ function logSimplified(val) {
 
         if(keys.length === 1) {
             const kind = _.isArray(val) ? `at ${_a}index${_a}` : `for ${_a}key${_a}`;
-            const message = [`value ${kind} ${_p[0]}${firstKey}${_p[1]}`];
+            const message = [`value ${kind} ${_p[0]}${safe(firstKey)}${_p[1]}`];
             if(isSimpleType(value)) {
                 logAsOneString(message, value);
             } else {
@@ -738,11 +739,11 @@ function logAddedRemoved(added, removed) {
     let message = addedKeys || removedKeys ? chevronSymbol : '';
     if(addedKeys) {
         const keys = added.length > compactKeysCount ? _.concat(_.take(added, compactKeysCount), ['and more...']) : added;
-        message += `added ${_b}${addedKeys}${_b} ${_p[0]}${_.join(keys, ', ')}${_p[1]}${removedKeys ? ', ' : ''}`;
+        message += `added ${_b}${addedKeys}${_b} ${_p[0]}${safe(_.join(keys, ', '))}${_p[1]}${removedKeys ? ', ' : ''}`;
     }
     if(removedKeys) {
         const keys = removed.length > compactKeysCount ? _.concat(_.take(removed, compactKeysCount), ['and more...']) : removed;
-        message += `removed ${_b}${removedKeys}${_b} ${_p[0]}${_.join(keys, ', ')}${_p[1]}`;
+        message += `removed ${_b}${removedKeys}${_b} ${_p[0]}${safe(_.join(keys, ', '))}${_p[1]}`;
     }
     if(message) logAsOneString(message);
 }
@@ -758,7 +759,7 @@ function logWasNow(was, now, keys) {
     logAddedRemoved(added, removed);
     if(changed && changed.length === 1) {
         const firstСhanged = _.first(changed);
-        const message = `${chevronSymbol}changed for ${_b}key${_b} ${_p[0]}${firstСhanged}${_p[1]}`;
+        const message = `${chevronSymbol}changed for ${_b}key${_b} ${_p[0]}${safe(firstСhanged)}${_p[1]}`;
         if(isSimpleType(nowValue[firstСhanged])) {
             logAsOneString(message, wasValue[firstСhanged], arrowSymbol, nowValue[firstСhanged]);
         } else {
@@ -769,7 +770,7 @@ function logWasNow(was, now, keys) {
         logAsOneString(`${_c}was${_c}`);
         logSmart(wasValue);
         logAsOneString(changed ?
-            `${_c}now${_c} changed for ${_b}keys${_b} ${_p[0]}${_.join(changed, ', ')}${_p[1]}` :
+            `${_c}now${_c} changed for ${_b}keys${_b} ${_p[0]}${safe(_.join(changed, ', '))}${_p[1]}` :
             `${_c}now${_c}`
         );
         logSmart(nowValue);
@@ -789,7 +790,7 @@ function logChanges(keys, prevValues, values) {
     _.forEach(updated, key => {
         const value = values[key];
         config.colors.trace = true;
-        const message = `${chevronSymbol}${_a}${key}${_a}`;
+        const message = `${chevronSymbol}${_a}${safe(key)}${_a}`;
         if(isSimpleType(value)) logAsOneString(message, prevValues[key], arrowSymbol, value);
         else {
             if(_.isFunction(value)) {
@@ -802,9 +803,9 @@ function logChanges(keys, prevValues, values) {
                     logAsOneString(`${message} ${arrowSymbol} changed itself but the keys unchanged {something is wrong!}`);
                     logWasNow(prevValues[key], value, changed);
                 } else {
-                    const keyMsg = `${message} @1@ ${_b}@2@${_b} ${_p[0]}${_.join(changed, ', ')}${_p[1]}`;
+                    const keyMsg = `${message} @1 ${_b}@2${_b} ${_p[0]}${safe(_.join(changed, ', '))}${_p[1]}`;
                     if(_.isArray(value)) {
-                        const arrayMsg = keyMsg.replace('@2@', changed.length === 1 ? 'index' : 'indexes').replace('@1@', 'at');
+                        const arrayMsg = keyMsg.replace('@2', changed.length === 1 ? 'index' : 'indexes').replace('@1', 'at');
                         if(changed.length === 1 && isSimpleType(value[firstKey])) {
                             logAsOneString(arrayMsg, prevValues[key][firstKey], arrowSymbol, value[firstKey]);
                         } else {
@@ -815,7 +816,7 @@ function logChanges(keys, prevValues, values) {
                         if(_.has(value, '$$typeof')) {
                             logAsOneString([message, `${_p[0]}React Component${_p[1]}`]);
                         } else {
-                            const objMsg = keyMsg.replace('@2@', changed.length === 1 ? 'key' : 'keys').replace('@1@', 'for');
+                            const objMsg = keyMsg.replace('@2', changed.length === 1 ? 'key' : 'keys').replace('@1', 'for');
                             if(changed.length === 1 && isSimpleType(value[firstKey])) {
                                 logAsOneString(objMsg, prevValues[key][firstKey], arrowSymbol, value[firstKey]);
                             } else {
@@ -841,12 +842,12 @@ function skipFrames(name, prev) {
 function componentName(prevFrames = 0) {
     const [name] = findOnStack(skipFrames('componentName', prevFrames));
     // component name should start with UpperCase, replace simple underscore with "other" underscore
-    if(name[0] === name[0].toUpperCase()) return name.replace(/_/g, '⎽');
+    if(name[0] === name[0].toUpperCase()) return safe(name); //.replace(/_/g, '⎽');
     // maybe we have function?
     // replace simple underscore with "other" underscore to avoid problems with 'colored' console
     // (underscore is used for _bold text_)
-    const func = name.replace('/zu_blocks', '').replace(/_/g, '⎽').replace(/[/]/g, '.');
-    return `${func}()`;
+    const func = name.replace('/zu_blocks', '').replace(/[/]/g, '.'); // .replace(/_/g, '⎽')
+    return `${safe(func)}()`;
 }
 
 function findOnStack(prevFrames) {
