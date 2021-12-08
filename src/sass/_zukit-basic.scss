@@ -84,8 +84,10 @@ $modal-component-class: zukit-modal;
 }
 
 %markdown_code {
+	padding: 1px 5px;
+	display: inline-block;
 	color: darken($admin-magenta-color, 10%);
-	background-color: rgba($admin-magenta-color, 0.05);
+	background-color: rgba($admin-magenta-color, 0.08);
 }
 
 %markdown_em {
