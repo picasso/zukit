@@ -72,7 +72,7 @@ const ZukitSidebar = ({
 					<h2 className="block-editor-block-card__title">
 						{ title }
 					</h2>
-					<span className="block-editor-block-card__description">
+					<span className="block-editor-block-card__description __zu_markdown">
 					{ description }
 					</span>
 				</div>

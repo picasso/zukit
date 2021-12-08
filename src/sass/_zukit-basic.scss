@@ -6,6 +6,7 @@ $admin-grey-color: #e5e5e5;
 $admin-light-yellow: #ffffa5;
 $admin-light-brown: #f2d592; //#d5b464;
 $admin-dark-brown: #7f6c3c;
+$admin-darker-brown: darken($admin-dark-brown, 5%);
 
 $admin-magenta-color: #e01765;
 $admin-error-color: #cc2027;
@@ -51,7 +52,7 @@ $custom-button-hover-text-color: white;
 $settings-max-width: 1020px; //none;
 $settings-left-width: 200px;
 $settings-left-min-width: $settings-left-width + 60px;
-$settings-sidebar-icon-size: 30px;
+$settings-sidebar-icon-size: 36px;
 
 $basic-font-family: 'Open Sans',-apple-system,Roboto,Ubuntu,sans-serif;
 $basic-font-size: 14px;
@@ -62,6 +63,7 @@ $plugin-icon-width: 100px;
 $plugin-icon-height: 80px;
 
 $select-item-size: 80px;
+$main-note-margin: 2em;
 
 // class prefixes -------------------------------------------------------------]
 

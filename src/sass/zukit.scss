@@ -228,7 +228,36 @@ $divider-component-class: zukit-divider;
 			border-radius: 5px;
 			margin-bottom: 2em;
 			background-color: rgba($admin-gold-color, 0.2);
+			.__code {
+				@extend %markdown_basic;
+				@extend %markdown_code;
+				background-color: rgba($admin-gold-color, 0.2);
+				@include in('^.is-green') { @extend %markdown_green; }
+				@include in('^.is-red') { @extend %markdown_red; }
+				@include in('^.is-gold') { @extend %markdown_gold; }
+			}
+			strong {
+				@extend %markdown_strong;
+			}
+			em {
+				@extend %markdown_basic;
+				@extend %markdown_em;
+				background-color: transparent;
+			}
+
+			// .__code {
+			// 	padding: 2px 6px;
+			// 	border-radius: 5px;
+			// 	background-color: rgba($admin-gold-color, 0.2);
+			// 	color: $admin-error-color;
+			// }
 		}
+		.editor-post-title + .__note {
+			display: inline-block;
+			margin: $main-note-margin;
+			width: calc(100% - #{($main-note-margin * 2) + $main-note-margin});
+		}
+
 		.__select_label {
 				display: block;
 				margin-bottom: 4px;
@@ -334,7 +363,13 @@ $divider-component-class: zukit-divider;
 				font-weight: 600;
 			}
 			.block-editor-block-card__title {
-				margin-bottom: 1.5em;
+				margin-left: 0.5em;
+				margin-bottom: 1em;
+				font-size: $basic-font-size;
+			}
+
+			.block-editor-block-card__description {
+				color: $admin-darker-brown;
 			}
 
 			.block-editor-block-card .block-editor-block-icon svg {
