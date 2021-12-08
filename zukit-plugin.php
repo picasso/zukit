@@ -252,12 +252,12 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	public function sprintf_dir(...$params) {
 		$path = call_user_func_array('sprintf', $params);
-		return $this->dir.$path;
+		return $this->dir . '/' . ltrim($path, '/\\');
 	}
 
 	public function sprintf_uri(...$params) {
 		$path = call_user_func_array('sprintf', $params);
-		return $this->uri.$path;
+		return $this->uri . '/' . ltrim($path, '/\\');
 	}
 
 	private function script_defaults() {
