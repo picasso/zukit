@@ -59,8 +59,8 @@ const config = {
         mount: false,
     },
     markers: {
-        accented: '*',
-        bold: '_',
+        accented: '±',
+        bold: '§',
         colored: '~',
         param: ['[', ']'],
         opaque: ['{', '}'],
@@ -68,8 +68,12 @@ const config = {
     timing: false,
 };
 
-let shortenMarkers = _.transform(config.markers, (a, v,k) => a[`_${k[0]}`] = v);
-
+const _markers = _.transform(config.markers, (a, v,k) => a[k[0]] = v);
+const _accented = s => `${_markers.a}${s}${_markers.a}`;
+const _bold = s => `${_markers.b}${s}${_markers.b}`;
+const _colored = s => `${_markers.c}${s}${_markers.c}`;
+const _param = (s, alt) => `${_markers.p[0]}${s}${alt ? ' : ' : ''}${alt ?? ''}${_markers.p[1]}`;
+const _opaque = s => `${_markers.o[0]}${s}${_markers.o[1]}`;
 
 let dcolors = {
     basic: '#a79635',
@@ -117,8 +121,8 @@ let dcolors = {
     // ajaxColor2: '#000'
 };
 
-const arrowSymbol = ' ~⇢~ ';
-const chevronSymbol = ' » ';
+const arrowSymbol = ' ' + _colored('⇢') + ' ';
+const chevronSymbol = ' ' + _bold('»') + ' '; // ' » ';
 const compactKeysCount = 6;
 
 function logLevel(newLevel = '') {
@@ -431,25 +435,23 @@ function logAsOneString(chunks, ...data) {
 
 // just display the label every time the component is rendered
 function renderComponent(maybeClientId) {
-    const { _b, _o } = shortenMarkers;
     const [clientId, clientId2] = _.castArray(maybeClientId);
     const component = componentName(clientId2 ? 'renderComponentWithId,renderComponent' : 'renderComponent');
-    const id = (clientId ?? clientId2)  ? ` with ${_b}${shortenId(clientId ?? clientId2)}${_b}` : '';
+    const id = (clientId ?? clientId2)  ? ` with ${_bold(shortenId(clientId ?? clientId2))}` : '';
     config.colors.render = true;
     setOpaqueColors('green');
-    logAsOneString(`${_b}${component}${_b}${id} ${_o[0]}render${_o[1]}`);
+    logAsOneString(`${_bold(component)}${id} ${_opaque('render')}`);
 }
 
 // display variables and their values, possibly simplifying the data
 function dataInComponent(data, marker = false) {
-    const { _a, _b, _c } = shortenMarkers;
     const component = componentName('dataInComponent');
     const keys = _.keys(data);
     const isSingleKey = keys.length === 1;
-    const key = isSingleKey ? safe(_.first(keys)) : _.join(_.map(keys, safe), `${_a}, ${_a}`);
-    const value = isSingleKey ? data[_.first(keys)] : data;
-    const altName = marker ? `:${_c}${safe(String(marker))}${_c}` : '';
-    const message = `${_b}${component}${_b}${altName} ${arrowSymbol} value for ${_a}${key}${_a}`;
+    const key = isSingleKey ? _.first(keys) : _.join(_.map(keys, _accented), `, `);
+    const value = isSingleKey ? data[key] : data;
+    const altName = marker ? `:${_colored(String(marker))}` : '';
+    const message = `${_bold(component)}${altName} ${arrowSymbol} value for ${isSingleKey ? _accented(key) : key}`;
     config.colors.data = true;
     if(isSimpleType(value)) {
         logAsOneString(message, value);
@@ -461,12 +463,12 @@ function dataInComponent(data, marker = false) {
 
 // display a formatted string and possibly some data
 function infoInComponent(messageData, ...data) {
-    const { _b } = shortenMarkers;
     const [message, clientId] = _.castArray(messageData);
-    const id = clientId ? ` with ${_b}${shortenId(clientId)}${_b}` : '';
+    const id = clientId ? ` with ${_bold(shortenId(clientId))}` : '';
     const component = componentName(clientId ? 'infoInComponentWithId,infoInComponent' : 'infoInComponent');
-    const info = `${_b}${component}${_b}${id} ${arrowSymbol} ${safe(message)}`;
+    const info = `${_bold(component)}${id} ${arrowSymbol} ${message}`;
     config.colors.info = true;
+    setOpaqueColors('blue');
     if(data.length === 0 || (data.length === 1 && isCompactType(data[0]))) {
         logAsOneString(info, ...data);
     } else {
@@ -477,17 +479,15 @@ function infoInComponent(messageData, ...data) {
 
 // trace changes in component props and state
 function useTraceUpdate(props, state = {}, trackClientId = false) {
-    const { _b } = shortenMarkers;
     const ref = useRef({
         key: componentName(trackClientId ? 'useTraceUpdate,useTraceUpdateWithId' : 'useTraceUpdate'),
-        id: trackClientId ? ` with ${_b}${shortenId(props)}${_b}` : '',
+        id: trackClientId ? ` with ${_bold(shortenId(props))}` : '',
     });
 
     const prevProps = usePrevious(props);
     const prevState = usePrevious(state);
 
     useEffect(() => {
-        const { _p } = shortenMarkers;
         const { id, key } = ref.current ?? {};
         const propKeys = changedKeys(props, prevProps);
         const stateKeys = changedKeys(state, prevState);
@@ -495,9 +495,9 @@ function useTraceUpdate(props, state = {}, trackClientId = false) {
         const propsChanged = propKeys[0].length || propKeys[1] || propKeys[2];
         const stateChanged = stateKeys[0].length || stateKeys[1] || stateKeys[2];
 
-        if(propsChanged && !stateChanged) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props${_p[1]}`);
-        if(!propsChanged && stateChanged) logAsOneString(`Traced changes${id} ${_p[0]}${key} : state${_p[1]}`);
-        if(propsChanged && stateChanged) logAsOneString(`Traced changes${id} ${_p[0]}${key} : props & state${_p[1]}`);
+        if(propsChanged && !stateChanged) logAsOneString(`Traced changes${id} ${_param(key, 'props')}`);
+        if(!propsChanged && stateChanged) logAsOneString(`Traced changes${id} ${_param(key, 'state')}`);
+        if(propsChanged && stateChanged) logAsOneString(`Traced changes${id} ${_param(key, 'props & state')}`);
 
         if(propsChanged) logChanges(propKeys, prevProps, props);
         if(stateChanged) logChanges(stateKeys, prevState, state);
@@ -510,13 +510,12 @@ function useMountUnmount() {
         component: componentName('useMountUnmount'),
     });
     useEffect(() => {
-        const { _b, _c, _o } = shortenMarkers;
         const { component } = ref.current ?? {};
         config.colors.mount = true;
-        logAsOneString(`${_b}${component}${_b} ${arrowSymbol} ${_c}componentDidMount${_c}`);
+        logAsOneString(`${_bold(component)} ${arrowSymbol} ${_colored('componentDidMount')}`);
         return () => {
             config.colors.mount = true;
-            logAsOneString(`${_b}${component}${_b} ${arrowSymbol} ${_o[0]}componentWillUnmount${_o[1]}`);
+            logAsOneString(`${_bold(component)} ${arrowSymbol} ${_opaque('componentWillUnmount$')}`);
         }
     }, []);
 }
@@ -581,83 +580,83 @@ function setOpaqueColors(color) {
 
 // старая реализация через regex, сохранил тут для идей
 // const fixed = { '*':'#1','_':'#2','~':'#3','{':'#4','}':'#5' };
-const fixed = { '*':'#1','_':'#2' };
-const inverted = _.invert(fixed);
+// const fixed = { '*':'#1','_':'#2' };
+// const inverted = _.invert(fixed);
 // replace the characters that will be used for formatting (then we will restore them)
-const safe = s => s.replace(/[*_]/g, m => fixed[m]); // /[*_~{}]/g
-const restore = s => s.replace(/(#1|#2)/g, m => inverted[m]); // /(#1|#2|#3|#4|#5)/g
-const restoreToken = t => `${restore(t)}%c`;
+// const safe = s => s.replace(/[*_]/g, m => fixed[m]); // /[*_~{}]/g
+// const restore = s => s.replace(/(#1|#2)/g, m => inverted[m]); // /(#1|#2|#3|#4|#5)/g
+const tokenFormat = t => `${t}%c`;
 
 function parseWithColors(message, colors) {
     const { normal, bold, params, accent, colored, opaque } = colors ?? getColors();
-    const { _a, _b, _c, _p, _o } = shortenMarkers;
+    const { a, b, c, p, o } = _markers;
     let isComplete = true;
     let format = '%c';
     let items = [normal];
     let token = '';
-    // *text* as 'accented'
-    // _text_ as 'bold'
+    // ±text± as 'accented'
+    // §text§ as 'bold'
     // ~text~ as 'colored'
     // [text] as 'param'
     // {text} as 'opaque'
     _.forEach(message, char => {
-        if(char === _a) {
+        if(char === a) {
             if(isComplete) {
-                format += restoreToken(token);
+                format += tokenFormat(token);
                 items.push(accent);
                 token = '';
                 isComplete = false;
             } else {
-                format += restoreToken(token);
+                format += tokenFormat(token);
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
-        } else if(char === _c) {
+        } else if(char === c) {
             if(isComplete) {
-                format += restoreToken(token);
+                format += tokenFormat(token);
                 items.push(colored);
                 token = '';
                 isComplete = false;
             } else {
-                format += restoreToken(token);
+                format += tokenFormat(token);
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
-        } else if(char === _b) {
+        } else if(char === b) {
             if(isComplete) {
-                format += restoreToken(token);
+                format += tokenFormat(token);
                 items.push(bold);
                 token = '';
                 isComplete = false;
             } else {
-                format += restoreToken(token);
+                format += tokenFormat(token);
                 items.push(normal);
                 token = '';
                 isComplete = true;
             }
-        } else if(char === _p[0]) {
-            format += `${restore(token)}${_p[0]}%c`;
+        } else if(char === p[0]) {
+            format += tokenFormat(token + p[0]); // `${token}${p[0]}%c`
             items.push(params);
             token = '';
-        } else if(char === _p[1]) {
-            format += restoreToken(token);
+        } else if(char === p[1]) {
+            format += tokenFormat(token);
             items.push(normal);
-            token = _p[1];
-        } else if(char === _o[0]) {
-            format += restoreToken(token);
+            token = p[1];
+        } else if(char === o[0]) {
+            format += tokenFormat(token);
             items.push(opaque);
             token = '';
-        } else if(char === _o[1]) {
-            format += restoreToken(token);
+        } else if(char === o[1]) {
+            format += tokenFormat(token);
             items.push(normal);
             token = '';
         } else {
             token += char;
         }
     });
-    format += restoreToken(token);
+    format += token;
     return { format, items };
 }
 
@@ -686,7 +685,7 @@ function changedKeys(next, prev) {
 
 function shortenId(props, forStorage = false) {
     const shortened = (props && props.clientId) ? props.clientId.slice(-4) : 0;
-    return forStorage ? shortened : (shortened === 0 ? '?' : safe(`✷✷✷-${shortened}`));
+    return forStorage ? shortened : (shortened === 0 ? '?' : `✷✷✷-${shortened}`);
 }
 
 function cloneValue(value) {
@@ -710,14 +709,13 @@ function cloneValue(value) {
 
 function logSimplified(val) {
     if(config.simplify) {
-        const { _a, _p } = shortenMarkers;
         const keys = _.keys(val);
         const firstKey = _.first(keys);
         const value = keys.length === 1 ? val[firstKey] : val;
 
         if(keys.length === 1) {
-            const kind = _.isArray(val) ? `at ${_a}index${_a}` : `for ${_a}key${_a}`;
-            const message = [`value ${kind} ${_p[0]}${safe(firstKey)}${_p[1]}`];
+            const kind = _.isArray(val) ? `at ${_accented('index')}` : `for ${_accented('key')}`;
+            const message = `value ${kind} ${_param(firstKey)}`;
             if(isSimpleType(value)) {
                 logAsOneString(message, value);
             } else {
@@ -733,23 +731,21 @@ function logSimplified(val) {
 }
 
 function logAddedRemoved(added, removed) {
-    const { _b, _p } = shortenMarkers;
     const addedKeys = added ? (added.length > 1 ? 'keys' : 'key') : false;
     const removedKeys = removed ? (removed.length > 1 ? 'keys' : 'key') : false;
     let message = addedKeys || removedKeys ? chevronSymbol : '';
     if(addedKeys) {
         const keys = added.length > compactKeysCount ? _.concat(_.take(added, compactKeysCount), ['and more...']) : added;
-        message += `added ${_b}${addedKeys}${_b} ${_p[0]}${safe(_.join(keys, ', '))}${_p[1]}${removedKeys ? ', ' : ''}`;
+        message += `added ${_bold(addedKeys)} ${_param(_.join(keys, ', '))}${removedKeys ? ', ' : ''}`;
     }
     if(removedKeys) {
         const keys = removed.length > compactKeysCount ? _.concat(_.take(removed, compactKeysCount), ['and more...']) : removed;
-        message += `removed ${_b}${removedKeys}${_b} ${_p[0]}${safe(_.join(keys, ', '))}${_p[1]}`;
+        message += `removed ${_bold(removedKeys)} ${_param(_.join(keys, ', '))}`;
     }
     if(message) logAsOneString(message);
 }
 
 function logWasNow(was, now, keys) {
-    const { _b, _c, _p, _o } = shortenMarkers;
     const firstKey = _.first(keys);
     const wasValue = keys.length === 1 ? was[firstKey] : was;
     const nowValue = keys.length === 1 ? now[firstKey] : now;
@@ -759,7 +755,7 @@ function logWasNow(was, now, keys) {
     logAddedRemoved(added, removed);
     if(changed && changed.length === 1) {
         const firstСhanged = _.first(changed);
-        const message = `${chevronSymbol}changed for ${_b}key${_b} ${_p[0]}${safe(firstСhanged)}${_p[1]}`;
+        const message = `${chevronSymbol}changed for ${_bold('key')} ${_param(firstСhanged)}`;
         if(isSimpleType(nowValue[firstСhanged])) {
             logAsOneString(message, wasValue[firstСhanged], arrowSymbol, nowValue[firstСhanged]);
         } else {
@@ -767,21 +763,20 @@ function logWasNow(was, now, keys) {
             logWasNow(wasValue, nowValue, changed);
         }
     } else {
-        logAsOneString(`${_c}was${_c}`);
+        logAsOneString(`${_colored('was')}`);
         logSmart(wasValue);
         logAsOneString(changed ?
-            `${_c}now${_c} changed for ${_b}keys${_b} ${_p[0]}${safe(_.join(changed, ', '))}${_p[1]}` :
-            `${_c}now${_c}`
+            `${_colored('now')} changed for ${_bold('keys')} ${_param(_.join(changed, ', '))}` :
+            `${_colored('now')}`
         );
         logSmart(nowValue);
         if(_.isEqual(wasValue, nowValue)) {
-            logAsOneString(`${_o[0]}Attention!${_o[1]} ${_b}they are equal!${_b}`);
+            logAsOneString(`${_opaque('Attention!')} ${_bold('they are equal!')}`);
         }
     }
 }
 
 function logChanges(keys, prevValues, values) {
-    const { _a, _b, _p } = shortenMarkers;
     const [updated, added, removed] = keys;
     // maybe there were additions and deletions?
     logAddedRemoved(added, removed);
@@ -790,11 +785,11 @@ function logChanges(keys, prevValues, values) {
     _.forEach(updated, key => {
         const value = values[key];
         config.colors.trace = true;
-        const message = `${chevronSymbol}${_a}${safe(key)}${_a}`;
+        const message = `${chevronSymbol}${_accented(key)}`;
         if(isSimpleType(value)) logAsOneString(message, prevValues[key], arrowSymbol, value);
         else {
             if(_.isFunction(value)) {
-                logAsOneString([message, `${_p[0]}[function]${_p[1]}`]);
+                logAsOneString([message, `${_param('function')}`]);
             } else {
                 const [changed, addedKeys, removedKeys] = changedKeys(value, prevValues[key]);
                 logAddedRemoved(addedKeys, removedKeys);
@@ -803,7 +798,7 @@ function logChanges(keys, prevValues, values) {
                     logAsOneString(`${message} ${arrowSymbol} changed itself but the keys unchanged {something is wrong!}`);
                     logWasNow(prevValues[key], value, changed);
                 } else {
-                    const keyMsg = `${message} @1 ${_b}@2${_b} ${_p[0]}${safe(_.join(changed, ', '))}${_p[1]}`;
+                    const keyMsg = `${message} @1 ${_bold('@2')} ${_param(_.join(changed, ', '))}`;
                     if(_.isArray(value)) {
                         const arrayMsg = keyMsg.replace('@2', changed.length === 1 ? 'index' : 'indexes').replace('@1', 'at');
                         if(changed.length === 1 && isSimpleType(value[firstKey])) {
@@ -814,7 +809,7 @@ function logChanges(keys, prevValues, values) {
                         }
                     } else {
                         if(_.has(value, '$$typeof')) {
-                            logAsOneString([message, `${_p[0]}React Component${_p[1]}`]);
+                            logAsOneString([message, `${_param('React Component')}`]);
                         } else {
                             const objMsg = keyMsg.replace('@2', changed.length === 1 ? 'key' : 'keys').replace('@1', 'for');
                             if(changed.length === 1 && isSimpleType(value[firstKey])) {
@@ -841,13 +836,11 @@ function skipFrames(name, prev) {
 
 function componentName(prevFrames = 0) {
     const [name] = findOnStack(skipFrames('componentName', prevFrames));
-    // component name should start with UpperCase, replace simple underscore with "other" underscore
-    if(name[0] === name[0].toUpperCase()) return safe(name); //.replace(/_/g, '⎽');
+    // component name should start with UpperCase
+    if(name[0] === name[0].toUpperCase()) return name;
     // maybe we have function?
-    // replace simple underscore with "other" underscore to avoid problems with 'colored' console
-    // (underscore is used for _bold text_)
-    const func = name.replace('/zu_blocks', '').replace(/[/]/g, '.'); // .replace(/_/g, '⎽')
-    return `${safe(func)}()`;
+    const func = name.replace('/zu_blocks', '').replace(/[/]/g, '.');
+    return `${func}()`;
 }
 
 function findOnStack(prevFrames) {
