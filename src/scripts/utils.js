@@ -4,7 +4,6 @@ import classnames from 'classnames';
 
 // WordPress dependencies
 
-
 const _ = lodash;
 const { __ } = wp.i18n;
 const { Path, G, SVG } = wp.components;
@@ -19,6 +18,7 @@ export function externalData(key, defaultValues = null) {
 }
 // Allows multiple access to external data after calling 'externalData' function
 export function getExternalData(key = null, defaultValue = null) {
+	if(_.isEmpty(extData)) window.console.warn('ZUKIT: utils.externalData(<your_key>) should be called before any getExternalData() call!')
 	if(key === null) return extData;
 	return _.get(extData, key, defaultValue);
 }
