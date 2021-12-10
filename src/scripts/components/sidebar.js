@@ -73,7 +73,7 @@ const ZukitSidebar = ({
 						{ title }
 					</h2>
 					<span className="block-editor-block-card__description __zu_markdown">
-					{ description }
+					{ simpleMarkdown(description, { br: true, json: true }) }
 					</span>
 				</div>
 			</div>

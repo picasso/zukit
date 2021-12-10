@@ -370,6 +370,10 @@ $divider-component-class: zukit-divider;
 
 			.block-editor-block-card__description {
 				color: $admin-darker-brown;
+				.__code {
+					color: $admin-dark-brown;
+					background-color: rgba($admin-light-brown, 0.2);
+				}
 			}
 
 			.block-editor-block-card .block-editor-block-icon svg {
