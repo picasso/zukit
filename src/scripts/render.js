@@ -12,9 +12,13 @@ import { setRestBasics } from './fetch.js';
 import ZukitSkeleton from './components/skeleton.js'
 import ZukitDivider from './components/divider.js'
 
+export function externalDataSettings(pageId) {
+	return externalData(`${pageId}_settings`);
+}
+
 export function renderPage(pageId, settings = {}) {
 
-	const pageData = externalData(`${pageId}_settings`);
+	const pageData = externalDataSettings(pageId);
 
 	// restRouter serves to identify the plugin/theme that currently uses the REST API
 	setRestBasics(pageData);
