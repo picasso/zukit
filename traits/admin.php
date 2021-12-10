@@ -53,7 +53,8 @@ trait zukit_Admin {
 
 	protected function on_activation() {}
 	protected function on_deactivation() {}
-	protected function extend_info() { return (object)null;}
+	protected function extend_info() {}
+	protected function extend_metadata($metadata) { return $metadata; }
 	protected function extend_actions() { return (object)null;}
 
 	// Wordpress Admin Page ---------------------------------------------------]
@@ -69,20 +70,29 @@ trait zukit_Admin {
 		$domain = $this->text_domain();
 		$github = preg_replace('/\.git$/', '', $data['GitHubURI']);
 
-		return [
-			'version'		=> $this->version,
-			// yes, I know that should not use a variable as a text string
-			// 'Poedit' will pull these strings from the plugin description
+		$metadata =  [
 			'title'			=> __($data['Name'], $domain),
 			'author'		=> __($data['Author'], $domain),
 			'link'			=> __($data['AuthorURI'], $domain),
 			'description'	=> __($data['Description'], $domain),
-			'uri'			=> $data['URI'],
-			'github'		=> $github ?: $defaultFill,
-			'icon'			=> $this->get('appearance.icon'),
-			'colors'		=> $this->get('appearance.colors'),
-			'more' 			=> $this->extend_info(),
 		];
+
+		return array_merge([
+				'version'		=> $this->version,
+				// yes, I know that should not use a variable as a text string
+				// 'Poedit' will pull these strings from the plugin description
+				'title'			=> __($data['Name'], $domain),
+				'author'		=> __($data['Author'], $domain),
+				'link'			=> __($data['AuthorURI'], $domain),
+				'description'	=> __($data['Description'], $domain),
+				'uri'			=> $data['URI'],
+				'github'		=> $github ?: $defaultFill,
+				'icon'			=> $this->get('appearance.icon'),
+				'colors'		=> $this->get('appearance.colors'),
+				'more' 			=> $this->extend_info() ?? (object)null,
+			],
+			$this->extend_metadata($metadata)
+		);
 	}
 
 	public function admin_slug() {
