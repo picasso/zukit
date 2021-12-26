@@ -22,7 +22,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 
 	protected $options_key;
 	protected $options = null;
-	protected $path_autocreated = false;
+	protected $path_autocreated = true;
 	protected $data = [];
 	protected $addons = [];
 	protected $blocks = null;
