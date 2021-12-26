@@ -55,14 +55,13 @@ trait zukit_Options {
 	public function set_option($key, $value, $rewrite_array = false, $addon_options = null) {
 		// $value cannot be undefined or null!
 		if(!isset($value) || is_null($value)) return $options;
-
 		$result = true;
 		$options = is_null($addon_options) ? $this->options : $addon_options;
-		if(!$rewrite_array && is_array($value)) $options[$key] = array_replace_recursive($options[$key] ?? [], $value);
+		// sets a value in a nested array based on path (if presented)
+		$pathParts = explode('.', $key);
+		$pathCount = count($pathParts);
+		if($pathCount === 1 && !$rewrite_array && is_array($value)) $options[$key] = array_replace_recursive($options[$key] ?? [], $value);
 		else {
-			// sets a value in a nested array based on path (if presented)
-			$pathParts = explode('.', $key);
-			$pathCount = count($pathParts);
 			if($pathCount === 1) {
 				$options[$key] = $value;
 			} else {
