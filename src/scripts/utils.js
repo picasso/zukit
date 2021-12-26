@@ -187,9 +187,13 @@ export function compareVersions(a, b) {
 }
 
 // Converts a string to a set of React components based on simple Markdown constructs
-// replaces *text* with <em>text</em>
 // replaces **text** with <strong>text</strong>
+// replaces *text* with <em>text</em>
+// NOTE: Attention! Doesn't work for two blocks not separated by anything:
+// *text1**text2* - doesn't work!  *text1* *text2* - works!
 // replaces `text` with <span>text</span>
+// NOTE: Attention! Doesn't work for two blocks not separated by anything:
+// `text1``text2` - doesn't work!  `text1` `text2` - works!
 // replaces [text](link) with <a href="link">text</a>
 // replaces newlines with <p> or <br/> if 'params.br' is true
 // also replaces $link<index> constructs with elements from the 'params.links' array
