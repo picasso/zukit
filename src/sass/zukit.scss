@@ -194,6 +194,38 @@ $divider-component-class: zukit-divider;
 				min-width: $settings-left-width;
 			}
 
+			// fix styles of controls that I do not like ----------------------]
+
+			.components-checkbox-control {
+				.components-checkbox-control__input {
+					border-radius: 4px;
+					opacity: 0.8;
+				}
+				.components-checkbox-control__checked {
+					width: 20px;
+					height: 20px;
+					left: 0;
+					top: 0;
+				}
+			}
+
+			.components-toggle-control {
+				.components-form-toggle {
+					opacity: 0.8;
+					&:not(.is-checked) {
+						.components-form-toggle__track {
+							border-color: rgba($wp-admin-blue-color, 0.8);
+						}
+					}
+				}
+			}
+
+			.__subtitle {
+				font-size: $basic-font-size;
+				font-weight: 600;
+				color: $admin-darker-brown;
+			}
+
 			.editor-post-title {
 				background-color: rgba($admin-grey-blue-color, 0.3);
 				box-shadow: 0 0 2px rgba(black, 0.3) inset;
@@ -221,53 +253,56 @@ $divider-component-class: zukit-divider;
 				}
 			}
 
-		.__note {
-			padding: 1em;
-			line-height: 1.7;
-			border: 1px solid $admin-gold-color;
-			border-radius: 5px;
-			margin-bottom: 2em;
-			background-color: rgba($admin-gold-color, 0.2);
-			.__code {
-				@extend %markdown_basic;
-				@extend %markdown_code;
+			.__note {
+				padding: 1em;
+				line-height: 1.7;
+				border: 1px solid $admin-gold-color;
+				border-radius: 5px;
+				margin-bottom: 2em;
 				background-color: rgba($admin-gold-color, 0.2);
-				@include in('^.is-green') { @extend %markdown_green; }
-				@include in('^.is-red') { @extend %markdown_red; }
-				@include in('^.is-gold') { @extend %markdown_gold; }
-			}
-			strong {
-				@extend %markdown_strong;
-			}
-			em {
-				@extend %markdown_basic;
-				@extend %markdown_em;
-				background-color: transparent;
+				.__code {
+					@extend %markdown_basic;
+					@extend %markdown_code;
+					background-color: rgba($admin-gold-color, 0.2);
+					@include in('^.is-green') { @extend %markdown_green; }
+					@include in('^.is-red') { @extend %markdown_red; }
+					@include in('^.is-gold') { @extend %markdown_gold; }
+				}
+				strong {
+					@extend %markdown_strong;
+				}
+				em {
+					@extend %markdown_basic;
+					@extend %markdown_em;
+					background-color: transparent;
+				}
+
+				// .__code {
+				// 	padding: 2px 6px;
+				// 	border-radius: 5px;
+				// 	background-color: rgba($admin-gold-color, 0.2);
+				// 	color: $admin-error-color;
+				// }
 			}
 
-			// .__code {
-			// 	padding: 2px 6px;
-			// 	border-radius: 5px;
-			// 	background-color: rgba($admin-gold-color, 0.2);
-			// 	color: $admin-error-color;
-			// }
-		}
-		.editor-post-title + .__note {
-			display: inline-block;
-			margin: $main-note-margin;
-			width: calc(100% - #{($main-note-margin * 2) + $main-note-margin});
-		}
+			.editor-post-title + .__note {
+				display: inline-block;
+				margin: $main-note-margin;
+				width: calc(100% - #{($main-note-margin * 2) + $main-note-margin});
+			}
 
-		.__select_label {
+			.__select_label {
 				display: block;
 				margin-bottom: 4px;
 			}
+
 			.__block_label {
 				label {
 					display: block;
 					margin-bottom: 4px;
 				}
 			}
+
 			.__select_block {
 				display: flex;
 				justify-content: space-between;
@@ -275,6 +310,7 @@ $divider-component-class: zukit-divider;
 					flex-direction: column;
 				}
 			}
+
 			.__select_control {
 				display: flex;
 				justify-content: flex-start;
@@ -290,6 +326,7 @@ $divider-component-class: zukit-divider;
 					min-width: 36px;
 				}
 			}
+
 			.components-base-control__help {
 				margin: 0 0 1em 1em;
 				color: $toggle-help-color;
@@ -351,7 +388,6 @@ $divider-component-class: zukit-divider;
 					margin-top: 27px;
 				}
 			}
-
 		}
 
 		// Settings Sidebar ---------------------------------------------------]
@@ -373,6 +409,12 @@ $divider-component-class: zukit-divider;
 				.__code {
 					color: $admin-dark-brown;
 					background-color: rgba($admin-light-brown, 0.2);
+				}
+			}
+			.__plugin_info {
+				.__code {
+					color: $wp-admin-blue-color;
+					background-color: rgba($wp-admin-blue-color, 0.15);
 				}
 			}
 
