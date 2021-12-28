@@ -21,16 +21,30 @@ $hover-darken: 10;
 $hover-shadow: 15;
 
 $admin-colors: (
+	'red': $admin-red-color,
+	'gold': $admin-gold-color,
 	'green': $admin-green-color,
 	'blue': $admin-blue-color,
-	'gold': $admin-gold-color,
-	'red': $admin-red-color,
 	'magenta': $admin-magenta-color,
 	'light-yellow': $admin-light-yellow,
 	'light-brown': $admin-light-brown,
 	'error': $admin-error-color,
 	'admin-blue': $wp-admin-blue-color
 );
+
+$custom-colors: (
+	'red': 		$red-color,
+	'orange': 	$orange-color,
+	'yellow': 	$yellow-color,
+	'green': 	$green-color,
+	'lime':		$lime-color,
+	'blue': 	$blue-color,
+	'blue-sky': $blue-sky-color,
+	'violet': 	$violet-color,
+	'brown':	$some-brown,
+	'grey':		$dark-blue-grey,
+);
+
 
 // colors ---------------------------------------------------------------------]
 
@@ -72,6 +86,7 @@ $listinput-component-class: zukit-list-input;
 $advtext-component-class: zukit-text-control;
 $loader-component-class: zukit-loader-control;
 $modal-component-class: zukit-modal;
+$title-indicator-class: zukit-title-indicator;
 
 // simple markdown ------------------------------------------------------------]
 
