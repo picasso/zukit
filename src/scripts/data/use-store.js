@@ -2,7 +2,7 @@
 
 const { isNil, isArray, isEmpty, isFunction, isPlainObject, some, reduce, defaults } = lodash;
 const { useSelect, useDispatch } = wp.data;
-const { useRef } = wp.element;
+const { useRef, useReducer } = wp.element;
 
 // Internal dependencies
 
@@ -12,6 +12,11 @@ import { useCoreDataGeneric, useSvgFromFileGeneric } from './core-store.js';
 const emptyArray = [];
 
 // Custom hooks ---------------------------------------------------------------]
+
+export function useForceUpdater() {
+	const [, forceUpdate] = useReducer(z => z + 1, 0);
+	return forceUpdate;
+}
 
 export function useRefInit(func, params = null) {
 	const ref = useRef(null);
