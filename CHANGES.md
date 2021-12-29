@@ -1,3 +1,10 @@
+#### 1.4.4 / 2021-12-29
+
+* added a new version number that forgot in the past release
+* changed the title font for the `Settings Page`
+* changed the first section header to the `General Settings`
+* small improvements
+
 #### 1.4.3 / 2021-12-28
 
 ##### Core
