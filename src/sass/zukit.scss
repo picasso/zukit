@@ -95,6 +95,32 @@ $divider-component-class: zukit-divider;
 		}
 	}
 
+	// fix styles of standard controls that I do not like ---------------------]
+
+	.components-checkbox-control {
+		.components-checkbox-control__input {
+			border-radius: 4px;
+			opacity: 0.8;
+		}
+		.components-checkbox-control__checked {
+			width: 20px;
+			height: 20px;
+			left: 0;
+			top: 0;
+		}
+	}
+
+	.components-toggle-control {
+		.components-form-toggle {
+			opacity: 0.8;
+			&:not(.is-checked) {
+				.components-form-toggle__track {
+					border-color: rgba($wp-admin-blue-color, 0.8);
+				}
+			}
+		}
+	}
+
 	.#{$skeleton-class} {
 	    background-color: white;
 
@@ -194,32 +220,6 @@ $divider-component-class: zukit-divider;
 				min-width: $settings-left-width;
 			}
 
-			// fix styles of controls that I do not like ----------------------]
-
-			.components-checkbox-control {
-				.components-checkbox-control__input {
-					border-radius: 4px;
-					opacity: 0.8;
-				}
-				.components-checkbox-control__checked {
-					width: 20px;
-					height: 20px;
-					left: 0;
-					top: 0;
-				}
-			}
-
-			.components-toggle-control {
-				.components-form-toggle {
-					opacity: 0.8;
-					&:not(.is-checked) {
-						.components-form-toggle__track {
-							border-color: rgba($wp-admin-blue-color, 0.8);
-						}
-					}
-				}
-			}
-
 			.__subtitle {
 				font-size: $basic-font-size;
 				font-weight: 600;
@@ -239,7 +239,7 @@ $divider-component-class: zukit-divider;
 					max-width: none;
 					h1 {
 						font-size: $plugin-title-size;
-						font-family: "Noto Serif", serif;
+						font-family: Ubuntu,Roboto,"Open Sans",sans-serif;
 					}
 					.block-editor-block-icon {
 						width: $plugin-icon-width;
@@ -276,13 +276,6 @@ $divider-component-class: zukit-divider;
 					@extend %markdown_em;
 					background-color: transparent;
 				}
-
-				// .__code {
-				// 	padding: 2px 6px;
-				// 	border-radius: 5px;
-				// 	background-color: rgba($admin-gold-color, 0.2);
-				// 	color: $admin-error-color;
-				// }
 			}
 
 			.editor-post-title + .__note {
@@ -331,7 +324,7 @@ $divider-component-class: zukit-divider;
 				margin: 0 0 1em 1em;
 				color: $toggle-help-color;
 				font-size: 13px;
-				font-style: italic;
+				letter-spacing: 0.5px;
 				text-align: right;
 				@include breakpoint-width(LESS_SETTINGS_BREAK) {
 					margin-left: 0;
@@ -400,7 +393,7 @@ $divider-component-class: zukit-divider;
 			}
 			.block-editor-block-card__title {
 				margin-left: 0.5em;
-				margin-bottom: 1em;
+				margin-bottom: 0.5em;
 				font-size: $basic-font-size;
 			}
 
