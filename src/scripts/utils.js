@@ -131,7 +131,8 @@ export function messageWithError(message, value = null) {
 		.replace(/,\s*/g, ',  ')
 		.replace(/"([^"]+)":/g, '<b>$1</b>: ');
 
-	return mdMessage.replace(/[:|.]\s*$/g, '') + `: <span class="zukit-data">${value}</span>`;
+	const noColon = /[?|!.]\s*$/.test(message);
+	return mdMessage.replace(/[:|.]\s*$/g, '') + `${noColon ? '' : ':'} <span class="zukit-data">${value}</span>`;
 }
 
 // Returns SVG with a reference to an already loaded SVG set
