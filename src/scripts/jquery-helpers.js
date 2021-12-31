@@ -135,6 +135,11 @@ export function hasSelector(parent, selector) {
 	return $(parent).has(selector).length > 0;
 }
 
+// Scroll back to the top of scrollable div (by default 'skeleton__content' of Settings Page)
+export function scrollTop(selector = '.block-editor-editor-skeleton__content') {
+	document.querySelector(selector).scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // Creates a function to observe the DOM mutation and attaches callback to it
 export function createMutationObserver(callback) {
 
