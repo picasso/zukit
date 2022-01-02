@@ -38,6 +38,7 @@ const setValidatedValue = (val, withoutValues, fallbackValue, kind, emptyIfFaile
 const AdvTextControl = ({
 		className,
 		isPassword,
+		isSideBySide,
 		showTooltip = true,
 		tooltipPosition = 'top center',
 		withoutClear,
@@ -46,8 +47,8 @@ const AdvTextControl = ({
 		value,
 		help,
 		type,
-		strict,
-
+		strict,				// 'number', 'email', 'url', 'tel' or regex string
+							// when regex - provide it in JSX as strict={ /^(?!\d)[\w$]+$/g }, with a string may be problems
 		withDebounce,
 		debounceDelay = 1000,
 		withoutValues = null,
@@ -115,21 +116,34 @@ const AdvTextControl = ({
 		}
 	}, [strict, withDebounce, onChange, onChangeValue, withoutValues, fallbackValue]);
 
+	const isСombined = isSideBySide && (label || help);
+
 	return (
+		<>
+		{ isСombined &&
+			<div className="__sidebyside components-base-control">
+				{ label &&
+					<label className="components-base-control__label">{ label }</label>
+				}
+				{ help &&
+					<p className="components-base-control__help">{ help }</p>
+				}
+			</div>
+		}
 		<div className={ mergeClasses(
 			'components-base-control', 'zukit-text-control', className,
 			{
-				'__with-label': label && withButton,
+				'__with-label': !isСombined && label && withButton,
 				// '__with-help': help && withButton,
-				'__with-label-help': label && help && withButton,
+				'__with-label-help': !isСombined && label && help && withButton,
 				'__with-button': withButton,
 			}
 		) }>
 			<TextControl
 				id={ id }
 				type={ controlType }
-				label={ label }
-				help={ help }
+				label={ isСombined ? undefined : label }
+				help={ isСombined ? undefined : help }
 				value={ (withDebounce ? temporaryValue : value) || '' }
 				onChange={ onValidatedChange }
 			/>
@@ -144,9 +158,9 @@ const AdvTextControl = ({
 					<Button
 						className={ mergeClasses('__exclude',
 						{
-							'__with-label': label && withButton,
+							'__with-label': !isСombined && label && withButton,
 							// '__with-help': help && withButton,
-							'__with-label-help': label && help && withButton,
+							'__with-label-help': !isСombined && label && help && withButton,
 						}
 					) }
 						icon={ controlIcon }
@@ -155,6 +169,7 @@ const AdvTextControl = ({
 				</ConditionalWrap>
 			}
 		</div>
+		</>
 	);
 }
 

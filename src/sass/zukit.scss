@@ -121,6 +121,18 @@ $divider-component-class: zukit-divider;
 		}
 	}
 
+	.__sidebyside {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		column-gap: 1em;
+		.components-base-control__label {
+			font-weight: 500;
+			margin: 0 0 1em;
+		}
+	}
+
 	.#{$skeleton-class} {
 	    background-color: white;
 

@@ -13,15 +13,6 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 	display: flex;
 	flex-direction: column;
 
-	.__desc {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		.components-base-control__label {
-			font-weight: 500;
-		}
-	}
-
 	.__list {
 		display: flex;
 		align-items: center;
