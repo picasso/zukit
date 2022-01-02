@@ -378,10 +378,9 @@ trait zukit_AjaxREST {
 				// if value for 'key' is 'null' then call 'del_option' instead of 'set_option'
 				if(array_key_exists($key, $values) && $values[$key] === null) $return = $router->del_option($key);
 				// with set_option 'null' will be ignored, 'false' considered as failure
-				else $return = $router->set_option($key, $values[$key] ?? null);
+				else $return = $router->set_option($key, $values[$key] ?? null, true);
 				// if at least one call returns 'true', then the overall result will also be 'true'
 				$result = $result || $return;
-				// if($return === false) $result = false;
 			}
 		}
 		// if $result is false - something went wrong - then return null
