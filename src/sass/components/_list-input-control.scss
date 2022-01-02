@@ -13,6 +13,10 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 	display: flex;
 	flex-direction: column;
 
+	&.__fullwidth {
+		width: 100%;
+	}
+
 	.__list {
 		display: flex;
 		align-items: center;
@@ -71,6 +75,25 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 			width: auto !important;
 			padding-right: 12px;
 			box-shadow: none;
+		}
+		&.__with-help {
+			.components-base-control__help {
+				margin-left: 0 !important;
+			}
+			.__add, .__reset {
+				margin-top: 0;
+				top: -8px;
+			}
+		}
+		&.__with-label-help {
+			margin-top: 0;
+			margin-bottom: 8px;
+			.components-base-control__field {
+				margin-bottom: 0;
+			}
+			.__add, .__reset {
+				margin-top: 0;
+			}
 		}
 	}
 }

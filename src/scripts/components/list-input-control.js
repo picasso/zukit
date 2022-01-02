@@ -52,6 +52,7 @@ const ListInputControl = ({
 		help,
 		inputLabel,
 		inputHelp,
+		isSideBySide,		// if true then 'inputLabel' and 'inputHelp' will be placed 'side by side'
 
 		strict,				// 'email', 'url', 'tel' or regex string
 							// when regex - provide it in JSX as strict={ /^(?!\d)[\w$]+$/g }, with a string may be problems
@@ -119,11 +120,12 @@ const ListInputControl = ({
 		}
 	}, [onAddItem]);
 
-	const isDesc = (isNotEmptyLabel ? !isEmpty(items) : true) && (label || help);
+	const isСombined = (isNotEmptyLabel ? !isEmpty(items) : true) && (label || help);
+	const isInputСombined = isSideBySide && (inputLabel || inputHelp);
 
 	return (
-		<BaseControl className={ cprefix }>
-			{ isDesc &&
+		<BaseControl className={ mergeClasses(cprefix, { __fullwidth: isСombined || isInputСombined }) }>
+			{ isСombined &&
 				<div className="__sidebyside">
 					{ label &&
 						<label className="components-base-control__label">{ label }</label>
@@ -159,15 +161,26 @@ const ListInputControl = ({
 				}
 			</div>
 			{ editMode &&
+				<>
+				{ isInputСombined &&
+					<div className="__sidebyside">
+						{ inputLabel &&
+							<label className="components-base-control__label">{ inputLabel }</label>
+						}
+						{ inputHelp &&
+							<p className="components-base-control__help">{ inputHelp }</p>
+						}
+					</div>
+				}
 				<div className={ mergeClasses(
 					'components-animate__appear',
 					'is-from-top',
 					'__input',
-					{ '__with-help': inputHelp }
+					{ '__with-help': inputHelp && !isInputСombined, '__with-label-help': isInputСombined }
 				) }>
 					<TextControl
-						label={ inputLabel || __('Enter new item', 'zukit') }
-						help={ inputHelp }
+						label={ isInputСombined ? undefined : (inputLabel || __('Enter new item', 'zukit')) }
+						help={ isInputСombined ? undefined : inputHelp }
 						value={ currentItem }
 						onChange={ setCurrentItem }
 						onKeyDown={ onKeyDown }
@@ -189,6 +202,7 @@ const ListInputControl = ({
 						{ __('Reset All', 'zukit') }
 					</Button>
 				</div>
+				</>
 			}
 		</BaseControl>
 	);

@@ -38,7 +38,7 @@ const setValidatedValue = (val, withoutValues, fallbackValue, kind, emptyIfFaile
 const AdvTextControl = ({
 		className,
 		isPassword,
-		isSideBySide,
+		isSideBySide,		// if true then 'label' and 'help' will be placed 'side by side'
 		showTooltip = true,
 		tooltipPosition = 'top center',
 		withoutClear,
