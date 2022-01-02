@@ -10,7 +10,8 @@ const { isEmail, isURL } = wp.url;
 
 // Internal dependencies
 
-import { getKey, messageWithError } from './../utils.js';
+import { getKey, messageWithError, mergeClasses } from './../utils.js';
+import { scrollTop } from './../jquery-helpers.js';
 import { withNoticesContext } from './../hooks/use-notices.js';
 
 // List Input Component
@@ -19,7 +20,6 @@ const cprefix = 'zukit-list-input';
 const closeIcon = 'no-alt';
 
 const isKind = (kind, value) => {
-
 	// https://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
 	const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/g;
 
@@ -51,16 +51,20 @@ const ListInputControl = ({
 		label,
 		help,
 		inputLabel,
+		inputHelp,
 
 		strict,				// 'email', 'url', 'tel' or regex string
+							// when regex - provide it in JSX as strict={ /^(?!\d)[\w$]+$/g }, with a string may be problems
 		value,
 		onChange,
+		isOpen,
+		isNotEmptyLabel,	// show 'label' and 'help' only when 'value' is not empty
 		noticeOperations,
 }) => {
 
 	const { createNotice } = noticeOperations;
 	const [ currentItem, setCurrentItem ] = useState('');
-	const [ editMode, setEditMode ] = useState(false);
+	const [ editMode, setEditMode ] = useState(isOpen);
 
 	// convert string value to array if needed
 	const items = useMemo(() => {
@@ -83,27 +87,27 @@ const ListInputControl = ({
 
 	// add an item to the list (only unique values are allowed)
 	const onAddItem = useCallback(() => {
+		let error = null;
 		if(!includes(items, currentItem)) {
 			if(isKind(strict, currentItem)) {
 				items.push(currentItem);
 				onChange(join(items, separator));
 				setCurrentItem('');
 			} else {
-				// Can be one of: success, info, warning, error
-				createNotice({
-					status: 'error',
-					content: messageByKind(strict, currentItem),
-					isDismissible: true,
-					__unstableHTML: true,
-				});
+				error = messageByKind(strict, currentItem);
 			}
 		} else {
+			error = messageWithError(messages.duplicate, currentItem);
+		}
+		if(error !== null) {
+			// Can be one of: success, info, warning, error
 			createNotice({
 				status: 'warning',
-				content: messageWithError(messages.duplicate, currentItem),
+				content: error,
 				isDismissible: true,
 				__unstableHTML: true,
 			});
+			scrollTop();
 		}
 	}, [currentItem, items, onChange, separator, strict, createNotice]);
 
@@ -115,12 +119,12 @@ const ListInputControl = ({
 		}
 	}, [onAddItem]);
 
-	const isDesc = label || help;
+	const isDesc = (isNotEmptyLabel ? !isEmpty(items) : true) && (label || help);
 
 	return (
 		<BaseControl className={ cprefix }>
 			{ isDesc &&
-				<div className="__desc">
+				<div className="__sidebyside">
 					{ label &&
 						<label className="components-base-control__label">{ label }</label>
 					}
@@ -155,9 +159,15 @@ const ListInputControl = ({
 				}
 			</div>
 			{ editMode &&
-				<div className="components-animate__appear is-from-top __input">
+				<div className={ mergeClasses(
+					'components-animate__appear',
+					'is-from-top',
+					'__input',
+					{ '__with-help': inputHelp }
+				) }>
 					<TextControl
 						label={ inputLabel || __('Enter new item', 'zukit') }
+						help={ inputHelp }
 						value={ currentItem }
 						onChange={ setCurrentItem }
 						onKeyDown={ onKeyDown }
