@@ -50,7 +50,8 @@ const AdvTextControl = ({
 		help,
 		type,
 		strict,				// 'number', 'email', 'url', 'tel' or regex string
-							// when regex - provide it in JSX as strict={ /^(?!\d)[\w$]+$/g }, with a string may be problems
+							// when regex - provide it in JSX as strict={ /^(?!\d)[\w$]+$/g },
+							// if passed as a string then there may be problems with the backslash
 		withDebounce,
 		debounceDelay = 1000,
 		withoutValues = null,
