@@ -1,7 +1,8 @@
 // WordPress dependencies
 
-const { isNil, isEmpty, debounce } = lodash;
+const { isNil, isEmpty, isFunction, debounce } = lodash;
 const { __ } = wp.i18n;
+const { ENTER } = wp.keycodes;
 const { Button, TextControl, Tooltip } = wp.components;
 const { useCallback, useState, useEffect } = wp.element;
 const { useInstanceId } = wp.compose;
@@ -56,6 +57,7 @@ const AdvTextControl = ({
 		fallbackValue = 'name',
 
 		onChange,
+		onKeyEnter,
 }) => {
 
 	const [visible, setVisible] = useState(false);
@@ -94,6 +96,14 @@ const AdvTextControl = ({
 		setTemporaryValue(value);
 		onUpdateValue(value);
 	}, [onUpdateValue]);
+
+	// call handler on ENTER key pressed
+	const onEnter = useCallback(event => {
+		const { keyCode } = event;
+		if(keyCode === ENTER && isFunction(onKeyEnter)) {
+			onKeyEnter();
+		}
+	}, [onKeyEnter]);
 
 	// sync 'temporaryValue' and 'value' what can happen if 'value' was changed outside the component и
 	// after the component has been mounted and the 'temporaryValue' state has already been initialized
@@ -148,6 +158,7 @@ const AdvTextControl = ({
 				help={ isСombined ? undefined : help }
 				value={ (withDebounce ? temporaryValue : value) || '' }
 				onChange={ onValidatedChange }
+				onKeyDown={ onEnter }
 				{ ...(isСombined ? { id: controlId } : {}) }
 			/>
 			{ withButton &&
