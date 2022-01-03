@@ -4,6 +4,7 @@ const { isNil, isEmpty, debounce } = lodash;
 const { __ } = wp.i18n;
 const { Button, TextControl, Tooltip } = wp.components;
 const { useCallback, useState, useEffect } = wp.element;
+const { useInstanceId } = wp.compose;
 
 // Internal dependencies
 
@@ -62,6 +63,8 @@ const AdvTextControl = ({
 	const controlType = isPassword ? (visible ? 'text' : 'password') : (type || 'text');
 	const controlIcon = isPassword ? (visible ? 'hidden' : 'visibility') : 'no-alt';
 	const controlTooltip = isPassword ? (visible ? labels.hide : labels.show) : labels.clear;
+	const instanceId = useInstanceId(AdvTextControl);
+	const controlId = id ?? `advanced-text-control-${ instanceId }`;
 
 	const onClear = useCallback(() => {
 		setTemporaryValue('');
@@ -123,7 +126,7 @@ const AdvTextControl = ({
 		{ isСombined &&
 			<div className="__sidebyside components-base-control">
 				{ label &&
-					<label className="components-base-control__label">{ label }</label>
+					<label className="components-base-control__label" htmlFor={ controlId }>{ label }</label>
 				}
 				{ help &&
 					<p className="components-base-control__help">{ help }</p>
@@ -134,18 +137,18 @@ const AdvTextControl = ({
 			'components-base-control', 'zukit-text-control', className,
 			{
 				'__with-label': !isСombined && label && withButton,
-				// '__with-help': help && withButton,
+				'__with-help': !isСombined && help,
 				'__with-label-help': !isСombined && label && help && withButton,
 				'__with-button': withButton,
 			}
 		) }>
 			<TextControl
-				id={ id }
 				type={ controlType }
 				label={ isСombined ? undefined : label }
 				help={ isСombined ? undefined : help }
 				value={ (withDebounce ? temporaryValue : value) || '' }
 				onChange={ onValidatedChange }
+				{ ...(isСombined ? { id: controlId } : {}) }
 			/>
 			{ withButton &&
 				<ConditionalWrap
@@ -159,7 +162,6 @@ const AdvTextControl = ({
 						className={ mergeClasses('__exclude',
 						{
 							'__with-label': !isСombined && label && withButton,
-							// '__with-help': help && withButton,
 							'__with-label-help': !isСombined && label && help && withButton,
 						}
 					) }
