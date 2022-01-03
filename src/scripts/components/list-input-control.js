@@ -3,7 +3,7 @@
 const { isArray, isEmpty, isNil, map, pull, split, join, includes, has } = lodash;
 const { __ } = wp.i18n;
 const { ENTER } = wp.keycodes;
-const { compose } = wp.compose;
+const { compose, useInstanceId } = wp.compose;
 const { BaseControl, Button, TextControl, Tooltip } = wp.components;
 const { useState, useCallback, useMemo } = wp.element;
 const { isEmail, isURL } = wp.url;
@@ -66,6 +66,8 @@ const ListInputControl = ({
 	const { createNotice } = noticeOperations;
 	const [ currentItem, setCurrentItem ] = useState('');
 	const [ editMode, setEditMode ] = useState(isOpen);
+	const instanceId = useInstanceId(ListInputControl);
+	const controlId = `list-input-control-${ instanceId }`;
 
 	// convert string value to array if needed
 	const items = useMemo(() => {
@@ -126,9 +128,9 @@ const ListInputControl = ({
 	return (
 		<BaseControl className={ mergeClasses(cprefix, { __fullwidth: isСombined || isInputСombined }) }>
 			{ isСombined &&
-				<div className="__sidebyside">
+				<div className="__sidebyside __list">
 					{ label &&
-						<label className="components-base-control__label">{ label }</label>
+						<label className="components-base-control__label" htmlFor={ controlId }>{ label }</label>
 					}
 					{ help &&
 						<p className="components-base-control__help">{ help }</p>
@@ -165,7 +167,7 @@ const ListInputControl = ({
 				{ isInputСombined &&
 					<div className="__sidebyside">
 						{ inputLabel &&
-							<label className="components-base-control__label">{ inputLabel }</label>
+							<label className="components-base-control__label" htmlFor={ controlId }>{ inputLabel }</label>
 						}
 						{ inputHelp &&
 							<p className="components-base-control__help">{ inputHelp }</p>
@@ -184,6 +186,7 @@ const ListInputControl = ({
 						value={ currentItem }
 						onChange={ setCurrentItem }
 						onKeyDown={ onKeyDown }
+						{ ...(isInputСombined ? { id: controlId } : {}) }
 					/>
 					<Button
 						className="__add __plugin_actions admin-blue"
