@@ -118,6 +118,7 @@ class zukit_Addon {
 			'ends_with_slug',
 			'enqueue_only',
 			'get_file_version',
+			'has_snippet',
 			'is_error',
 			'logd',
 			'prefix_it',

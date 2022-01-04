@@ -16,7 +16,7 @@ require_once('traits/exchange.php');
 
 class zukit_Plugin extends zukit_SingletonScripts {
 
-	private static $zukit_version = '1.4.4' .' (modified)';
+	private static $zukit_version = '1.4.5'; // .' (modified)';
 
 	public $config;
 
@@ -534,6 +534,11 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	}
 
 	// Common Interface to Zu Snippets helpers with availability check --------]
+
+	public function has_snippet($name) {
+		if(!function_exists('zu_snippets')) return false;
+		return zu_snippets()->method_exists($name);
+	}
 
 	public function register_snippet($func, $instance = 'self', $default = null) {
 		if(!function_exists('zu_snippets')) return false;
