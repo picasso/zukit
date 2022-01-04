@@ -61,7 +61,7 @@ const SelectItemControl = ({
 		if((selectedItem === value && !isDisabled) && has(style, 'isSelected')) return style['isSelected'];
 		return omit(style, ['isSelected', 'isDisabled']);
 	}
-	const makeItem = ({ label, value, style, isDisabled, isSlot }) => (
+	const makeItem = ({ label, value, style, isDisabled, isSlot, ...more }) => (
 		<ConditionalWrap
 			condition={ withTooltip }
 			wrap={ Tooltip }
@@ -97,7 +97,7 @@ const SelectItemControl = ({
 					{ fillNull && value === null ?
 						<span className="is-null"></span>
 						:
-						isSlot ? null : (isFunction(transformValue) ? transformValue(value, label, style) : value)
+						isSlot ? null : (isFunction(transformValue) ? transformValue(value, label, style, more) : value)
 					}
 				</Button>
 				{ !isSlot && withLabels &&
