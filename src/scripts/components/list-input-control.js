@@ -176,10 +176,13 @@ const ListInputControl = ({
 					</div>
 				}
 				<div className={ mergeClasses(
-					'components-animate__appear',
-					'is-from-top',
 					'__input',
-					{ '__with-help': inputHelp && !isInputСombined, '__with-label-help': isInputСombined }
+					// 'is-from-top',
+					{
+						'components-animate__appear is-from-top': !isOpen,
+						'__with-help': inputHelp && !isInputСombined,
+						'__with-label-help': isInputСombined,
+					}
 				) }>
 					<TextControl
 						label={ isInputСombined ? undefined : (inputLabel || __('Enter new item', 'zukit')) }
