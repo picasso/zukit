@@ -37,7 +37,7 @@ class zukit_Blocks extends zukit_Addon {
 		// if the class was inherited from 'zukit_Blocks') then merge this data with the default data
 		$this->config = array_replace_recursive(['blocks' => $this->get('blocks', true)], $this->config());
 		$this->blocks_available = function_exists('register_block_type');
-		$this->handle = $this->get('blocks.handle') ?? $this->prefix_it('blocks');
+		$this->handle = $this->get_callable('blocks.handle') ?? $this->prefix_it('blocks');
 		$this->namespace = $this->get('blocks.namespace') ?? $this->get('prefix', true);
 		if($this->blocks_available) {
 			// add_action('init', [$this, 'register_blocks'], 99);
@@ -146,13 +146,13 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	protected function js_params($defaults = null) {
-		$params = is_null($defaults) ? $this->get('blocks.script') : $this->plugin->get('script', [], $defaults);
+		$params = is_null($defaults) ? $this->get('blocks.script', []) : $this->plugin->get('script', [], $defaults);
 		$params['data'] = is_callable($params['data'] ?? null) ? call_user_func($params['data'], false) : $params['data'] ?? null;
 		return $params;
 	}
 
 	protected function css_params($defaults = null) {
-		return is_null($defaults) ? $this->get('blocks.style') : $this->plugin->get('style', [], $defaults);
+		return is_null($defaults) ? $this->get('blocks.style', []) : $this->plugin->get('style', [], $defaults);
 	}
 
 	// 'editor_assets' will be called only in the WordPress Block Editor (Gutenberg)
@@ -281,7 +281,7 @@ class zukit_Blocks extends zukit_Addon {
 	// create a list of _full_ block names
 	private function get_blocks() {
 		if($this->block_names === null) {
-			$blocks = $this->get('blocks.blocks');
+			$blocks = $this->get_callable('blocks.blocks');
 			$this->block_names = [];
 			foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
 				$this->block_names[] = $this->full_name($block);

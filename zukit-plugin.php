@@ -16,7 +16,7 @@ require_once('traits/exchange.php');
 
 class zukit_Plugin extends zukit_SingletonScripts {
 
-	private static $zukit_version = '1.4.4'; //.' (modified)';
+	private static $zukit_version = '1.4.4' .' (modified)';
 
 	public $config;
 
@@ -473,7 +473,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		return sprintf('%1$s%2$s%3$s', $this->prefix, $divider, $str);
 	}
 
-	public function get($key, $default_value = null, $addon_config = null) {
+	public function get($key, $default_value = null, $addon_config = null, $check_callable = true) {
 		$config = is_null($addon_config) ? $this->config : $addon_config;
 		// If 'key' contains 'path' - then resolve it before get
 		$pathParts = explode('.', $key);
@@ -488,6 +488,13 @@ class zukit_Plugin extends zukit_SingletonScripts {
 			}
 		}
 		return isset($config[$key]) ? $config[$key] : $default_value;
+	}
+
+	public function get_callable($key, $default_value = null, $addon_config = null) {
+		$value = $this->get($key, $default_value, $addon_config);
+		// we do not use 'is_callable' directly to avoid cases when the 'value' matches the name of the existing function
+		$is_callable = (is_array($value) && is_callable($value)) || ($value instanceof Closure);
+		return $is_callable ? call_user_func($value) : $value;
 	}
 
 	public function params_validated($params, $defaults = []) {
@@ -506,13 +513,13 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	}
 
 	private function blocks_config() {
-		$blocks = $this->get('blocks.blocks');
-		$instance = $this->get('blocks.instance');
+		$blocks = $this->get_callable('blocks.blocks');
+		$instance = $this->get_callable('blocks.instance');
 		if(!empty($blocks) || !empty($instance)) {
 			if(is_null($instance)) $this->blocks = new zukit_Blocks;
 			elseif(is_string($instance) && class_exists($instance)) $this->blocks = new $instance();
 			if($this->blocks instanceof zukit_Blocks) $this->register_addon($this->blocks);
-			else zu_logc('!Your class must inherit from the "zukit_Blocks" class',  $instance);
+			else zu_logc('!Your class must inherit from the "zukit_Blocks" class', $instance);
 		}
 	}
 

@@ -87,8 +87,8 @@ trait zukit_Admin {
 				'description'	=> __($data['Description'], $domain),
 				'uri'			=> $data['URI'],
 				'github'		=> $github ?: $defaultFill,
-				'icon'			=> $this->get('appearance.icon'),
-				'colors'		=> $this->get('appearance.colors'),
+				'icon'			=> $this->get_callable('appearance.icon'),
+				'colors'		=> $this->get_callable('appearance.colors'),
 				'more' 			=> $this->extend_info() ?? (object)null,
 			],
 			$this->extend_metadata($metadata)

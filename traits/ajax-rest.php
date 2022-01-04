@@ -31,9 +31,9 @@ trait zukit_AjaxREST {
 
 	private function ajax_config() {
 
-		$this->nonce = $this->get('api.nonce') ?? $this->prefix.'_ajax_nonce';
-		$this->api_root = $this->get('api.root') ?? $this->prefix;
-		$this->api_version = $this->get('api.version') ?? 1;
+		$this->nonce = $this->get_callable('api.nonce') ?? $this->prefix.'_ajax_nonce';
+		$this->api_root = $this->get_callable('api.root') ?? $this->prefix;
+		$this->api_version = $this->get_callable('api.version') ?? 1;
 
 		$this->zukit_routes = [
 			// make action via ajax call
