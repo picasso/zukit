@@ -1,3 +1,24 @@
+#### 1.4.5 / 2022-01-04
+
+##### Core
+* added `has_snippet` method
+* added `get_callable` method which allows you to use functions as configuration values
+* all `set_option` for Ajax requests are now running with the option `rewrite_array` equal to true
+* fixed bug in method `set_option` when `rewrite_array` is true and `key` is path
+
+##### Components
+* added `onKeyEnter` prop for `AdvTextControl` component
+* added `isSideBySide` prop to `ListInputControl` and `AdvTextControl` components
+* some CSS fix and `htmlFor` support when `isSideBySide` is true for `ListInputControl` and `AdvTextControl` components
+* added `isOpen` and `isNotEmptyLabel` props for `ListInput` Component
+* added `more` argument in `transformValue` function for `SelectItemControl` component
+* disable animation in `ListInputControl` component when `isOpen` is true
+
+##### Other
+* added `scrollTop` DOM helper
+* added `jquery-helpers` to global export for Settings Page
+* added `noColon` check for `messageWithError` function
+
 #### 1.4.4 / 2021-12-29
 
 * added a new version number that forgot in the past release
