@@ -1,3 +1,9 @@
+#### 1.4.8 / 2022-01-11
+
+* refactoring how __Zukit__ color palette can be extended
+* added key `extended_colors` in section `blocks` for config
+* added `getColorGetter` that creates custom color getter for plugin/theme
+
 #### 1.4.7 / 2022-01-09
 
 * added `get_full_filepath` scripts helper
