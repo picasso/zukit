@@ -16,7 +16,7 @@ require_once('traits/exchange.php');
 
 class zukit_Plugin extends zukit_SingletonScripts {
 
-	private static $zukit_version = '1.4.7'; // .' (modified)';
+	private static $zukit_version = '1.4.7' .' (modified)';
 
 	public $config;
 
@@ -560,7 +560,8 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		$snippets = zu_snippets();
 		if($snippets->method_exists($func)) return call_user_func_array([$snippets, $func], $params);
 		else {
-			if($this->debug_mode && !$quiet) $this->logc('!Snippet called was not found!', $func);
+			$is_heartbeat = wp_doing_ajax() && isset($_POST['action']) && ($_POST['action'] === 'heartbeat');
+			if($this->debug_mode && !$quiet) $this->logc('!Snippet called was not found!', $func, $is_heartbeat);
 			return null;
 		}
 	}
