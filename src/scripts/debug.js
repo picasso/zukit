@@ -4,8 +4,6 @@ const _ = lodash;
 const { useEffect, useRef } = wp.element;
 const { usePrevious } = wp.compose;
 
-import zuPackage from './../../../package.json';
-
 // log levels (but errors are always shown!):
 //
 //      'short' || 1                - only milestone messages & warn (without data and annoying handlers)
@@ -40,7 +38,6 @@ import zuPackage from './../../../package.json';
 
 // some internal vars
 const config = {
-    version: zuPackage.version || 'unknown',
     level: 'default',
     simplify: true,         // когда установлено, то пытается упростить вывод
                             //  - например, заменяет вывод массива с одним элементом на
