@@ -15,7 +15,7 @@ trait zukit_AdminMenu {
 
 	private static $detailed_log = false;
 	private static $if_log = false;
-	private static $if_class = null; //'zu_Translate';
+	private static $if_class = null; //'zu_Plus';
 
 	private $shift_gap = 20;
 	protected $total_index_break = 220;		// max items count in submenu?
@@ -172,19 +172,20 @@ zu_log_if(self::$if_log, $modify['separator'], $this->menu_items($submenu[$defau
 					// старый формат - массив массивов, т.е. массив для каждого элемента
 					// новый формат - массив, где ключ это позиция, а значение - привязка к элементу
 					if(is_string($menu_item)) $menu_item = [$position => $menu_item];
-					else [, $position] = $this->key_and_pos($menu_item);
+					// else [, $position] = $this->key_and_pos($menu_item);
 			    	$parent = $menu_item['parent'] ?? $default_id;
 			    	$sep_index = $this->get_new_index($menu_item, $parent, true);
 			    	if($sep_index > 0 && $sep_index < $this->total_index_break) {
-zu_log_if(self::$if_log, $position, $sep_index, $this->menu_items($submenu[$parent]));
-						$skip_separator = $this->skip_separator($submenu[$parent], $sep_index, $position);
-zu_log_if(self::$if_log, $skip_separator);
-						if($skip_separator) continue;
+// zu_log_if(self::$if_log, $position, $sep_index, $this->menu_items($submenu[$parent]));
+// 						$skip_separator = $this->skip_separator($submenu[$parent], $sep_index, $position);
+// zu_log_if(self::$if_log, 'skip_separator results', $skip_separator);
+// 						if($skip_separator) continue;
 						$name = sprintf('sep-%s-%s-%s', $sep_index, $position, array_values($menu_item)[0]);
 						$separator = ['','read', $name, '', 'wp-menu-separator'];
 						$update = $this->array_insert($submenu[$parent], $sep_index, $separator);
-						$submenu[$parent] = $update;
-zu_log_if(self::$if_log, $this->menu_items($update));
+// 						$submenu[$parent] = $update;
+						$submenu[$parent] = $this->fix_separators($update);
+zu_log_if(self::$if_log, 'after separator inserted', $this->menu_items($update));
 					}
 			    }
 			}
@@ -308,40 +309,50 @@ zu_log_if(self::$if_log, $this->menu_items($update));
 		return $array;
 	}
 
-	private function skip_separator($menu, $index, $position) {
-zu_log_if(self::$if_log, 'skip_separator [current]', $index, $position, $this->has_separator($menu, $index));
-		$has_item = $this->has_separator($menu, $index);
-		// if(is_null($has_item) && $position === 'before') return false;
-		if($has_item) return true;
-
-		$keys = array_keys($menu);
-		if($has_item === false || (is_null($has_item) && $position === 'before')) {
-			$prev_index = $this->search_separator($keys, $index, true);
-zu_log_if(self::$if_log, 'skip_separator [prev]', $keys, $prev_index, $this->has_separator($menu, $prev_index));
-			if($this->has_separator($menu, $prev_index)) return true;
+	private function fix_separators($menu) {
+		$prev_separator = false;
+		foreach($menu as $index => $item) {
+			$has_separator = ($item[4] ?? null) === 'wp-menu-separator';
+			if($has_separator && $prev_separator) $menu[$index] = null;
+			else $prev_separator = $has_separator;
 		}
-		if($has_item === false || (is_null($has_item) && $position === 'after')) {
-			$next_index = $this->search_separator($keys, $index, false);
-zu_log_if(self::$if_log, 'skip_separator [next]', $keys, $next_index, $this->has_separator($menu, $next_index));
-			if($this->has_separator($menu, $next_index)) return true;
-		}
-		return false;
+		return array_filter($menu);
 	}
 
-	private function has_separator($menu, $index) {
-		$item = $menu[$index] ?? [];
-		return ($item[4] ?? null) === 'wp-menu-separator' ? true : (count($item) ? null : false);
-	}
-
-	private function search_separator($keys, $index, $back) {
-		$item_index = false;
-		$last_index = $keys[count($keys)-1];
-		while($index && $index < $last_index && !$item_index) {
-			$index += $back ? -1 : 1;
-			$item_index = array_search($index, $keys);
-		}
-		return $item_index ? $keys[$item_index] : false;
-	}
+// 	private function skip_separator($menu, $index, $position) {
+// zu_log_if(self::$if_log, 'skip_separator [current]', $index, $position, $this->has_separator($menu, $index));
+// 		$has_item = $this->has_separator($menu, $index);
+// 		// if(is_null($has_item) && $position === 'before') return false;
+// 		if($has_item) return true;
+//
+// 		$keys = array_keys($menu);
+// 		if($has_item === false || (is_null($has_item) && $position === 'before')) {
+// 			$prev_index = $this->search_separator($keys, $index, true);
+// zu_log_if(self::$if_log, 'skip_separator [prev]', $keys, $prev_index, $this->has_separator($menu, $prev_index));
+// 			if($this->has_separator($menu, $prev_index)) return true;
+// 		}
+// 		if($has_item === false || (is_null($has_item) && $position === 'after')) {
+// 			$next_index = $this->search_separator($keys, $index, false);
+// zu_log_if(self::$if_log, 'skip_separator [next]', $keys, $next_index, $this->has_separator($menu, $next_index));
+// 			if($this->has_separator($menu, $next_index)) return true;
+// 		}
+// 		return false;
+// 	}
+//
+// 	private function has_separator($menu, $index) {
+// 		$item = $menu[$index] ?? [];
+// 		return ($item[4] ?? null) === 'wp-menu-separator' ? true : (count($item) ? null : false);
+// 	}
+//
+// 	private function search_separator($keys, $index, $back) {
+// 		$item_index = false;
+// 		$last_index = $keys[count($keys)-1];
+// 		while($index && $index < $last_index && !$item_index) {
+// 			$index += $back ? -1 : 1;
+// 			$item_index = array_search($index, $keys);
+// 		}
+// 		return $item_index ? $keys[$item_index] : false;
+// 	}
 
 	private function key_and_pos($item) {
 		$index = $this->snippets('array_pick_keys', $item, [
