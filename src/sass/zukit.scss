@@ -458,7 +458,9 @@ $divider-component-class: zukit-divider;
 				.__code {
 					display: inline;
 					letter-spacing: normal;
-					color: $wp-admin-blue-color;
+					margin: 0;
+					padding: 0 3px;
+					color: darken($wp-admin-blue-color, 10%);
 					background-color: rgba($wp-admin-blue-color, 0.05);
 				}
 			}
