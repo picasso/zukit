@@ -31,8 +31,10 @@ const { usePrevious } = wp.compose;
 //      Zubug.response(route, data)     - output Ajax response information
 
 // Модификаторы цвета и шрифта (первый символ сообщения для log() и info()):
-//      '!' - console.info, bold, '#cc0096'
-//      '?' - bold, '#ff2020'
+//      '!' - console.info, bold, '#ff2020'
+//      '?' - bold, '#cc0096'
+//      '*' - '#1f993f'
+//      '+' - '#0070c9'
 //      '>' - начать группу
 //      '#' - bold, '#ffffff' на фоне '#e50039' в окружении ★★★
 
@@ -165,8 +167,8 @@ function logWithColors(messages, messageColors,  ...data) {
         groupFunc = true;
     }
 
-    if(message1.startsWith('?')) color1 = dcolors.maybe;
-    if(message1.startsWith('!')) color1 = /application|framework/ig.test(message1) ? dcolors.framework : dcolors.attn;
+    if(message1.startsWith('?')) color1 = dcolors.mount;
+    if(message1.startsWith('!')) color1 = /application|framework/ig.test(message1) ? dcolors.framework : dcolors.alert;
 
     // special colors for selected messages
     if(message1.startsWith('#')) {
@@ -194,14 +196,14 @@ function logWithColors(messages, messageColors,  ...data) {
 
     // if starts with '!' - then make it BOLD and change console function
     if(message1.startsWith('!')) {
-        message1 = message1.replace(/^!/, '');
+        // message1 = message1.replace(/^!/, '');
         colors1 = colors1.replace('normal', 'bold');
         colors3 = colors3.replace('normal', 'bold');
         func = groupFunc ? console.groupCollapsed : console.info;
     }
     // if starts with '?' - then make it BOLD
     if(message1.startsWith('?')) {
-        message1 = message1.replace(/^\?/, '');
+        // message1 = message1.replace(/^\?/, '');
         colors1 = colors1.replace('normal', 'bold');
         colors3 = colors3.replace('normal', 'bold');
     }
@@ -213,6 +215,7 @@ function logWithColors(messages, messageColors,  ...data) {
         if(!message2) message1 += ' ★★★ ';
         else if(message3) message3 += ' ★★★ ';
     }
+    message1 = stripColorModifiers(message1);
 
     const [firstData, ...rest] = data;
     if(config.mods.forseNil || firstData !== undefined) {
@@ -266,7 +269,7 @@ function logWithColors2(message, ...data) {
     const func = config.colors.info ? console.info : console.log;
     const colors = getColors(colorBy(message));
 
-    let { format, items } = parseWithColors(message, colors);
+    let { format, items } = parseWithColors(stripColorModifiers(message), colors);
     if(!_.isEmpty(data)) format = format + '  ';
     _.forEach(data, item => {
         if(_.isString(item)) {
@@ -293,7 +296,7 @@ function log(message, ...data) {
     if(message) {
         message = message.trim();
 
-        let colors = [ colorBy(message),  dcolors.name, null ];
+        let colors = [ colorBy(message, true),  dcolors.name, null ];
         let param_regex = /\[\s*([^\]]+)]/i;
         // let color2 = /loading =|ver /ig.test(message) ? dcolors.navigate : dcolors.name;
 
@@ -461,9 +464,13 @@ function dataInComponent(data, marker = false) {
 // display a formatted string and possibly some data
 function infoInComponent(messageData, ...data) {
     const [message, clientId] = _.castArray(messageData);
+    // minus - a special sign to skip the function name
+    const colorMod = stripColorModifiers(message, true);
     const id = clientId ? ` with ${_bold(shortenId(clientId))}` : '';
     const component = componentName(clientId ? 'infoInComponentWithId,infoInComponent' : 'infoInComponent');
-    const info = `${_bold(component)}${id} ${arrowSymbol} ${message}`;
+    const withName = _.startsWith(message, '-') ? false : component !== '?';
+    const spacer = withName || id ? ` ${arrowSymbol} ` : '';
+    const info = `${colorMod}${withName ? _bold(component) : ''}${id}${spacer}${stripColorModifiers(message)}`;
     config.colors.info = true;
     setOpaqueColors('blue');
     if(data.length === 0 || (data.length === 1 && isCompactType(data[0]))) {
@@ -533,9 +540,25 @@ function renderComponentWithId(clientId) {
 
 // Helpers for colored console & components debuging --------------------------]
 
-function colorBy(message) {
+const modRegex = /^[!|?|*|+|#|>]/;
+function stripColorModifiers(string, returnMod = false) {
+    // minus - a special sign to skip the function name - first remove it
+    const str = _.trimStart(string, '-');
+    return returnMod ? (modRegex.test(str) ? str[0] : '') : str.replace(modRegex, '');
+}
+
+function colorBy(message, obsoleteMode = false) {
     let color = dcolors.basic;
-    // first test with var names
+
+    if(!obsoleteMode) {
+        // first check special modifiers from which the string can start
+        if(message.startsWith('!')) return [dcolors.alert, true, { color: dcolors.white, bg: dcolors.alert }];
+        if(message.startsWith('?')) return [dcolors.mount, true, { color: dcolors.white, bg: dcolors.mount }];
+        if(message.startsWith('*')) return [dcolors.render, true, { color: dcolors.white, bg: dcolors.render }];
+        if(message.startsWith('+')) return [dcolors.info, true, { color: dcolors.white, bg: dcolors.info }];
+    }
+
+    // then test with var names
     if(config.colors.info) return dcolors.info;
     if(config.colors.data) return dcolors.data;
     if(config.colors.trace) return dcolors.trace;
@@ -550,13 +573,14 @@ function colorBy(message) {
     return color;
 }
 
-function getColors(mainColor = dcolors.basic) {
-    const weightNormal = 'font-weight: normal;';
+function getColors(main = dcolors.basic) {
+    const [mainColor, mainBold, mainOpaque] = _.isArray(main) ? main : [main, false, null];
     const weightBold = 'font-weight: bold;';
+    const weightNormal = mainBold ? weightBold : 'font-weight: normal;';
     const padding = 'padding: 0 2px 0 2px;';
     const paddingBg = 'padding: 1px 3px 1px 3px;';
     const rounded = 'border-radius: 3px;';
-    const opaque = config.colors.opaque || { color: dcolors.white, bg: dcolors.alert };
+    const opaque = mainOpaque ?? config.colors.opaque ?? { color: dcolors.white, bg: dcolors.alert };
     return {
         normal: `${weightNormal} color: ${mainColor}`,
         accent: `${weightBold} ${paddingBg} ${rounded} color: ${dcolors.bold}; background: ${dcolors.boldBg}`,
@@ -681,7 +705,8 @@ function changedKeys(next, prev) {
 }
 
 function shortenId(props, forStorage = false) {
-    const shortened = (props && props.clientId) ? props.clientId.slice(-4) : 0;
+    const clientId = _.get(props, 'clientId', props);
+    const shortened = _.isString(clientId) ? clientId.slice(-4) : 0;
     return forStorage ? shortened : (shortened === 0 ? '?' : `✷✷✷-${shortened}`);
 }
 
