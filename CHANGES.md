@@ -1,3 +1,26 @@
+#### 1.4.9 / 2022-01-20
+
+##### Core
+* refactoring `AdminMenu` methods (*docs update required*)
+* implemented `keep_file` and `get_file` static methods to keep file paths
+* added `File` field to plugin/theme meta
+
+##### Components
+* refactoring `zukit_Table` class and `ZukitTable` component to support CSS Grid layout
+* added `ZukitToggle` component with simple markdown support
+* use `ZukitToggle` instead of `ToggleControl`
+
+##### Debug
+* added simple `__log` method - for debugging without any classes
+* added support for `Color Modifiers` in `info` method
+* disable __Zukit__ scripts caching with static `zukit_debug` method
+* removed `package.json` import (and `ver` getter) in `Debug` module
+
+##### Other
+* updated NPM package dependencies
+* logo experiments
+* improved CSS
+
 #### 1.4.8 / 2022-01-11
 
 * refactoring how __Zukit__ color palette can be extended
