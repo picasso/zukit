@@ -437,7 +437,7 @@ function logAsOneString(chunks, ...data) {
 function renderComponent(maybeClientId) {
     const [clientId, clientId2] = _.castArray(maybeClientId);
     const component = componentName(clientId2 ? 'renderComponentWithId,renderComponent' : 'renderComponent');
-    const id = (clientId ?? clientId2)  ? ` with ${_bold(shortenId(clientId ?? clientId2))}` : '';
+    const id = (clientId ?? clientId2) ? withId(clientId ?? clientId2) : '';
     config.colors.render = true;
     setOpaqueColors('green');
     logAsOneString(`${_bold(component)}${id} ${_opaque('render')}`);
@@ -453,6 +453,7 @@ function dataInComponent(data, marker = false) {
     const altName = marker ? `:${_colored(String(marker))}` : '';
     const message = `${_bold(component)}${altName} ${arrowSymbol} value for ${isSingleKey ? _accented(key) : key}`;
     config.colors.data = true;
+    setOpaqueColors('brown');
     if(isSimpleType(value)) {
         logAsOneString(message, value);
     } else {
@@ -466,7 +467,7 @@ function infoInComponent(messageData, ...data) {
     const [message, clientId] = _.castArray(messageData);
     // minus - a special sign to skip the function name
     const colorMod = stripColorModifiers(message, true);
-    const id = clientId ? ` with ${_bold(shortenId(clientId))}` : '';
+    const id = clientId ? withId(clientId) : '';
     const component = componentName(clientId ? 'infoInComponentWithId,infoInComponent' : 'infoInComponent');
     const withName = _.startsWith(message, '-') ? false : component !== '?';
     const spacer = withName || id ? ` ${arrowSymbol} ` : '';
@@ -485,7 +486,7 @@ function infoInComponent(messageData, ...data) {
 function useTraceUpdate(props, state = {}, trackClientId = false) {
     const ref = useRef({
         key: componentName(trackClientId ? 'useTraceUpdate,useTraceUpdateWithId' : 'useTraceUpdate'),
-        id: trackClientId ? ` with ${_bold(shortenId(props))}` : '',
+        id: trackClientId ? withId(props) : '',
     });
 
     const prevProps = usePrevious(props);
@@ -526,6 +527,10 @@ function useMountUnmount() {
 
 // to trace several instances of one component on the page --------------------]
 
+function withId(id) {
+    return ` with ID ${_bold(shortenId(id))}`;
+}
+
 function useTraceUpdateWithId(props, state = {}) {
     useTraceUpdate(props, state, true);
 }
@@ -556,6 +561,7 @@ function colorBy(message, obsoleteMode = false) {
         if(message.startsWith('?')) return [dcolors.mount, true, { color: dcolors.white, bg: dcolors.mount }];
         if(message.startsWith('*')) return [dcolors.render, true, { color: dcolors.white, bg: dcolors.render }];
         if(message.startsWith('+')) return [dcolors.info, true, { color: dcolors.white, bg: dcolors.info }];
+        if(message.startsWith('#')) return [dcolors.data, true, { color: dcolors.white, bg: dcolors.data }];
     }
 
     // then test with var names
@@ -597,6 +603,7 @@ function setOpaqueColors(color) {
     if(color === 'violet') config.colors.opaque = { color: dcolors.white, bg: dcolors.mount };
     if(color === 'orange') config.colors.opaque = { color: dcolors.white, bg: dcolors.name };
     if(color === 'blue') config.colors.opaque = { color: dcolors.white, bg: dcolors.info };
+    if(color === 'brown') config.colors.opaque = { color: dcolors.white, bg: dcolors.data };
 }
 
 // старая реализация через regex, сохранил тут для идей
@@ -877,7 +884,6 @@ function funcFromStack(frames, index = 0) {
 }
 
 export default {
-    get ver() { return config.version; },
 
     get level() { return logLevel(); },
     set level(val) { logLevel(val); },
