@@ -31,12 +31,13 @@ const { usePrevious } = wp.compose;
 //      Zubug.response(route, data)     - output Ajax response information
 
 // Модификаторы цвета и шрифта (первый символ сообщения для log() и info()):
-//      '!' - console.info, bold, '#ff2020'
-//      '?' - bold, '#cc0096'
-//      '*' - '#1f993f'
-//      '+' - '#0070c9'
 //      '>' - начать группу
-//      '#' - bold, '#ffffff' на фоне '#e50039' в окружении ★★★
+//      '!' - bold, '#ff2020'
+//      '?' - bold, '#cc0096'
+//      '*' - bold, '#1f993f'
+//      '+' - bold, '#0070c9'
+//      '#' - bold, '#a79635'
+//      '^' - bold, цвет зависит от функции и конфига
 
 // some internal vars
 const config = {
@@ -545,7 +546,7 @@ function renderComponentWithId(clientId) {
 
 // Helpers for colored console & components debuging --------------------------]
 
-const modRegex = /^[!|?|*|+|#|>]/;
+const modRegex = /^[!|?|*|+|#|^|>]/;
 function stripColorModifiers(string, returnMod = false) {
     // minus - a special sign to skip the function name - first remove it
     const str = _.trimStart(string, '-');
@@ -553,8 +554,8 @@ function stripColorModifiers(string, returnMod = false) {
 }
 
 function colorBy(message, obsoleteMode = false) {
-    let color = dcolors.basic;
-
+    // let color = dcolors.basic;
+    let color = dcolors[_.findKey(config.colors)] ?? dcolors.basic;
     if(!obsoleteMode) {
         // first check special modifiers from which the string can start
         if(message.startsWith('!')) return [dcolors.alert, true, { color: dcolors.white, bg: dcolors.alert }];
@@ -562,15 +563,18 @@ function colorBy(message, obsoleteMode = false) {
         if(message.startsWith('*')) return [dcolors.render, true, { color: dcolors.white, bg: dcolors.render }];
         if(message.startsWith('+')) return [dcolors.info, true, { color: dcolors.white, bg: dcolors.info }];
         if(message.startsWith('#')) return [dcolors.data, true, { color: dcolors.white, bg: dcolors.data }];
+        if(message.startsWith('^')) return [color, true, null];
     }
 
     // then test with var names
-    if(config.colors.info) return dcolors.info;
-    if(config.colors.data) return dcolors.data;
-    if(config.colors.trace) return dcolors.trace;
-    if(config.colors.render) return dcolors.render;
-    if(config.colors.alert) return dcolors.alert;
-    if(config.colors.mount) return dcolors.mount;
+    if(color !== dcolors.basic) return color;
+    // if(config.colors.info) return dcolors.info;
+    // if(config.colors.data) return dcolors.data;
+    // if(config.colors.trace) return dcolors.trace;
+    // if(config.colors.render) return dcolors.render;
+    // if(config.colors.alert) return dcolors.alert;
+    // if(config.colors.mount) return dcolors.mount;
+
     // remove any var names which may lead to false-positive test
     message = message.replace(/\[[^\]]+\]/,'').replace(/"[^"]+"/g, '');
     if(/token|logout|user/ig.test(message)) return /unsuccessful|error/ig.test(message) ? dcolors.keypoint2 : dcolors.keypoint1;
@@ -617,7 +621,7 @@ const tokenFormat = t => `${t}%c`;
 
 function parseWithColors(message, colors) {
     const { normal, bold, params, accent, colored, opaque } = colors ?? getColors();
-    const { a, b, c, p, o } = _markers;
+    const { a, b, c, p, o } = _markers; // accented, bold, colored, param, opaque
     let isComplete = true;
     let format = '%c';
     let items = [normal];
@@ -627,61 +631,73 @@ function parseWithColors(message, colors) {
     // ~text~ as 'colored'
     // [text] as 'param'
     // {text} as 'opaque'
-    _.forEach(message, char => {
-        if(char === a) {
-            if(isComplete) {
-                format += tokenFormat(token);
-                items.push(accent);
-                token = '';
-                isComplete = false;
-            } else {
-                format += tokenFormat(token);
-                items.push(normal);
-                token = '';
-                isComplete = true;
-            }
-        } else if(char === c) {
-            if(isComplete) {
-                format += tokenFormat(token);
-                items.push(colored);
-                token = '';
-                isComplete = false;
-            } else {
-                format += tokenFormat(token);
-                items.push(normal);
-                token = '';
-                isComplete = true;
-            }
-        } else if(char === b) {
-            if(isComplete) {
-                format += tokenFormat(token);
-                items.push(bold);
-                token = '';
-                isComplete = false;
-            } else {
-                format += tokenFormat(token);
-                items.push(normal);
-                token = '';
-                isComplete = true;
-            }
-        } else if(char === p[0]) {
-            format += tokenFormat(token + p[0]); // `${token}${p[0]}%c`
-            items.push(params);
-            token = '';
-        } else if(char === p[1]) {
-            format += tokenFormat(token);
-            items.push(normal);
-            token = p[1];
-        } else if(char === o[0]) {
-            format += tokenFormat(token);
-            items.push(opaque);
-            token = '';
-        } else if(char === o[1]) {
-            format += tokenFormat(token);
-            items.push(normal);
+    _.forEach(message, (char, index) => {
+        // if 'token' is -1, then skip the current symbol
+        if(token === -1) {
             token = '';
         } else {
-            token += char;
+            if(char === a) {
+                if(isComplete) {
+                    format += tokenFormat(token);
+                    items.push(accent);
+                    token = '';
+                    isComplete = false;
+                } else {
+                    format += tokenFormat(token);
+                    items.push(normal);
+                    token = '';
+                    isComplete = true;
+                }
+            } else if(char === c) {
+                if(isComplete) {
+                    format += tokenFormat(token);
+                    items.push(colored);
+                    token = '';
+                    isComplete = false;
+                } else {
+                    format += tokenFormat(token);
+                    items.push(normal);
+                    token = '';
+                    isComplete = true;
+                }
+            } else if(char === b) {
+                if(isComplete) {
+                    format += tokenFormat(token);
+                    items.push(bold);
+                    token = '';
+                    isComplete = false;
+                } else {
+                    format += tokenFormat(token);
+                    items.push(normal);
+                    token = '';
+                    isComplete = true;
+                }
+            } else if(char === p[0]) {
+                format += tokenFormat(token + p[0]);
+                items.push(params);
+                token = '';
+            } else if(char === p[1]) {
+                format += tokenFormat(token);
+                items.push(normal);
+                token = p[1];
+            } else if(char === o[0]) {
+                format += tokenFormat(token);
+                const coloredOpaque = stripColorModifiers(message[index + 1], true);
+                if(coloredOpaque) {
+                    const { opaque: opaqueColor } = getColors(colorBy(message[index + 1]));
+                    items.push(opaqueColor);
+                    token = -1;
+                } else {
+                    items.push(opaque);
+                    token = '';
+                }
+            } else if(char === o[1]) {
+                format += tokenFormat(token);
+                items.push(normal);
+                token = '';
+            } else {
+                token += char;
+            }
         }
     });
     format += token;
