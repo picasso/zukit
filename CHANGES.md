@@ -1,3 +1,7 @@
+#### 1.5.1 / 2022-01-25
+* small fixes for compatibility with WP 5.9
+* static property `$zukit_handle` of `zukit_Blocks` class is public now
+
 #### 1.5.0 / 2022-01-25
 * color modifiers support for opaque colors in `Debug` module
 * some helpers for input/textarea manipulations (compatible with React) in `JQ` module
