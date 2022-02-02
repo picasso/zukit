@@ -132,13 +132,16 @@ function logWithColors(message, ...data) {
     let { format, items } = parseWithColors(stripColorModifiers(message), colors);
     if(!_.isEmpty(data)) format = format + '  ';
     _.forEach(data, item => {
-        if(_.isString(item) && notLog) {
-            const { format: newFormat, items: newItems } = parseWithColors(item, colors);
+        // delayed value creation - if the 'item' is a function,
+        // then we replace it with the value returned from the function
+        const value = _.isFunction(item) ? item() : item;
+        if(_.isString(value) && notLog) {
+            const { format: newFormat, items: newItems } = parseWithColors(value, colors);
             format = format + newFormat;
             items.push(...newItems);
         } else {
-            format = format + (_.isString(item) ? '%s' : '%o');
-            items.push(config.clone ? cloneValue(item) : item);
+            format = format + (_.isString(value) ? '%s' : '%o');
+            items.push(config.clone ? cloneValue(value) : value);
         }
     });
     func(format, ...items);
@@ -302,6 +305,10 @@ function renderComponent(maybeClientId) {
 
 // display variables and their values, possibly simplifying the data
 function dataInComponent(data, marker = false) {
+    // delayed value creation - if the 'data' is a function,
+    // then we replace it with the value returned from the function
+    if(_.isFunction(data)) data = data();
+
     const component = componentName('dataInComponent');
     const keys = _.keys(data);
     const isSingleKey = keys.length === 1;
