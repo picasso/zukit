@@ -425,6 +425,7 @@ function colorBy(message) {
     const mod = stripColorModifiers(message, true);
     if(mod) {
         const modColor = dcolors[_.findKey(mods, v => v === mod)] ?? dcolors.basic;
+        if(mod === '^') config.colors.opaque = { color: dcolors.white, bg: dcolors.cyan };
         return mod === '^' ? [color, true, null] : [modColor, true, { color: dcolors.white, bg: modColor }];
     }
     return color;
