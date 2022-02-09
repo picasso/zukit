@@ -1,7 +1,8 @@
 #### 1.5.2 / 2022-02-09
 
 ##### Debug
-* added `dim` color modifier; refactoring `logGroup` method
+* added `dim` color modifier
+* refactoring `logGroup` method
 * changed opaque color for `^` modifier
 * delayed value creation - if the `data` is a function, then we replace it with the value returned from the function
 
