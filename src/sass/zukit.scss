@@ -165,6 +165,16 @@ $divider-component-class: zukit-divider;
 				.components-notice__content div {
 					display: inline-block;
 				}
+				.components-notice__dismiss {
+					transition: background-color $transition-time $transition-function,
+								border-color $transition-time $transition-function;
+					border-radius: 5px;
+					border: 1px solid transparent;
+					&:hover {
+						background-color: white;
+						border-color: rgba(black, 0.2);
+					}
+				}
 				// I just don't like notifications with a white background
 				.is-info {
 					background-color: rgba($blue-color, 0.1);
