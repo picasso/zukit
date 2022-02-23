@@ -151,6 +151,8 @@ $divider-component-class: zukit-divider;
 		}
 	}
 
+	// Zukit Settings Page ----------------------------------------------------]
+
 	.#{$skeleton-class} {
 	    background-color: white;
 
@@ -594,8 +596,13 @@ $divider-component-class: zukit-divider;
 			border-radius: 0 0 $help-border-radius $help-border-radius;
 			margin-top: -1px;
 			@each $color-name, $color-value in $admin-colors {
-				&.#{$color-name}{
+				&.#{$color-name} {
 		            background-color: rgba($color-value, $help-color-opacity);
+					.__code {
+						background-color: rgba($color-value, $help-code-color-opacity);
+						max-height: 17px;
+						padding: 0 3px;
+					}
 				}
 			}
 		}
