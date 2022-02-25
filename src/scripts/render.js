@@ -25,16 +25,16 @@ export function renderPage(pageId, settings = {}) {
 	setRestBasics(pageData);
 
 	if(get(settings, 'panels') !== undefined) {
-		// Get 'debug' options key
-		const debugPanelKey = get(pageData, 'debug.debug_group', null);
-		// Add 'Debug Actions' panel defaults if 'debug' key is found
+		// Get 'debug_group' options key
+		const debugPanelKey = get(pageData, 'inhouse.debug_group', null);
+		// Add 'Debug Actions' panel defaults if 'debug_group' key is found
 		if(debugPanelKey !== null) {
 			defaultsDeep(settings.panels, {
 				[debugPanelKey]: { label:  __('Debug Plugin', 'zukit'), value: false },
 			});
 		}
 		// Sync 'panels' with saved 'options' if presented
-		const panels = get(pageData, ['options', get(pageData, 'debug.panels_group')], []);
+		const panels = get(pageData, ['options', get(pageData, 'inhouse.panels_group')], []);
 		forEach(panels, (value, key) => set(settings, `panels.${key}.value`, value));
 	}
 

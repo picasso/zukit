@@ -324,7 +324,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 			'router'		=> $this->get_router_name(),
 			'options' 		=> $this->options,
 			'info'			=> $this->info(),
-			'debug'			=> $this->debug_data(),
+			'inhouse'		=> $this->internal_data(),
 			'actions' 		=> $this->extend_actions(),
 		];
 		return $default_data;

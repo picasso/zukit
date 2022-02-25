@@ -56,7 +56,7 @@ trait zukit_Debug {
 
 	// Debug helpers ----------------------------------------------------------]
 
-	protected function debug_data() {
+	protected function internal_data() {
 		return [
 			'debug_group'	=> self::$debug_group,
 			'panels_group'	=> self::$panels_group,
