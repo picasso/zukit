@@ -86,7 +86,7 @@ const ZukitSkeleton = ({
 	// create 'options' and setter
 	const [options, updateOptions, setUpdateHook] = useOptions(initialOptions, createNotice);
 	// create getter and setter for 'panels'
-	const [getPanel, setPanel, PanelsContext] = usePanels(initialPanels, createNotice);
+	const [getPanel, setPanel, PanelsContext] = usePanels(initialPanels, createNotice, debug);
 
 	// function that allows you to selectively reset options to their original values
 	// first get all initial values through 'ajaxAction', and then create an object with updates

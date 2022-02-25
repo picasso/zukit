@@ -26,7 +26,7 @@ export function renderPage(pageId, settings = {}) {
 
 	if(get(settings, 'panels') !== undefined) {
 		// Get 'debug' options key
-		const debugPanelKey = get(pageData, 'debug.prefix', null);
+		const debugPanelKey = get(pageData, 'debug.debug_group', null);
 		// Add 'Debug Actions' panel defaults if 'debug' key is found
 		if(debugPanelKey !== null) {
 			defaultsDeep(settings.panels, {
@@ -34,10 +34,8 @@ export function renderPage(pageId, settings = {}) {
 			});
 		}
 		// Sync 'panels' with saved 'options' if presented
-		if(get(pageData, 'options.panels') !== undefined) {
-			const { options: { panels } } = pageData;
-			forEach(panels, (value, key) => set(settings, `panels.${key}.value`, value));
-		}
+		const panels = get(pageData, ['options', get(pageData, 'debug.panels_group')], []);
+		forEach(panels, (value, key) => set(settings, `panels.${key}.value`, value));
 	}
 
 	if(document.getElementById(pageId) !== null) {

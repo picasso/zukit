@@ -51,7 +51,7 @@ const ZukitSidebar = ({
 	const hasActions = !isEmpty(pluginActions) || some(actions, ['hasMoreActions', true]);
 	const hasPanels = !isEmpty(panels);
 
-	const debugSet = get(debug, 'prefix', null);
+	const debugSet = get(debug, 'debug_group', null);
 	const debugOptions = debugSet ? get(debug, 'options') : null;
 	const debugActions =  debugSet ? omitBy(get(debug, 'actions'), isNil) : null;
 	const hasDebug = (!isEmpty(debugActions) || !isEmpty(debugOptions)) && get(panels, `${debugSet}.value`) === true;
