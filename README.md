@@ -1,4 +1,4 @@
-# Zukit: The Developer Framework for WordPress.
+# Zukit: The Developer Framework for WordPress
 
 [![Zukit Version](https://img.shields.io/github/package-json/v/picasso/zukit?style=for-the-badge)](https://github.com/picasso/zukit/wiki)
 [![Zukit: Tested WP Version](https://img.shields.io/github/package-json/testedWP/picasso/zukit?color=4ab866&label=wordpress%20tested&style=for-the-badge)](https://wordpress.org)
@@ -10,7 +10,6 @@ Implements basic functionality for managing scripts and creating plugin or theme
 
 ![ZuKit - The Developer Framework for WordPress.](https://raw.githubusercontent.com/wiki/picasso/zukit/assets/banner-1544x500.png)
 
-
 ## Install
 
 To _use_ __Zukit__ framework in your project, you need to load its classes before referring to the class that inherits the framework methods. There are many ways to do this, but the easiest one is [to install the framework](https://github.com/picasso/zukit/wiki/%5BMisc%5D-Install) as a `subtree` in your project.
@@ -20,7 +19,6 @@ To _use_ __Zukit__ framework in your project, you need to load its classes befor
 The best way to learn a framework is to look at working examples of its use. This can be done in plugins that I have already adapted for the new framework: [Zu Contact](https://github.com/picasso/zu-contact), [Zu Media](https://github.com/picasso/zumedia) and [Zu Plus](https://github.com/picasso/zu-plus).
 
 Documentation is available on the [GitHub wiki](https://github.com/picasso/zukit/wiki). There I described the main points of working with the framework.
-
 
 ------------------------------------------------------
 

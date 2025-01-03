@@ -1,41 +1,49 @@
 #### 1.5.5 / 2022-03-05
 
 ##### Snippets
+
 * removed `zusnippets_Lang` trait (these helpers duplicated in the `Zu Translate` plugin)
 
 ##### Debug
+
 * delayed value creation for the second argument of `logGroup` method
 * renaming `debug` JS data set to `inhouse`
 * refactoring init for `_debug` and `_panels` option groups
 * keep `_debug` and `_panels` option groups even on reset
 
 #### 1.5.4 / 2022-02-24
+
 * added `unescapeHtml` helper to `utils`
 * added `hover` to `notice__dismiss` button
 * added `zu_loge` function as last resort for complex debug cases
 * fixed `markdown` CSS in `action` buttons
 
 #### 1.5.3 / 2022-02-13
+
 * fixed CSS of `Settings` (Safari)
 * improved inserting separators in the `Admin Menu`
 
 #### 1.5.2 / 2022-02-09
 
 ##### Debug
+
 * added `dim` color modifier
 * refactoring `logGroup` method
 * changed opaque color for `^` modifier
 * delayed value creation - if the `data` is a function, then we replace it with the value returned from the function
 
 ##### Other
+
 * added outline on `:focus` for `SelectItemControl` control
 * improved CSS on various screen widths
 
 #### 1.5.1 / 2022-01-25
+
 * small fixes for compatibility with WP 5.9
 * static property `$zukit_handle` of `zukit_Blocks` class is public now
 
 #### 1.5.0 / 2022-01-25
+
 * color modifiers support for opaque colors in `Debug` module
 * some helpers for input/textarea manipulations (compatible with React) in `JQ` module
 * minify JS output
@@ -43,22 +51,26 @@
 #### 1.4.9 / 2022-01-20
 
 ##### Core
+
 * refactoring `AdminMenu` methods (*docs update required*)
 * implemented `keep_file` and `get_file` static methods to keep file paths
 * added `File` field to plugin/theme meta
 
 ##### Components
+
 * refactoring `zukit_Table` class and `ZukitTable` component to support CSS Grid layout
 * added `ZukitToggle` component with simple markdown support
 * use `ZukitToggle` instead of `ToggleControl`
 
 ##### Debug
+
 * added simple `__log` method - for debugging without any classes
 * added support for `Color Modifiers` in `info` method
 * disable __Zukit__ scripts caching with static `zukit_debug` method
 * removed `package.json` import (and `ver` getter) in `Debug` module
 
 ##### Other
+
 * updated NPM package dependencies
 * logo experiments
 * improved CSS
@@ -76,12 +88,14 @@
 #### 1.4.6 / 2022-01-04
 
 ##### Core
+
 * added `has_snippet` method
 * added `get_callable` method which allows you to use functions as configuration values
 * all `set_option` for Ajax requests are now running with the option `rewrite_array` equal to true
 * fixed bug in method `set_option` when `rewrite_array` is true and `key` is path
 
 ##### Components
+
 * added `onKeyEnter` prop for `AdvTextControl` component
 * added `isSideBySide` prop to `ListInputControl` and `AdvTextControl` components
 * some CSS fix and `htmlFor` support when `isSideBySide` is true for `ListInputControl` and `AdvTextControl` components
@@ -90,6 +104,7 @@
 * disable animation in `ListInputControl` component when `isOpen` is true
 
 ##### Other
+
 * added `scrollTop` DOM helper
 * added `jquery-helpers` to global export for Settings Page
 * added `noColon` check for `messageWithError` function
@@ -104,23 +119,27 @@
 #### 1.4.3 / 2021-12-28
 
 ##### Core
+
 * added `useForceUpdater` custom hook
 * fixed bug in `set_option` method when `$value` is array and `$key` is path
 * made `path_autocreated` = `true` by default
 * added explanation (*in comments*) when `simpleMarkdown` does not work
 
 ##### Blocks & Components
+
 * added `TitleIndicator` component
 * added `withPlugin` and `withPluginMeta` HOCs to work with predefined WP slots (*PluginDocumentSettingPanel*, *PluginSidebar* and etc.)
 * exported `debug` module for __Zukit__ settings
 
 ##### CSS
+
 * fix styles of some `standard` controls (checkbox, toggle)
 * small improvements
 
 #### 1.4.2 / 2021-12-10
 
 ##### Core
+
 * changed parser to ecmaVersion 11
 * implemented `do_with_instances` to iterate all __Zukit__ instances for given method
 * refactoring `do_addons` to work with `options` and `collect` results
@@ -138,17 +157,20 @@
 * implemented `getAttrWithClientId` and `getCssWithClientId` jQuery helpers
 
 ##### Debug
+
 * refactoring `debug` module with new knowledge about React hooks
 * improved `useTraceUpdate`, implemented check for `added` and `removed` keys
 * improved `colored` console for Safari
 * changed codes for `colored console` blocks
 
 ##### REST &  AJAX
+
 * fixed bug with `zudata` Ajax request
 * grouped the keys for the REST API
 * refactoring REST settings (implemented `setRestBasics` and `restRequestURL` methods)
 
 ##### CSS
+
 * converted `instyle` SASS to SCSS
 * renaming some colors
 * improved `getColorOptions` to work with a list of slugs to be excluded
@@ -159,12 +181,15 @@
 * small improvements
 
 ##### Snippets
+
 * improved `array_flatten` snippet to work with associative arrays
 
 #### 1.4.0 / 2021-10-16
+
 * adapted to WP 5.8.1
 
 ##### Core
+
 * implemented `zukit_ExchangeWithMagic` trait
 * refactoring redirect to parent methods with PHP `__call`
 * added `construct_more_inner` method to free `construct_more` for users
@@ -181,12 +206,14 @@
 * refactoring dependencies for scripts and styles to fix errors in WP 5.8 (widgets.php)
 
 ##### REST &  AJAX
+
 * renaming `ajax.php` trait to `ajax-rest.php`
 * implemented `default_options` AJAX response
 * logic of `set_options_ajax` method is changed - if at least one call returns `true`, then the overall result will also be `true`
 * refactoring `sanitize helpers`, added `rest_response` and `maybe_fix_sanitize` methods
 
 ##### Blocks & Components
+
 * improved `SelectItemControl` component - added `fillNull` option and `smart style` support
 * refactoring `zukit_Blocks` to allow use `config` from the class that was inherited from `zukit_Blocks`
 * added the ability to create an instance of the `zukit_Blocks` class by name
@@ -197,11 +224,13 @@
 * improved `svgRef` and `getColor` helpers
 
 ##### CSS
+
 * refactoring SASS with `div()` function because using `/` for division is deprecated
 * small fixes for Safari browser
 * added `__note` global class
 
 ##### Snippets
+
 * moving `arrays` methods to separate trait
 * added `cast_array`, `array_zip_merge`, `add_inline_script_now`, `build_style` methods
 * added `null_on_failure` arg for `to_bool` function
@@ -211,15 +240,17 @@
 * fixed bug in `get_excerpt` function
 
 ##### Other
+
 * The Wiki was last updated on Apr 16 2021.
 
 #### 1.3.0 / 2021-08-10
+
 * supports `version` property
 * implemented `Extend` trait to dynamically extend snippets with new methods
 * added `Exchange` trait to support communication between add-ons
 * implemented extended logging for debug `Exchange` methods
 * added SVG curves
-* added support for main stylesheet (_themes only_)
+* added support for main stylesheet (*themes only*)
 * added `$dir` and `$uri` properties in `zukit_Addon` class
 
 * implemented snippets for working with arrays: `array_without_keys`, `array_without_null`, `array_pick_keys`, `array_with_defaults`, `array_flatten`, `is_assoc_array`, `array_md5`
@@ -257,10 +288,12 @@
 * small improvements
 
 #### 1.2.3 / 2021-05-03
+
 * fixed bug with headers in `ZukitTable` component
 * fixed bug for `Prevent Script Caching` when dealing with `zukit.min.js`
 
 #### 1.2.2 / 2021-05-03
+
 * implemented dynamic cells for `ZukitTable` component
 * implemented support for `GitHub` __uri__ in `info` method
 * rows in `Plugin Info` are now hidden through the `value` equal to __null__
@@ -274,6 +307,7 @@
 * small CSS improvements
 
 #### 1.2.0 / 2021-04-13
+
 * refactoring `zukit_Singleton` to use `zukit_Logging` and `zukit_Scripts` traits
 * added support for __Zukit__ version
 * refactoring logging to work with `Zu Plus`
@@ -317,11 +351,13 @@
 * other small fixes
 
 #### 1.1.6 / 2021-03-26
+
 * added inline style for submenu separators
 * added `fillMissing` prop for `SelectItemControl` component
 * tested for compatibility with WP 5.7
 
 #### 1.1.5 / 2021-03-24
+
 * added `compareVersions` function to `utils`
 * passed a WP version to the script and basic containers
 * improved JS and CSS for WP with version earlier than 5.5
@@ -329,6 +365,7 @@
 * other small fixes
 
 #### 1.1.4 / 2021-03-21
+
 * added `ModalMessage` and `RawHTML` components for the Settings Page export
 * added default size and `bottomHalf` option for `ZukitDivider` component
 * added `ends_with_slug` helper for add-ons
@@ -346,6 +383,7 @@
 * other small improvements
 
 #### 1.1.3 / 2021-02-10
+
 * changed configuration structure
 * added access to nested configuration sections
 * refactoring to use `config` instead of `js_params` and `css_params`
@@ -360,11 +398,13 @@
 * other small improvements
 
 #### 1.1.2 / 2021-01-08
+
 * fixed bug with `lookbehind` regex (Safari does not support it)
 * fixed bug with `shape` type in `LoaderControl` component
 * improved CSS to be compatible with WP 5.6
 
 #### 1.1.0 / 2021-01-06
+
 * added `withDebounce` and `withoutValues` params for `AdvTextControl` component
 * renaming `ListInput` and `SelectItem` components
 * implemented `ModalMessage` component
@@ -408,6 +448,7 @@
 * other small improvements
 
 #### 1.0.0 / 2020-12-06
+
 * adapted to changes in WP 5.5
 * refactoring use of plugin data
 * added `falsely` type for `getPanel`
@@ -418,14 +459,17 @@
 * bug fixing
 
 #### 0.9.9 / 2020-12-01
+
 * refactoring compatibility check (for PHP and WordPress)
 * improved `export-ignore` generation for archive
 * updated `README` file
 
 #### 0.9.8 / 2020-11-29
+
 * bug fixing and improvements
 
 #### 0.9.7 / 2020-11-28
+
 * added translations
 * fixed `Text Domain` for some translation calls
 * implemented loading of translations for both `.MO` and `.JSON` forms
@@ -437,6 +481,7 @@
 * improved `README` file
 
 #### 0.9.6 / 2020-11-24
+
 * added `editMode` for `ListInput` component
 * created new `AdvTextControl` component
 * all debug methods moved to a separate trait
@@ -452,6 +497,7 @@
 * css improvements and cleaning
 
 #### 0.9.5 / 2020-11-09
+
 * created a new component `ListInput`
 * added `loaders` to __snippets__
 * refactoring `js_data` methods
@@ -465,6 +511,7 @@
 * several sections are added to README
 
 #### 0.9.4 / 2020-10-30
+
 * fixed bug in `is_zukit_slug` method
 * added `router` support for REST API methods
 * added `router` support in `fetch.js`
@@ -473,6 +520,7 @@
 * css improvements
 
 #### 0.9.3 / 2020-10-28
+
 * method `enqueue_only` now enqueue both script and style when called without params
 * implemented logic when `null` is replaced with default value in `js_params` and `css_params`
 * added __bash script__ to install the framework
@@ -483,20 +531,24 @@
 * small improvements
 
 #### 0.9.2 / 2020-10-26
+
 * refactored scripts methods to to separate `register` and `enqueue` phases
 * added `enqueue_only` and `register_only` methods
 * fixed bug in `zu_printf`
 * added check to load Zukit scripts only once
 
 #### 0.9.1 / 2020-10-23
+
 * implemented `zu_sprintf` - special version of the `sprintf` function
 * fixed bug with `wp_enqueue_scripts` action name
 * added `merge_js_data` method
 * added README in *mixed* language
 
 #### 0.9.0 / 2020-10-22
+
 * renaming __snippets__ index file
 * small improvements
 
 #### 0.8.0 / 2020-10-06
+
 * initial commit (split from Zu Media)

@@ -1,4 +1,5 @@
 #### Создать из SCSS vars файл с цветами
+
 __with regex__
 find:^\$([^:]+).+
 replace:.js_$1 { color: $ $1; }
