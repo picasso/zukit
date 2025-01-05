@@ -1,18 +1,14 @@
 // WordPress dependencies
 
-const { createElement } = wp.element;
+const { createElement } = wp.element
 
 // Alternative RawHTML Component
 
-const RawHTML = ({
-	tag = 'p',
-	children,
-	...props
-}) => {
+const RawHTML = ({ tag = 'p', children, ...props }) => {
 	return createElement(tag, {
 		dangerouslySetInnerHTML: { __html: children },
 		...props,
-	} );
+	})
 }
 
-export default RawHTML;
+export default RawHTML
