@@ -19,8 +19,8 @@ class zukit_Blocks extends zukit_Addon {
 	// handler for Zukit common JS with utilities and components
 	public static $zukit_handle = 'zukit-blocks';
 	// We can only have one 'zukit-blocks' script loaded and therefore
-    // store its status in a static property so that we can avoid repeated 'enqueue' calls.
-    private static $zukit_loaded = false;
+	// store its status in a static property so that we can avoid repeated 'enqueue' calls.
+	private static $zukit_loaded = false;
 	// filename with common colors that could be available in JS
 	private static $colors_filename = 'zukit-colors';
 	private static $zukit_colors = null;
@@ -39,7 +39,7 @@ class zukit_Blocks extends zukit_Addon {
 		$this->blocks_available = function_exists('register_block_type');
 		$this->handle = $this->get_callable('blocks.handle') ?? $this->prefix_it('blocks');
 		$this->namespace = $this->get('blocks.namespace') ?? $this->get('prefix', true);
-		if($this->blocks_available) {
+		if ($this->blocks_available) {
 			// add_action('init', [$this, 'register_blocks'], 99);
 			add_action('enqueue_block_editor_assets', [$this, 'editor_assets']);
 			add_action('enqueue_block_assets', [$this, 'block_assets']);
@@ -70,7 +70,7 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	protected function is_blocks_config($key) {
-		$value = $this->get('blocks.'.$key);
+		$value = $this->get('blocks.' . $key);
 		return $value === true;
 	}
 
@@ -90,25 +90,25 @@ class zukit_Blocks extends zukit_Addon {
 
 	public function register_blocks() {
 		// return early if not available
-		if(!$this->blocks_available) return;
+		if (!$this->blocks_available) return;
 
-		foreach($this->get_blocks() as $block) {
+		foreach ($this->get_blocks() as $block) {
 			$args = $this->get_block_args($block);
 			register_block_type($block, $args);
 		}
 
 		// add block attributes, generate 'render_callbak' and register these blocks
-		if($this->is_blocks_config('dynamic')) $this->register_blocks_with_attributes();
+		if ($this->is_blocks_config('dynamic')) $this->register_blocks_with_attributes();
 
 		// register meta keys to make them be accessible for blocks via the REST API
-		if($this->is_blocks_config('metakeys')) $this->register_metakeys();
+		if ($this->is_blocks_config('metakeys')) $this->register_metakeys();
 
 		// add list of blocks which should be avoided during apply_filters('the_content'...)
 		// because we need remove any Gutenberg block which use 'get_excerpt' before apply_filters('the_content'...)
-		if($this->is_blocks_config('no_excerpt')) {
+		if ($this->is_blocks_config('no_excerpt')) {
 			$no_excerpt_blocks = $this->no_excerpt();
-			if(!empty($no_excerpt_blocks)) {
-				add_filter('zukit_no_excerpt_blocks', function($blocks) use($no_excerpt_blocks) {
+			if (!empty($no_excerpt_blocks)) {
+				add_filter('zukit_no_excerpt_blocks', function ($blocks) use ($no_excerpt_blocks) {
 					return array_merge($blocks, $no_excerpt_blocks);
 				}, 10, 1);
 			}
@@ -122,11 +122,8 @@ class zukit_Blocks extends zukit_Addon {
 			// front-end script & style
 			'script'	=> [
 				'add_prefix'	=> false,
-				'deps'			=> ['wp-block-library', 'wp-editor', 'wp-plugins'], // ['wp-edit-post'],
-				// данные депенденси выпали при замене, но нужны ли они были вообще?
-				// media-models,
-				// media-views,
-				// postbox,
+				// данные получены из `php` asset что генерятся автоматически by `wp-scropts`
+				'deps'			=> ['lodash', 'react-jsx-runtime'],
 				'data'			=> [$this, 'jsdata_defaults'],
 				'handle'		=> $this->handle,
 			],
@@ -167,7 +164,7 @@ class zukit_Blocks extends zukit_Addon {
 	// we do not load these scripts for the front-end beacuse
 	// they will be loaded automatically (we specified their handles when registering blocks)
 	public function block_assets() {
-		if(is_admin()) {
+		if (is_admin()) {
 			$this->plugin->force_frontend_enqueue(
 				$this->get('blocks.load_frontend_css'),
 				$this->get('blocks.load_frontend_js')
@@ -182,9 +179,9 @@ class zukit_Blocks extends zukit_Addon {
 	// so that the plugin/theme can make the right decision about loading
 	public function frontend_assets() {
 		$frontend_blocks = $this->get_frontend_blocks();
-		foreach($frontend_blocks as $block) {
+		foreach ($frontend_blocks as $block) {
 			$attrs = $this->check_block($block);
-			if($attrs !== false) {
+			if ($attrs !== false) {
 				$this->plugin->blocks_enqueue_more(true, $this->full_name($block), $attrs);
 				break;
 			}
@@ -192,7 +189,7 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	private function enqueue_zukit_blocks() {
-		if(self::$zukit_loaded === false && $this->is_blocks_config('load_zukit')) {
+		if (self::$zukit_loaded === false && $this->is_blocks_config('load_zukit')) {
 			// params for 'zukit-blocks' script
 			$zukit_params = [
 				'absolute'		=> true,
@@ -211,7 +208,7 @@ class zukit_Blocks extends zukit_Addon {
 			]));
 			// Parameters: [$handle, $domain, $path]. WordPress will check for a file in that path
 			// with the format ${domain}-${locale}-${handle}.json as the source of translations
-        	wp_set_script_translations('zukit', 'zukit', $this->plugin->zukit_dirname('lang'));
+			wp_set_script_translations('zukit', 'zukit', $this->plugin->zukit_dirname('lang'));
 			self::$zukit_loaded = true;
 		}
 	}
@@ -229,12 +226,12 @@ class zukit_Blocks extends zukit_Addon {
 		);
 
 		// add dependency to Zukit Blocks if required
-		if($this->is_blocks_config('load_zukit')) {
+		if ($this->is_blocks_config('load_zukit')) {
 			$css_params['deps'][] = self::$zukit_handle;
 			$js_params['deps'][] = self::$zukit_handle;
 		}
 
-		if($this->is_blocks_config('load_css')) {
+		if ($this->is_blocks_config('load_css')) {
 			$this->admin_enqueue_style($this->handle, $css_params);
 		}
 
@@ -245,7 +242,7 @@ class zukit_Blocks extends zukit_Addon {
 
 	// normalize block name to include namespace, if provided as non-namespaced
 	protected function full_name($name) {
-		return strpos($name, '/') === false ? ($this->namespace.'/'.$name) : $name;
+		return strpos($name, '/') === false ? ($this->namespace . '/' . $name) : $name;
 	}
 
 	protected function is_block($test, $block_name) {
@@ -256,34 +253,34 @@ class zukit_Blocks extends zukit_Addon {
 	// and parse its attributes (if found)
 	private function check_block($name) {
 
-	    $wp_post = get_post();
+		$wp_post = get_post();
 		$post = $wp_post instanceof WP_Post ? $wp_post->post_content : null;
 		$block_name = $this->full_name($name);
 
-	    // test for existence of block by its fully qualified name
-	    $has_block = false !== strpos($post, '<!-- wp:' . $block_name . ' ');
+		// test for existence of block by its fully qualified name
+		$has_block = false !== strpos($post, '<!-- wp:' . $block_name . ' ');
 
-	    if($has_block) {
+		if ($has_block) {
 			$preg_name = str_replace('/', '\/', $block_name);
 			preg_match_all('/<!-- wp:' . $preg_name . ' (.*?) -->/', $post, $matches);
 
 			$attrs = [];
-			foreach($matches[1] ?? [] as $attr_string) {
+			foreach ($matches[1] ?? [] as $attr_string) {
 				$json = json_decode(trim($attr_string), true);
 				$attrs[] = $json ?? null;
 			}
 			return $attrs;
-	    }
+		}
 
-	    return $has_block;
+		return $has_block;
 	}
 
 	// create a list of _full_ block names
 	private function get_blocks() {
-		if($this->block_names === null) {
+		if ($this->block_names === null) {
 			$blocks = $this->get_callable('blocks.blocks');
 			$this->block_names = [];
-			foreach((is_array($blocks) ? $blocks : [$blocks]) as $block) {
+			foreach ((is_array($blocks) ? $blocks : [$blocks]) as $block) {
 				$this->block_names[] = $this->full_name($block);
 			}
 		}
@@ -292,10 +289,10 @@ class zukit_Blocks extends zukit_Addon {
 
 	// create a list of _full_ block names available on the front-end
 	private function get_frontend_blocks() {
-		if($this->frontend_names === null) {
+		if ($this->frontend_names === null) {
 			$frontend_blocks = $this->get('blocks.frontend_blocks') ?? $this->get_blocks();
 			$this->frontend_names = [];
-			foreach((is_array($frontend_blocks) ? $frontend_blocks : [$frontend_blocks]) as $block) {
+			foreach ((is_array($frontend_blocks) ? $frontend_blocks : [$frontend_blocks]) as $block) {
 				$this->frontend_names[] = $this->full_name($block);
 			}
 		}
@@ -319,10 +316,10 @@ class zukit_Blocks extends zukit_Addon {
 			'filter'	=> $framework_only ? self::$basic_colors : null,
 		], true, false);
 		extract($params, EXTR_PREFIX_ALL, 'custom');
-		if(empty($custom_filter) && empty($custom_include)) return [];
+		if (empty($custom_filter) && empty($custom_include)) return [];
 
 		// if color is just an alias on an already existing color - just make a substitution
-		foreach($custom_include as $name => $color) {
+		foreach ($custom_include as $name => $color) {
 			$colors[$name] = $colors[$color] ?? $color;
 		}
 
@@ -331,25 +328,25 @@ class zukit_Blocks extends zukit_Addon {
 	}
 
 	private function get_zukit_colors() {
-		if(is_null(self::$zukit_colors)) {
+		if (is_null(self::$zukit_colors)) {
 			$colors = [];
 			$filepath = $this->plugin->get_zukit_filepath(true, self::$colors_filename, false);
-			if(file_exists($filepath)) {
+			if (file_exists($filepath)) {
 				$content = file_get_contents($filepath);
-				if($content === false) return $colors;
-				foreach(explode('}', $content) as $line) {
-					if(empty(trim($line))) continue;
+				if ($content === false) return $colors;
+				foreach (explode('}', $content) as $line) {
+					if (empty(trim($line))) continue;
 					$name = preg_match('/.js_([^\{]+)/', $line, $matches) ? $matches[1] : 'error';
 					$color = preg_match('/color\:(.+)/', $line, $matches) ? $matches[1] : 'red';
 					$short_name = str_replace(['_color', '_'], ['', '-'], $name);
-					if(array_key_exists($short_name, $colors)) {
+					if (array_key_exists($short_name, $colors)) {
 						$this->logc('Duplicate name when creating Zukit Colors!', [
 							'line'			=> $line,
-			                'name'			=> $name,
-			                'color'			=> $color,
-			                'short_name'	=> $short_name,
+							'name'			=> $name,
+							'color'			=> $color,
+							'short_name'	=> $short_name,
 							'colors'		=> $colors,
-			            ]);
+						]);
 					}
 					$colors[$short_name] = $color;
 				}
