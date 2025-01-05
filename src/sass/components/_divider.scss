@@ -1,6 +1,9 @@
-// Admin Divider Component ----------------------------------------------------]
+@use "../variables";
+@use "../zukit-basic";
 
-.#{$divider-component-class} {
+// Admin Divider Component ------------------------------------------------------------------------]
+
+.#{zukit-basic.$divider-component-class} {
 	margin-top: -1em;
-	border-bottom: 1px solid $admin-border-color;
+	border-bottom: 1px solid variables.$admin-border-color;
 }

@@ -1,10 +1,14 @@
+@use "sass:list";
+@use "sass:meta";
+@use "sass:selector";
+@use "sass:string";
 // inStyle (v1.6.3)
 // github.com/salsita/inStyle
 // 2016 | MIT
-// ==============================
+// =================================================================================================
 // https://github.com/salsita/inStyle/
 //
-//-----------------------------------------------------------------------------]
+//-------------------------------------------------------------------------------------------------]
 // @include in('<.class')
 // Appending a state to an existing parent is done with the < special character.
 // Each additional use of this character targets a higher parent (works the same for all features).
@@ -87,7 +91,7 @@
 //         }
 //     }
 // }
-//-----------------------------------------------------------------------------]
+//-------------------------------------------------------------------------------------------------]
 
 // using '/' for division is deprecated and will be removed in Dart Sass 2.0.0
 // this function is more convenient to use than math.div
@@ -101,28 +105,28 @@ $__inTagReplace: '@' !default;
 
 // String helpers
 @function __trimString($string) {
-    $index: str-index($string, ' ');
+    $index: string.index($string, ' ');
     @if $index == 1 {
-        @return __trimString(str-slice($string, $index + 1, -1));
-    } @else if $index == str-length($string) {
-        @return __trimString(str-slice($string, 1, $index - 1));
+        @return __trimString(string.slice($string, $index + 1, -1));
+    } @else if $index == string.length($string) {
+        @return __trimString(string.slice($string, 1, $index - 1));
     }
     @return $string;
 }
 
 @function __stringToList($string, $delimiter: ',', $separator: comma) {
     $list: ();
-    $sum: str-length($string);
+    $sum: string.length($string);
     @for $i from 1 through $sum {
-        $str: str-index($string, $delimiter);
-        @if str-length($string) >= 1 and $str == null {
-            $list: append($list, unquote(__trimString($string)), $separator);
+        $str: string.index($string, $delimiter);
+        @if string.length($string) >= 1 and $str == null {
+            $list: list.append($list, string.unquote(__trimString($string)), $separator);
             $string: '';
         }
-        @if type-of($str) == number {
-            $each: str-slice($string, 0, ($str - 1));
-            $list: append($list, unquote(__trimString($each)), $separator);
-            $string: str-slice($string, ($str + 1), $sum);
+        @if meta.type-of($str) == number {
+            $each: string.slice($string, 0, ($str - 1));
+            $list: list.append($list, string.unquote(__trimString($each)), $separator);
+            $string: string.slice($string, ($str + 1), $sum);
         }
     }
     @return $list;
@@ -131,15 +135,15 @@ $__inTagReplace: '@' !default;
 // List helpers
 @function __insertInList($list, $index, $value) {
     $result: null;
-    @if $index > length($list) {
-        @warn "List index is #{$index} but list is only #{length($list)} items long for __insertInList().";
+    @if $index > list.length($list) {
+        @warn "List index is #{$index} but list is only #{list.length($list)} items long for __insertInList().";
     } @else {
         $result: ();
-        @for $i from 1 through length($list) {
+        @for $i from 1 through list.length($list) {
             @if $i == $index {
-                $result: append($result, $value);
+                $result: list.append($result, $value);
             }
-            $result: append($result, nth($list, $i));
+            $result: list.append($result, list.nth($list, $i));
         }
     }
     @return $result;
@@ -147,11 +151,11 @@ $__inTagReplace: '@' !default;
 
 @function __removeFromList($list, $value, $recursive: false) {
     $result: ();
-    @for $i from 1 through length($list) {
-        @if type-of(nth($list, $i)) == list and $recursive {
-            $result: append($result, remove(nth($list, $i), $value, $recursive));
-        } @else if nth($list, $i) != $value {
-            $result: append($result, nth($list, $i));
+    @for $i from 1 through list.length($list) {
+        @if meta.type-of(list.nth($list, $i)) == list and $recursive {
+            $result: list.append($result, remove(list.nth($list, $i), $value, $recursive));
+        } @else if list.nth($list, $i) != $value {
+            $result: list.append($result, list.nth($list, $i));
         }
     }
     @return $result;
@@ -159,11 +163,11 @@ $__inTagReplace: '@' !default;
 
 @function __reverseList($list, $recursive: false) {
     $result: ();
-    @for $i from length($list)*-1 through -1 {
-        @if type-of(nth($list, abs($i))) == list and $recursive {
-            $result: append($result, __reverseList(nth($list, abs($i)), $recursive));
+    @for $i from list.length($list)*-1 through -1 {
+        @if meta.type-of(list.nth($list, math.abs($i))) == list and $recursive {
+            $result: list.append($result, __reverseList(list.nth($list, math.abs($i)), $recursive));
         } @else {
-            $result: append($result, nth($list, abs($i)));
+            $result: list.append($result, list.nth($list, math.abs($i)));
         }
     }
     @return $result;
@@ -171,12 +175,12 @@ $__inTagReplace: '@' !default;
 
 @function __listToString($list, $glue: '', $is-nested: false) {
     $result: null;
-    @for $i from 1 through length($list) {
-        $e: nth($list, $i);
-        @if type-of($e) == list {
-            $result: unquote("#{$result}#{to-string($e, $glue, true)}");
+    @for $i from 1 through list.length($list) {
+        $e: list.nth($list, $i);
+        @if meta.type-of($e) == list {
+            $result: string.unquote("#{$result}#{to-string($e, $glue, true)}");
         } @else {
-            $result: if($i != length($list) or $is-nested, unquote("#{$result}#{$e}#{$glue}"), unquote("#{$result}#{$e}"));
+            $result: if($i != list.length($list) or $is-nested, string.unquote("#{$result}#{$e}#{$glue}"), string.unquote("#{$result}#{$e}"));
         }
     }
     @return $result;
@@ -185,11 +189,11 @@ $__inTagReplace: '@' !default;
 @function __removeDuplicatesFromList($list, $recursive: false, $separator: comma) {
     $result: ();
     @each $item in $list {
-        @if not index($result, $item) {
-            @if length($item) > 1 and $recursive {
-                $result: append($result, __removeDuplicatesFromList($item, $recursive), $separator);
+        @if not list.index($result, $item) {
+            @if list.length($item) > 1 and $recursive {
+                $result: list.append($result, __removeDuplicatesFromList($item, $recursive), $separator);
             } @else {
-                $result: append($result, $item, $separator);
+                $result: list.append($result, $item, $separator);
             }
         }
     }
@@ -199,11 +203,11 @@ $__inTagReplace: '@' !default;
 // Custom helpers
 @function __tagIndex($string, $tag) {
     $index: 0;
-    @if str-index($string, $tag) == 1 {
+    @if string.index($string, $tag) == 1 {
         $index: 1;
-        $sum: str-length($string);
+        $sum: string.length($string);
         @for $i from 2 through $sum {
-            @if str-slice($string, $i, $i) == $tag {
+            @if string.slice($string, $i, $i) == $tag {
                 $index: $index + 1;
             } @else {
                 @return $index;
@@ -218,27 +222,27 @@ $__inTagReplace: '@' !default;
     // Make sure the $current list is correctly parsed while using libsass.
     $currentList: ();
     @each $parent in $current {
-        $currentList: append($currentList, $parent, comma);
+        $currentList: list.append($currentList, $parent, comma);
     }
-    @if length($currentList) > 0 {
+    @if list.length($currentList) > 0 {
         $current: $currentList;
     }
     // Save maximum length of matched compound to compare relevancy
     @each $parent in $current {
-        $parentIndex: index($current, $parent);
-        $depthMap: append($depthMap, 0, comma);
+        $parentIndex: list.index($current, $parent);
+        $depthMap: list.append($depthMap, 0, comma);
         @each $compound in $selector {      // Check only for specific compound
-            @if max(__tagIndex($compound, $__inTagInsert), __tagIndex($compound, $__inTagAppend), __tagIndex($compound, $__inTagReplace)) == 0 {
-                $simple: simple-selectors($compound);
+            @if math.max(__tagIndex($compound, $__inTagInsert), __tagIndex($compound, $__inTagAppend), __tagIndex($compound, $__inTagReplace)) == 0 {
+                $simple: selector.simple-selectors($compound);
                 // Test all matches starting with full compound and reducing for each step
-                @for $i from 1 through length($simple) {
+                @for $i from 1 through list.length($simple) {
                     @if $i > 1 {
-                        $simple: __removeFromList($simple, nth($simple, length($simple)));
+                        $simple: __removeFromList($simple, list.nth($simple, list.length($simple)));
                     }
-                    @if index($parent, __listToString($simple)) and length($simple) > nth($depthMap, $parentIndex) {
+                    @if list.index($parent, __listToString($simple)) and list.length($simple) > list.nth($depthMap, $parentIndex) {
                         // Relevancy scoring
-                        $depthIndex: index(__reverseList($parent), __listToString($simple)) + div(length($simple), 1000);
-                        $depthMap: set-nth($depthMap, $parentIndex, $depthIndex);
+                        $depthIndex: list.index(__reverseList($parent), __listToString($simple)) + div(list.length($simple), 1000);
+                        $depthMap: list.set-nth($depthMap, $parentIndex, $depthIndex);
                     }
                 }
             }
@@ -260,10 +264,10 @@ $__inTagReplace: '@' !default;
     @each $selector in $selectors {
         $selector: __removeFromList(__stringToList($selector, ' ', space), '');
         // Render only best matching parents in multiselectors
-        $depthMap: if(length($current) == 1, 0, __getDepthMap($selector, $current));
-        @for $n from 1 through length($current) {
-            @if nth($depthMap, $n) == max($depthMap...) {
-                $parent: nth($current, $n);
+        $depthMap: if(list.length($current) == 1, 0, __getDepthMap($selector, $current));
+        @for $n from 1 through list.length($current) {
+            @if list.nth($depthMap, $n) == math.max($depthMap...) {
+                $parent: list.nth($current, $n);
                 $newParent: __reverseList($parent);
                 // Save insertions to process later
                 $insertQueue: ();
@@ -272,56 +276,56 @@ $__inTagReplace: '@' !default;
                     $appendIndex: __tagIndex($compound, $__inTagAppend);
                     $insertIndex: __tagIndex($compound, $__inTagInsert);
                     $replaceIndex: __tagIndex($compound, $__inTagReplace);
-                    $changeIndex: max($appendIndex, $insertIndex, $replaceIndex) + $startIndex;
+                    $changeIndex: math.max($appendIndex, $insertIndex, $replaceIndex) + $startIndex;
                     // OUT_OF_BOUNDS check
-                    @if $changeIndex > length($parent) {
-                        @error 'OUT_OF_BOUNDS: \'#{$compound}\' modification outside of \'#{$parent} {}\' (#{$changeIndex} vs #{length($parent)}).';
+                    @if $changeIndex > list.length($parent) {
+                        @error 'OUT_OF_BOUNDS: \'#{$compound}\' modification outside of \'#{$parent} {}\' (#{$changeIndex} vs #{list.length($parent)}).';
                     }
                     // Add to insertion queue
                     @if $insertIndex > 0 {
-                        $insertQueue: append($insertQueue, $compound);
+                        $insertQueue: list.append($insertQueue, $compound);
                     } @else if $replaceIndex > 0 {
                         // Replace
-                        $validatedCompound: __listToString(simple-selectors(str-slice($compound, $replaceIndex + 1)));
-                        $newParent: set-nth($newParent, $startIndex + $replaceIndex, $validatedCompound);
+                        $validatedCompound: __listToString(selector.simple-selectors(string.slice($compound, $replaceIndex + 1)));
+                        $newParent: list.set-nth($newParent, $startIndex + $replaceIndex, $validatedCompound);
                         $checkDupes: true;
                     } @else if $appendIndex > 0 {
                         // Append with tag
-                        $validatedCompound: nth($newParent, $startIndex + $appendIndex) + __listToString(simple-selectors(str-slice($compound, $appendIndex + 1)));
-                        $newParent: set-nth($newParent, $startIndex + $appendIndex, $validatedCompound);
+                        $validatedCompound: list.nth($newParent, $startIndex + $appendIndex) + __listToString(selector.simple-selectors(string.slice($compound, $appendIndex + 1)));
+                        $newParent: list.set-nth($newParent, $startIndex + $appendIndex, $validatedCompound);
                     } @else {
                         // Append with selector
-                        $simple: simple-selectors($compound);
+                        $simple: selector.simple-selectors($compound);
                         $state: ();
                         $matched: false;
                         // Loop compound variants
-                        @for $i from 1 through length($simple) {
+                        @for $i from 1 through list.length($simple) {
                             @if $i > 1 {
-                                $state: join(nth($simple, length($simple)), $state);
-                                $simple: __removeFromList($simple, nth($simple, length($simple)));
+                                $state: list.join(list.nth($simple, list.length($simple)), $state);
+                                $simple: __removeFromList($simple, list.nth($simple, list.length($simple)));
                             }
                             $trySimple: __listToString($simple);
                             $tryState: if($i > 1, __listToString($state), '');
                             // Match base to reversed parent list
-                            @for $n from ($startIndex + 1) through length($newParent) {
-                                @if $n <= length($newParent) and $trySimple == nth($newParent, $n) {
+                            @for $n from ($startIndex + 1) through list.length($newParent) {
+                                @if $n <= list.length($newParent) and $trySimple == list.nth($newParent, $n) {
                                     // Append to matched parent selector
                                     $matched: true;
-                                    $newParent: set-nth($newParent, $n, unquote($trySimple + $tryState));
+                                    $newParent: list.set-nth($newParent, $n, string.unquote($trySimple + $tryState));
                                 }
                             }
                         }
                         @if not $matched {
-                            @error 'OUT_OF_BOUNDS: \'#{nth($simple, 1)}\' not found in \'#{$parent}\'.';
+                            @error 'OUT_OF_BOUNDS: \'#{list.nth($simple, 1)}\' not found in \'#{$parent}\'.';
                         }
                     }
                 }
                 // Process insertion queue
-                @if length($insertQueue) > 0 {
+                @if list.length($insertQueue) > 0 {
                     $insertIndexes: ();
                     @each $insert in $insertQueue {
                         $insertIndex: __tagIndex($insert, $__inTagInsert);
-                        $validatedCompound: __listToString(simple-selectors(str-slice($insert, $insertIndex + 1)));
+                        $validatedCompound: __listToString(selector.simple-selectors(string.slice($insert, $insertIndex + 1)));
                         // Find how many previous inserts were lower than current
                         $addIndex: 0;
                         @each $index in $insertIndexes {
@@ -329,19 +333,19 @@ $__inTagReplace: '@' !default;
                                 $addIndex: $addIndex + 1;
                             }
                         }
-                        $insertIndexes: append($insertIndexes, $insertIndex);
+                        $insertIndexes: list.append($insertIndexes, $insertIndex);
                         // Insert in selector
                         $newIndex: $startIndex + $insertIndex + $addIndex;
                         $newParent: __insertInList($newParent, $newIndex, $validatedCompound);
                     }
                 }
                 // Save modified selectors
-                $final: append($final, __reverseList($newParent), comma);
+                $final: list.append($final, __reverseList($newParent), comma);
             }
         }
     }
     // Remove possible duplicates from multiselector replacement;
-    $final: if(length($final) > 1 and $checkDupes, __removeDuplicatesFromList($final), $final);
+    $final: if(list.length($final) > 1 and $checkDupes, __removeDuplicatesFromList($final), $final);
     // Render final selectors
     @at-root #{$final} {
         @content;

@@ -1,6 +1,10 @@
-// Admin Table Component ------------------------------------------------------]
+@use "../instyle";
+@use "../variables";
+@use "../zukit-basic";
 
-$table-basic-color: $admin-grey-blue-color;
+// Admin Table Component --------------------------------------------------------------------------]
+
+$table-basic-color: variables.$admin-grey-blue-color;
 $table-border-color: rgba($table-basic-color, 0.3);
 $table-header-color: rgba($table-basic-color, 0.1);
 $table-header-border-color: rgba($table-basic-color, 0.6);
@@ -15,13 +19,13 @@ $table-basic-font-size: 14px;
 	flex-flow: row nowrap;
 }
 
-.#{$table-component-class} {
+.#{zukit-basic.$table-component-class} {
 	font-size: $table-basic-font-size;
 	color: $table-basic-color;
 	margin: 0.5rem;
 	line-height: 1.5;
 	border: 1px solid $table-border-color;
-	transition: height $transition-time $transition-function;
+	transition: height variables.$transition-time variables.$transition-function;
 
 	&.css-flex {
 		display: flex;
@@ -50,7 +54,7 @@ $table-basic-font-size: 14px;
 		background-color: $table-header-color;
 		white-space: normal;
 		border-bottom: 1px solid $table-header-border-color;
-		@include in('<.css-flex') {
+		@include instyle.in('<.css-flex') {
 			@extend %row_flex;
 			justify-content: center;
 		}
@@ -65,7 +69,7 @@ $table-basic-font-size: 14px;
 		&:last-child {
 			border-bottom-width: 0;
 		}
-		@include in('<.css-flex') {
+		@include instyle.in('<.css-flex') {
 			@extend %row_flex;
 		}
 	}
@@ -94,7 +98,7 @@ $table-basic-font-size: 14px;
 		min-width: 0px;
 		white-space: nowrap;
 
-		@include in('<.css-flex') {
+		@include instyle.in('<.css-flex') {
 			flex-flow: row nowrap;
 			flex-grow: 1;
 			flex-basis: 0;
@@ -118,7 +122,7 @@ $table-basic-font-size: 14px;
 		}
 
 		&.__zu_icon {
-			@include in('<.css-flex') {
+			@include instyle.in('<.css-flex') {
 				max-width: 60px;
 			}
 		}

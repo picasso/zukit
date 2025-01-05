@@ -1,11 +1,13 @@
-// Modal Component ------------------------------------------------------------]
+@use "../zukit-basic";
+
+// Modal Component --------------------------------------------------------------------------------]
 
 $modal-accent-color: #002233;
 $modal-text-color: rgba(black, 0.5);
 $modal-strong-color: rgba($modal-accent-color, 0.7);
 $modal-em-color: rgba($modal-accent-color, 0.6);
 
-.#{$modal-component-class} {
+.#{zukit-basic.$modal-component-class} {
 	&.components-modal__frame {
 		.components-modal__header {
 			h1 {
@@ -51,7 +53,7 @@ $modal-em-color: rgba($modal-accent-color, 0.6);
                 height: auto;
             }
         }
-        @each $color-name, $color-value in $admin-colors {
+        @each $color-name, $color-value in zukit-basic.$admin-colors {
             .__#{$color-name} {
                 color: $color-value;
             }

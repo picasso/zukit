@@ -1,13 +1,12 @@
-// @use 'sass:math';
-//-----------------------------------------------------------------------------]
-@import "instyle";
-// @function div($be-divided, $by) { @return math.div($be-divided, $by); }
+@use "sass:math";
+@use "instyle";
 
-@function strip-units($number) { @return div($number, ($number * 0 + 1)); }
-@function half($number) { @return floor(div($number, 2)); }
-@function twice($number) { @return floor($number * 2); }
 
-// Colors ---------------------------------------------------------------------]
+@function strip-units($number) { @return instyle.div($number, ($number * 0 + 1)); }
+@function half($number) { @return math.floor(instyle.div($number, 2)); }
+@function twice($number) { @return math.floor($number * 2); }
+
+// Colors -----------------------------------------------------------------------------------------]
 
 $some-orange: #fb8f3d;
 $some-orange-bright: #fcbf00;
@@ -31,7 +30,7 @@ $black-blue: #2f2933;
 $gold-green-color: #c8ba51; // #9f985e;
 $some-brown: #987654; // #987654 #826644 #a0785a #80755a #6c541e #c19a6b
 
-// Site colors ----------------------------------------------------------------]
+// Site colors ------------------------------------------------------------------------------------]
 
 $red-color: $some-red !default;
 $green-color: $some-green !default;
@@ -44,7 +43,7 @@ $yellow-color: $some-orange-bright !default;
 $brown-color: $some-brown !default;
 $red-bright-color: $some-red-bright !default;
 
-// Wordpress basic vars -------------------------------------------------------]
+// Wordpress basic vars ---------------------------------------------------------------------------]
 
 // Alert colors
 $wp-alert-yellow: #f0b849;
@@ -79,7 +78,7 @@ $wp-shadow-modal: 0 3px 30px rgba(25, 30, 35, 0.2);
 $wp-modal-min-width: 360px;
 $wp-header-height: 56px;
 
-//-----------------------------------------------------------------------------]
+//-------------------------------------------------------------------------------------------------]
 
 $folders-blue: rgb(0, 117, 175);
 $link-color-hover: rgba($folders-blue, 0.8);
@@ -101,7 +100,7 @@ $flickr-blue-color: #0063db;
 
 $my-font-family: 'Ubuntu' !default;
 
-// Transitions ----------------------------------------------------------------]
+// Transitions ------------------------------------------------------------------------------------]
 
 $transition-time: .3s !default;
 $transition-short-time: .1s !default;
@@ -116,7 +115,7 @@ $collection-transition-time: $transition-medium-time !default;
 $collection-transition-function: $transition-cubic !default;
 $collection-transition-delay: 0.2s !default;
 
-// Admin Components -----------------------------------------------------------]
+// Admin Components -------------------------------------------------------------------------------]
 
 $admin-grey-blue-color: #323c5a;
 $admin-light-blue: #b2d5e7; // equal rgba($wp-admin-blue-color, 0.3) on white
@@ -126,7 +125,7 @@ $admin-disable-border-color: #ddd;
 $admin-disable-background-color: #f7f7f7;
 $admin-disable-text-color: #a0a5aa;
 
-// common colors and sizes ----------------------------------------------------]
+// common colors and sizes ------------------------------------------------------------------------]
 
 $admin-block-accent-color: $some-violet;
 
@@ -154,14 +153,14 @@ $admin-type-label-color: #191e23; //rgba($admin-dark, 0.8);
 $admin-type-label-bg-color: #f3f4f5; //rgba($wp-admin-blue-color, 0.1);
 $admin-type-label-link-color: #999;
 
-// Basic Settings Page sizes --------------------------------------------------]
+// Basic Settings Page sizes ----------------------------------------------------------------------]
 
 $settings-max-width: 1020px; //none;
 $settings-min-width: 580px;
 $settings-sidebar-width: 280px;
 $settings-leftmenu-width: 160px;
 
-// Responsive Design ----------------------------------------------------------]
+// Responsive Design ------------------------------------------------------------------------------]
 
 $more-than-break-1280-width: 1200px;
 $break-1280: 1280px;

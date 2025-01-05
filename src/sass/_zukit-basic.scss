@@ -1,21 +1,22 @@
-@import "variables";
+@use "sass:color";
+@use "variables";
 
-$brand-color: $violet-color;
+$brand-color: variables.$violet-color;
 
 $admin-grey-color: #e5e5e5;
 $admin-light-yellow: #ffffa5;
 $admin-light-brown: #f2d592; //#d5b464;
 $admin-dark-brown: #7f6c3c;
-$admin-darker-brown: darken($admin-dark-brown, 5%);
+$admin-darker-brown: color.adjust($admin-dark-brown, $lightness: -5%);
 
 $admin-magenta-color: #e01765;
 $admin-error-color: #cc2027;
 $admin-error-bg-color: #f2c1c2;
 
 $admin-green-color: #1a937d;
-$admin-blue-color: $some-blue;
+$admin-blue-color: variables.$some-blue;
 $admin-gold-color: #e8a723;
-$admin-red-color: $some-red;
+$admin-red-color: variables.$some-red;
 
 $hover-darken: 10;
 $hover-shadow: 15;
@@ -29,42 +30,41 @@ $admin-colors: (
 	'light-yellow': $admin-light-yellow,
 	'light-brown': $admin-light-brown,
 	'error': $admin-error-color,
-	'admin-blue': $wp-admin-blue-color
+	'admin-blue': variables.$wp-admin-blue-color
 );
 
 $custom-colors: (
-	'red': 		$red-color,
-	'orange': 	$orange-color,
-	'yellow': 	$yellow-color,
-	'green': 	$green-color,
-	'lime':		$lime-color,
-	'blue': 	$blue-color,
-	'blue-sky': $blue-sky-color,
-	'violet': 	$violet-color,
-	'brown':	$some-brown,
-	'grey':		$dark-blue-grey,
+	'red': 		variables.$red-color,
+	'orange': 	variables.$orange-color,
+	'yellow': 	variables.$yellow-color,
+	'green': 	variables.$green-color,
+	'lime':		variables.$lime-color,
+	'blue': 	variables.$blue-color,
+	'blue-sky': variables.$blue-sky-color,
+	'violet': 	variables.$violet-color,
+	'brown':	variables.$some-brown,
+	'grey':		variables.$dark-blue-grey,
 );
 
 
-// colors ---------------------------------------------------------------------]
+// colors -----------------------------------------------------------------------------------------]
 
 $page-basic-color: rgba($admin-grey-color, 0.3);
 $settings-color: white;
 $sidebar-color: white;
-$settings-border-color: $admin-border-color;
+$settings-border-color: variables.$admin-border-color;
 $toggle-help-color: #006287; //rgba($dark-blue-grey, 0.5);
 $help-color-opacity: 0.1;
 $help-code-color-opacity: 0.08;
 $help-border-radius: 5px;
-$custom-button-color: rgba($wp-admin-blue-color, 0.1);
-$custom-button-border-color: rgba($wp-admin-blue-color, 0.7);
-$custom-button-text-color: darken($wp-admin-blue-color, 10);
-$custom-button-hover-color: $wp-admin-blue-color;
+$custom-button-color: rgba(variables.$wp-admin-blue-color, 0.1);
+$custom-button-border-color: rgba(variables.$wp-admin-blue-color, 0.7);
+$custom-button-text-color: color.adjust(variables.$wp-admin-blue-color, $lightness: -10%);
+$custom-button-hover-color: variables.$wp-admin-blue-color;
 $custom-button-hover-text-color: white;
 
-// sizes ----------------------------------------------------------------------]
+// sizes ------------------------------------------------------------------------------------------]
 
-$settings-max-width: 1020px; //none;
 $settings-left-width: 200px;
 $settings-left-min-width: $settings-left-width + 60px;
 $settings-sidebar-icon-size: 36px;
@@ -83,7 +83,7 @@ $plugin-icon-height: 80px;
 $select-item-size: 80px;
 $main-note-margin: 2em;
 
-// class prefixes -------------------------------------------------------------]
+// class prefixes ---------------------------------------------------------------------------------]
 
 $selectitem-component-class: zukit-select-item;
 $listinput-component-class: zukit-list-input;
@@ -91,49 +91,6 @@ $advtext-component-class: zukit-text-control;
 $loader-component-class: zukit-loader-control;
 $modal-component-class: zukit-modal;
 $title-indicator-class: zukit-title-indicator;
+$table-component-class: zukit-table;
+$divider-component-class: zukit-divider;
 
-// simple markdown ------------------------------------------------------------]
-
-%markdown_basic {
-	letter-spacing: 0.5px;
-	font-weight: 500;
-	padding: 0 3px 1px;
-	margin: 0 2px;
-	border-radius: $admin-border-radius;
-}
-
-%markdown_code {
-	padding: 1px 5px;
-	display: inline-block;
-	color: darken($admin-magenta-color, 10%);
-	background-color: rgba($admin-magenta-color, 0.08);
-}
-
-%markdown_em {
-	color: darken($wp-admin-blue-color, 10%);
-	background-color: rgba($wp-admin-blue-color, 0.1);
-}
-
-%markdown_strong {
-	letter-spacing: 0.5px;
-}
-
-%markdown_green {
-	color: darken($green-color, 10%);
-	background-color: rgba($green-color, 0.1);
-}
-
-%markdown_red {
-	color: darken($red-color, 10%);
-	background-color: rgba($red-color, 0.1);
-}
-
-%markdown_red_on_red {
-	color: darken($red-color, 30%);
-	background-color: rgba($yellow-color, 0.2);
-}
-
-%markdown_gold {
-	color: darken($yellow-color, 10%);
-	background-color: rgba($yellow-color, 0.1);
-}

@@ -1,25 +1,71 @@
-@import "zukit-basic";
+@use "sass:color";
+@use "instyle";
+@use "variables";
+@use "zukit-basic";
 
-@import "components/select-item-control";
-@import "components/list-input-control";
-@import "components/adv-text-control";
+@use "components/select-item-control";
+@use "components/list-input-control";
+@use "components/adv-text-control";
 
-// class prefixes -------------------------------------------------------------]
+@use "components/table";
+@use "components/divider";
+
+// class prefixes ---------------------------------------------------------------------------------]
 
 $skeleton-class: zukit-skeleton;
 $skeleton-editor-class: zukit-skeleton__editor;
 $skeleton-content-class: zukit-skeleton__content;
 $skeleton-sidebar-class: zukit-skeleton__sidebar;
 
-$table-component-class: zukit-table;
-$divider-component-class: zukit-divider;
+// simple markdown --------------------------------------------------------------------------------]
 
-@import "components/table";
-@import "components/divider";
+%markdown_basic {
+	letter-spacing: 0.5px;
+	font-weight: 500;
+	padding: 0 3px 1px;
+	margin: 0 2px;
+	border-radius: variables.$admin-border-radius;
+}
+
+%markdown_code {
+	padding: 1px 5px;
+	display: inline-block;
+	color: color.adjust(zukit-basic.$admin-magenta-color, $lightness: -10%);
+	background-color: rgba(zukit-basic.$admin-magenta-color, 0.08);
+}
+
+%markdown_em {
+	color: color.adjust(variables.$wp-admin-blue-color, $lightness: -10%);
+	background-color: rgba(variables.$wp-admin-blue-color, 0.1);
+}
+
+%markdown_strong {
+	letter-spacing: 0.5px;
+}
+
+%markdown_green {
+	color: color.adjust(variables.$green-color, $lightness: -10%);
+	background-color: rgba(variables.$green-color, 0.1);
+}
+
+%markdown_red {
+	color: color.adjust(variables.$red-color, $lightness: -10%);
+	background-color: rgba(variables.$red-color, 0.1);
+}
+
+%markdown_red_on_red {
+	color: color.adjust(variables.$red-color, $lightness: -30%);
+	background-color: rgba(variables.$yellow-color, 0.2);
+}
+
+%markdown_gold {
+	color: color.adjust(variables.$yellow-color, $lightness: -10%);
+	background-color: rgba(variables.$yellow-color, 0.1);
+}
 
 .zukit-settings {
 
-	font-family: $basic-font-family;
+	font-family: zukit-basic.$basic-font-family;
 
 	#wpfooter, #update-nag, .update-nag {
 		display: none;
@@ -34,7 +80,7 @@ $divider-component-class: zukit-divider;
 	    height: auto;
 	}
 
-	// when WP == 5.4 ---------------------------------------------------------]
+	// when WP == 5.4 -----------------------------------------------------------------------------]
 
 	.wp_5_4 {
 		&.block-editor-editor-skeleton {
@@ -50,7 +96,7 @@ $divider-component-class: zukit-divider;
 		}
 	}
 
-	// when WP version < 5.4 --------------------------------------------------]
+	// when WP version < 5.4 ----------------------------------------------------------------------]
 
 	.wp_less_5_4 {
 		&.block-editor-editor-skeleton {
@@ -69,7 +115,7 @@ $divider-component-class: zukit-divider;
 						    margin: 0 auto;
 						}
 					}
-					@include breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
+					@include variables.breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
 						width: 100%;
 					}
 				}
@@ -97,7 +143,7 @@ $divider-component-class: zukit-divider;
 		}
 	}
 
-	// when WP == 5.9 ---------------------------------------------------------]
+	// when WP == 5.9 -----------------------------------------------------------------------------]
 	// они забыли, что-ли? может сами исправят в следующей версии?
 	.wp_5_9 {
 		.components-visually-hidden {
@@ -114,7 +160,7 @@ $divider-component-class: zukit-divider;
 		}
 	}
 
-	// fix styles of standard controls that I do not like ---------------------]
+	// fix styles of standard controls that I do not like -----------------------------------------]
 
 	.components-checkbox-control {
 		.components-checkbox-control__input {
@@ -142,7 +188,7 @@ $divider-component-class: zukit-divider;
 		.components-base-control__help.components-base-control__help {
 			margin-bottom: 8px !important;
 		}
-		@include breakpoint-width(LESS_SETTINGS_BREAK) {
+		@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
 			flex-direction: column;
 			align-items: flex-start;
 			.components-base-control__label {
@@ -151,23 +197,23 @@ $divider-component-class: zukit-divider;
 		}
 	}
 
-	// Zukit Settings Page ----------------------------------------------------]
+	// Zukit Settings Page ------------------------------------------------------------------------]
 
 	.#{$skeleton-class} {
 	    background-color: white;
 
-		// Settings Main Screen -----------------------------------------------]
+		// Settings Main Screen -------------------------------------------------------------------]
 
 		.#{$skeleton-content-class} {
-			background-color: $page-basic-color;
+			background-color: zukit-basic.$page-basic-color;
 			.components-editor-notices__dismissible {
 				z-index: 29;
 				.components-notice__content div {
 					display: inline-block;
 				}
 				.components-notice__dismiss {
-					transition: background-color $transition-time $transition-function,
-								border-color $transition-time $transition-function;
+					transition: background-color variables.$transition-time variables.$transition-function,
+								border-color variables.$transition-time variables.$transition-function;
 					border-radius: 5px;
 					border: 1px solid transparent;
 					&:hover {
@@ -177,10 +223,10 @@ $divider-component-class: zukit-divider;
 				}
 				// I just don't like notifications with a white background
 				.is-info {
-					background-color: rgba($blue-color, 0.1);
+					background-color: rgba(variables.$blue-color, 0.1);
 				}
 				.is-warning {
-					background-color: rgba($yellow-color, 0.1);
+					background-color: rgba(variables.$yellow-color, 0.1);
 				}
 
 				.__code {
@@ -194,17 +240,17 @@ $divider-component-class: zukit-divider;
 					@extend %markdown_basic;
 					@extend %markdown_em;
 					font-style: normal;
-					@include in('^.is-success') { @extend %markdown_green; }
-					@include in('^.is-error') { @extend %markdown_red_on_red; }
-					@include in('^.is-warning') { @extend %markdown_gold; }
+					@include instyle.in('^.is-success') { @extend %markdown_green; }
+					@include instyle.in('^.is-error') { @extend %markdown_red_on_red; }
+					@include instyle.in('^.is-warning') { @extend %markdown_gold; }
 				}
 				.zukit-data {
 					height: auto;
 					margin-left: 10px;
 					padding: 3px 6px;
 					border-width: 0;
-					background-color: $admin-error-bg-color;
-					color: $admin-error-color;
+					background-color: zukit-basic.$admin-error-bg-color;
+					color: zukit-basic.$admin-error-color;
 					pointer-events: none;
 					cursor: default;
 					font-weight: 400;
@@ -239,9 +285,9 @@ $divider-component-class: zukit-divider;
 			}
 
 			.block-editor-block-list__block {
-				background-color: $settings-color;
-				max-width: $settings-max-width;
-				border: 1px solid $settings-border-color;
+				background-color: zukit-basic.$settings-color;
+				max-width: variables.$settings-max-width;
+				border: 1px solid zukit-basic.$settings-border-color;
 				border-top-width: 0;
 				border-bottom-width: 0;
 				box-shadow: 0 1px 1px rgba(black, 0.04);
@@ -249,38 +295,38 @@ $divider-component-class: zukit-divider;
 			}
 
 			.components-panel__body-title .components-button {
-				font-size: $panel-title-font-size;
-				font-weight: $panel-title-font-weight;
+				font-size: zukit-basic.$panel-title-font-size;
+				font-weight: zukit-basic.$panel-title-font-weight;
 			}
 
 			.components-base-control,
 				.components-button:not(.zukit-select-item__button):not(.__plugin_actions):not(.__exclude):not(.components-panel__body-toggle) {
-				font-size: $basic-font-size !important;
-				line-height: $basic-line-height !important;
-				color: $admin-grey-blue-color;
+				font-size: zukit-basic.$basic-font-size !important;
+				line-height: zukit-basic.$basic-line-height !important;
+				color: variables.$admin-grey-blue-color;
 			}
 
 			.components-base-control .components-toggle-control__label {
-				min-width: $settings-left-width;
+				min-width: zukit-basic.$settings-left-width;
 			}
 
 			h2, h3, h4, h5, h6 {
 				&.__subtitle {
-					font-size: $basic-font-size;
+					font-size: zukit-basic.$basic-font-size;
 					font-weight: 600;
-					color: $admin-darker-brown;
+					color: zukit-basic.$admin-darker-brown;
 				}
 			}
 			.__subtitle {
 				.components-panel__body-toggle {
-					font-size: $basic-font-size;
+					font-size: zukit-basic.$basic-font-size;
 					font-weight: 600;
-					color: $admin-darker-brown;
+					color: zukit-basic.$admin-darker-brown;
 				}
 			}
 
 			.editor-post-title {
-				background-color: rgba($admin-grey-blue-color, 0.3);
+				background-color: rgba(variables.$admin-grey-blue-color, 0.3);
 				box-shadow: 0 0 2px rgba(black, 0.3) inset;
 				padding: 0 48px;
 				.editor-post-title__block {
@@ -291,16 +337,16 @@ $divider-component-class: zukit-divider;
 					justify-content: space-between;
 					max-width: none;
 					h1 {
-						font-size: $plugin-title-size;
-						font-family: $plugin-font-family;
+						font-size: zukit-basic.$plugin-title-size;
+						font-family: zukit-basic.$plugin-font-family;
 					}
 					.block-editor-block-icon {
-						width: $plugin-icon-width;
-						height: $plugin-icon-height;
+						width: zukit-basic.$plugin-icon-width;
+						height: zukit-basic.$plugin-icon-height;
 						svg {
-							max-width: $plugin-icon-width;
-							max-height: $plugin-icon-height;
-							height: $plugin-icon-height;
+							max-width: zukit-basic.$plugin-icon-width;
+							max-height: zukit-basic.$plugin-icon-height;
+							height: zukit-basic.$plugin-icon-height;
 						}
 					}
 				}
@@ -309,17 +355,17 @@ $divider-component-class: zukit-divider;
 			.__note {
 				padding: 1em;
 				line-height: 1.7;
-				border: 1px solid $admin-gold-color;
+				border: 1px solid zukit-basic.$admin-gold-color;
 				border-radius: 5px;
 				margin-bottom: 2em;
-				background-color: rgba($admin-gold-color, 0.2);
+				background-color: rgba(zukit-basic.$admin-gold-color, 0.2);
 				.__code {
 					@extend %markdown_basic;
 					@extend %markdown_code;
-					background-color: rgba($admin-gold-color, 0.2);
-					@include in('^.is-green') { @extend %markdown_green; }
-					@include in('^.is-red') { @extend %markdown_red; }
-					@include in('^.is-gold') { @extend %markdown_gold; }
+					background-color: rgba(zukit-basic.$admin-gold-color, 0.2);
+					@include instyle.in('^.is-green') { @extend %markdown_green; }
+					@include instyle.in('^.is-red') { @extend %markdown_red; }
+					@include instyle.in('^.is-gold') { @extend %markdown_gold; }
 				}
 				strong {
 					@extend %markdown_strong;
@@ -330,14 +376,14 @@ $divider-component-class: zukit-divider;
 					background-color: transparent;
 					margin: 0;
 					padding: 0 1px;
-					color: $brown-color;
+					color: variables.$brown-color;
 				}
 			}
 
 			.editor-post-title + .__note {
 				display: inline-block;
-				margin: $main-note-margin;
-				width: calc(100% - #{($main-note-margin * 2) + $main-note-margin});
+				margin: zukit-basic.$main-note-margin;
+				width: calc(100% - #{(zukit-basic.$main-note-margin * 2) + zukit-basic.$main-note-margin});
 			}
 
 			.__select_label {
@@ -355,7 +401,7 @@ $divider-component-class: zukit-divider;
 			.__select_block {
 				display: flex;
 				justify-content: space-between;
-				@include breakpoint-width(LESS_SETTINGS_BREAK) {
+				@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
 					flex-direction: column;
 				}
 			}
@@ -365,7 +411,7 @@ $divider-component-class: zukit-divider;
 				justify-content: flex-start;
 				align-items: center;
 				margin-bottom: 8px;
-				min-width: $settings-left-min-width;
+				min-width: zukit-basic.$settings-left-min-width;
 				.components-base-control__field {
 					margin-bottom: 0;
 				}
@@ -378,11 +424,11 @@ $divider-component-class: zukit-divider;
 
 			.components-base-control__help {
 				margin: 0 0 1em 1em;
-				color: $toggle-help-color;
+				color: zukit-basic.$toggle-help-color;
 				font-size: 13px;
 				letter-spacing: 0.5px;
 				text-align: right;
-				@include breakpoint-width(LESS_SETTINGS_BREAK) {
+				@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
 					margin-left: 0;
 					text-align: left;
 				}
@@ -393,9 +439,9 @@ $divider-component-class: zukit-divider;
 				.__code {
 					@extend %markdown_basic;
 					@extend %markdown_code;
-					@include in('^.is-green') { @extend %markdown_green; }
-					@include in('^.is-red') { @extend %markdown_red; }
-					@include in('^.is-gold') { @extend %markdown_gold; }
+					@include instyle.in('^.is-green') { @extend %markdown_green; }
+					@include instyle.in('^.is-red') { @extend %markdown_red; }
+					@include instyle.in('^.is-gold') { @extend %markdown_gold; }
 				}
 				strong {
 					@extend %markdown_strong;
@@ -418,7 +464,7 @@ $divider-component-class: zukit-divider;
 					margin-bottom: 0;
 				}
 
-				@include breakpoint-width(LESS_SETTINGS_BREAK) {
+				@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
 					flex-direction: column;
 					.components-base-control__field {
 						margin-bottom: 0.5em;
@@ -431,7 +477,7 @@ $divider-component-class: zukit-divider;
 				align-items: flex-start;
 				justify-content: space-between;
 				.components-base-control__field {
-					min-width: $settings-left-min-width;
+					min-width: zukit-basic.$settings-left-min-width;
 				}
 				.components-base-control__help {
 					margin-top: 27px;
@@ -439,10 +485,10 @@ $divider-component-class: zukit-divider;
 			}
 		}
 
-		// Settings Sidebar ---------------------------------------------------]
+		// Settings Sidebar -----------------------------------------------------------------------]
 
 		.#{$skeleton-sidebar-class} {
-			background-color: $sidebar-color;
+			background-color: zukit-basic.$sidebar-color;
 
 			.block-editor-block-card__title, .components-panel__body-toggle {
 				font-weight: 600;
@@ -450,28 +496,28 @@ $divider-component-class: zukit-divider;
 			.block-editor-block-card__title {
 				margin-left: 0.5em;
 				margin-bottom: 0.5em;
-				font-size: $basic-font-size;
+				font-size: zukit-basic.$basic-font-size;
 			}
 
 			.block-editor-block-card__description {
-				color: $admin-darker-brown;
+				color: zukit-basic.$admin-darker-brown;
 				.__code {
-					color: $admin-dark-brown;
-					background-color: rgba($admin-light-brown, 0.2);
+					color: zukit-basic.$admin-dark-brown;
+					background-color: rgba(zukit-basic.$admin-light-brown, 0.2);
 				}
 			}
 			.__plugin_info {
 				.__code {
-					color: $wp-admin-blue-color;
-					background-color: rgba($wp-admin-blue-color, 0.15);
+					color: variables.$wp-admin-blue-color;
+					background-color: rgba(variables.$wp-admin-blue-color, 0.15);
 				}
 			}
 
 			.block-editor-block-card .block-editor-block-icon svg {
-				width: $settings-sidebar-icon-size;
-				height: $settings-sidebar-icon-size;
-				max-width: $settings-sidebar-icon-size;
-				max-height: $settings-sidebar-icon-size;
+				width: zukit-basic.$settings-sidebar-icon-size;
+				height: zukit-basic.$settings-sidebar-icon-size;
+				max-width: zukit-basic.$settings-sidebar-icon-size;
+				max-height: zukit-basic.$settings-sidebar-icon-size;
 			}
 
 			.components-panel__body.is-opened {
@@ -480,19 +526,19 @@ $divider-component-class: zukit-divider;
 				}
 			}
 
-			@include breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
+			@include variables.breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
 				display: none;
 			}
 		}
 
-		// Settings Common Rules ----------------------------------------------]
+		// Settings Common Rules ------------------------------------------------------------------]
 
 		.zukit-toggle {
 			.components-form-toggle {
 				opacity: 0.8;
 				&:not(.is-checked) {
 					.components-form-toggle__track {
-						border-color: rgba($wp-admin-blue-color, 0.8);
+						border-color: rgba(variables.$wp-admin-blue-color, 0.8);
 					}
 				}
 			}
@@ -502,8 +548,8 @@ $divider-component-class: zukit-divider;
 					letter-spacing: normal;
 					margin: 0;
 					padding: 0 3px;
-					color: darken($wp-admin-blue-color, 10%);
-					background-color: rgba($wp-admin-blue-color, 0.05);
+					color: color.adjust(variables.$wp-admin-blue-color, $lightness: -10%);
+					background-color: rgba(variables.$wp-admin-blue-color, 0.05);
 				}
 			}
 		}
@@ -532,9 +578,9 @@ $divider-component-class: zukit-divider;
 			.__code {
 				@extend %markdown_basic;
 				@extend %markdown_code;
-				@include in('^.is-green') { @extend %markdown_green; }
-				@include in('^.is-red') { @extend %markdown_red; }
-				@include in('^.is-gold') { @extend %markdown_gold; }
+				@include instyle.in('^.is-green') { @extend %markdown_green; }
+				@include instyle.in('^.is-red') { @extend %markdown_red; }
+				@include instyle.in('^.is-gold') { @extend %markdown_gold; }
 			}
 			strong {
 				@extend %markdown_strong;
@@ -550,19 +596,19 @@ $divider-component-class: zukit-divider;
 				position: relative;
 			    width: 100%;
 			    color: white;
-				font-size: $basic-font-size;
+				font-size: zukit-basic.$basic-font-size;
 			    font-weight: 600;
-				transition: background-color $transition-time $transition-function;
+				transition: background-color variables.$transition-time variables.$transition-function;
 				box-shadow: 0px 0px 0px 1px rgba(black, 0.2) inset;
 
-				background-color: $admin-blue-color;
-				border-color: darken($admin-blue-color, $hover-shadow) !important;
+				background-color: zukit-basic.$admin-blue-color;
+				border-color: color.adjust(zukit-basic.$admin-blue-color, $lightness: -(zukit-basic.$hover-shadow) * 1%) !important;
 				&:not(.is-loading):hover:enabled {
-					background-color: darken($admin-blue-color, $hover-darken);
+					background-color: color.adjust(zukit-basic.$admin-blue-color, $lightness: -(zukit-basic.$hover-darken) * 1%);
 					color: #fff !important;
 				}
 				&:not(.is-loading):active:enabled {
-					background-color: darken($admin-blue-color, $hover-shadow);
+					background-color: color.adjust(zukit-basic.$admin-blue-color, $lightness: -(zukit-basic.$hover-shadow) * 1%);
 					color: #fff !important;
 				}
 				&.is-loading {
@@ -585,15 +631,15 @@ $divider-component-class: zukit-divider;
 					margin-right: 8px;
 				}
 
-				@each $color-name, $color-value in $admin-colors {
+				@each $color-name, $color-value in zukit-basic.$admin-colors {
 					&.#{$color-name} {
 						background-color: $color-value;
-						border-color: darken($color-value, $hover-shadow) !important;
+						border-color: color.adjust($color-value, $lightness: -(zukit-basic.$hover-shadow) * 1%) !important;
 			            &:hover:enabled {
-			                background-color: darken($color-value, $hover-darken);
+			                background-color: color.adjust($color-value, $lightness: -(zukit-basic.$hover-darken) * 1%);
 			            }
 						&:active:enabled {
-							background-color: darken($color-value, $hover-shadow);
+							background-color: color.adjust($color-value, $lightness: -(zukit-basic.$hover-shadow) * 1%);
 						}
 					}
 				}
@@ -603,40 +649,40 @@ $divider-component-class: zukit-divider;
 		.__help {
 			padding-top: 5px;
 			padding: 5px 10px;
-			border-radius: 0 0 $help-border-radius $help-border-radius;
+			border-radius: 0 0 zukit-basic.$help-border-radius zukit-basic.$help-border-radius;
 			margin-top: -1px;
-			@each $color-name, $color-value in $admin-colors {
+			@each $color-name, $color-value in zukit-basic.$admin-colors {
 				&.#{$color-name} {
-		            background-color: rgba($color-value, $help-color-opacity);
+		            background-color: rgba($color-value, zukit-basic.$help-color-opacity);
 					.__code {
-						background-color: rgba($color-value, $help-code-color-opacity);
+						background-color: rgba($color-value, zukit-basic.$help-code-color-opacity);
 						max-height: 17px;
 						padding: 0 3px;
 					}
 				}
 			}
 		}
+		
+	} // end of skeleton --------------------------------------------------------------------------]
 
-	} // end of skeleton ------------------------------------------------------]
-
-	// Components -------------------------------------------------------------]
+	// Components ---------------------------------------------------------------------------------]
 
 	.zukit-select-item {
 		.dashicons{
 			width: 100%;
 			height: 100%;
-			font-size: $select-item-size;
+			font-size: zukit-basic.$select-item-size;
 		}
 	}
 }
 
 // NOTE: Не удалить ли???
 
-.zukit_red { color: $admin-red-color;}
-.zukit_green { color: $admin-green-color;}
-.zukit_magenta { color: $admin-magenta-color;}
-.zukit_gold { color: $admin-gold-color;}
-.zukit_blue { color: $admin-blue-color;}
+.zukit_red { color: zukit-basic.$admin-red-color;}
+.zukit_green { color: zukit-basic.$admin-green-color;}
+.zukit_magenta { color: zukit-basic.$admin-magenta-color;}
+.zukit_gold { color: zukit-basic.$admin-gold-color;}
+.zukit_blue { color: zukit-basic.$admin-blue-color;}
 
 .zukit_bold { font-weight: 600; letter-spacing: 0.5pt;}
 .zukit_grand { font-weight: 600; font-size: 110%; letter-spacing: 1pt; text-transform: uppercase;}

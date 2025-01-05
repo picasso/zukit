@@ -1,8 +1,11 @@
-@import "zukit-basic";
+@use "zukit-basic";
 
-@import "components/select-item-control";
-@import "components/title-indicator";
-@import "components/list-input-control";
-@import "components/adv-text-control";
-@import "components/loader-control";
-@import "components/modal";
+@use "components/adv-text-control";
+// @use "components/divider"; used only in settings
+@use "components/list-input-control";
+@use "components/loader-control";
+@use "components/modal";
+@use "components/select-item-control";
+// @use "components/table"; used only in settings
+@use "components/title-indicator";
+

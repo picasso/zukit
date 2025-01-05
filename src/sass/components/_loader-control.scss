@@ -1,4 +1,7 @@
-// Admin Loader Component -----------------------------------------------------]
+@use "../variables";
+@use "../zukit-basic";
+
+// Admin Loader Component -------------------------------------------------------------------------]
 
 $loader-padding: 8px;
 $loader-none-transform: uppercase;
@@ -6,17 +9,17 @@ $loader-none-transform: uppercase;
 .wp-block.is-selected {
 	.zu-loader {
 		z-index: 1;
-		color: $red-bright-color;
+		color: variables.$red-bright-color;
 		fill: currentColor;
 	}
 }
 
-.#{$loader-component-class} {
+.#{zukit-basic.$loader-component-class} {
 	.components-button-group {
 		justify-content: flex-start;
 	}
-	.#{$selectitem-component-class}.__3columns {
-		.#{$selectitem-component-class}__button-wrapper {
+	.#{zukit-basic.$selectitem-component-class}.__3columns {
+		.#{zukit-basic.$selectitem-component-class}__button-wrapper {
 			position: relative;
 			width: calc(36% - 12px);
 			margin: 4px 2px;
@@ -28,10 +31,10 @@ $loader-none-transform: uppercase;
 			}
 			.components-button {
 				position: absolute;
-				width: calc(100% - #{twice($admin-button-wrapper-padding)});
-				height: calc(100% - #{twice($admin-button-wrapper-padding)});
-				top: $admin-button-wrapper-padding;
-				left: $admin-button-wrapper-padding;
+				width: calc(100% - #{variables.twice(variables.$admin-button-wrapper-padding)});
+				height: calc(100% - #{variables.twice(variables.$admin-button-wrapper-padding)});
+				top: variables.$admin-button-wrapper-padding;
+				left: variables.$admin-button-wrapper-padding;
 			}
 			.zukit-select-item__none span {
 				text-transform: $loader-none-transform;
