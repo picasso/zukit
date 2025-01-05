@@ -1,32 +1,54 @@
 {
-    "name": "zukit",
-    "version": "1.5.5",
-    "testedWP": "5.9.1",
-    "requiresPHP": ">=7.2.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/picasso/zukit.git"
-    },
-    "keywords": [
-        "wordpress",
-        "framework",
-        "plugin",
-        "gutenberg",
-        "responsive"
-    ],
-    "author": "Dmitry Rudakov",
-    "description": "Implements basic functionality for managing scripts and creating plugin or theme settings page based on Gutenberg functionality.",
-    "license": "MIT",
-    "scripts": {},
-    "devDependencies": {
-        "@wordpress/eslint-plugin": "^9.3.0",
-        "eslint": "^8.2.0",
-        "eslint-plugin-react": "^7.26.1",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "replace-in-file": "^6.3.2",
-        "typescript": "^4.5.2"
-    },
-    "dependencies": {
-        "classnames": "^2.2.6"
-    }
+	"name": "zukit",
+	"version": "1.5.5",
+	"testedWP": "5.9.1",
+	"requiresPHP": ">=7.2.0",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/picasso/zukit.git"
+	},
+	"keywords": [
+		"wordpress",
+		"framework",
+		"plugin",
+		"gutenberg",
+		"responsive"
+	],
+	"author": "Dmitry Rudakov",
+	"description": "Implements basic functionality for managing scripts and creating plugin or theme settings page based on Gutenberg functionality.",
+	"license": "MIT",
+	"scripts": {
+		"build": "npm run build:js && npm run build:css",
+		"build:js": "wp-scripts build --config wp-scripts.config.cjs",
+		"build:css": "wp-scripts build --config wp-sass.config.cjs",
+		"---dev---": "",
+		"start": "wp-scripts start",
+		"---------": "",
+		"lint:eslint": "eslint src/scripts",
+		"lint:fix": "npm run lint:eslint -- --fix",
+		"format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
+		"format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+		"------": "",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"check-engines": "wp-scripts check-engines",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"dependencies": {
+		"clsx": "^2.1.1",
+		"lodash-es": "^4.17.21"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.17.0",
+		"@wordpress/eslint-plugin": "^22.1.1",
+		"@wordpress/scripts": "^30.8.1",
+		"eslint": "^9.17.0",
+		"eslint-plugin-react": "^7.37.3",
+		"eslint-plugin-react-hooks": "^5.1.0",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"globals": "^15.14.0",
+		"prettier": "^3.4.2",
+		"replace-in-file": "^8.3.0",
+		"typescript": "^5.7.2"
+	}
 }
