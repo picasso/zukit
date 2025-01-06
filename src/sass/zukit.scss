@@ -1,7 +1,7 @@
 @use "sass:color";
 @use "instyle";
-@use "variables";
-@use "zukit-basic";
+@use "variables" as vars;
+@use "zukit-basic" as basic;
 
 @use "components/select-item-control";
 @use "components/list-input-control";
@@ -24,19 +24,19 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 	font-weight: 500;
 	padding: 0 3px 1px;
 	margin: 0 2px;
-	border-radius: variables.$admin-border-radius;
+	border-radius: vars.$admin-border-radius;
 }
 
 %markdown_code {
 	padding: 1px 5px;
 	display: inline-block;
-	color: color.adjust(zukit-basic.$admin-magenta-color, $lightness: -10%);
-	background-color: rgba(zukit-basic.$admin-magenta-color, 0.08);
+	color: color.adjust(basic.$admin-magenta-color, $lightness: -10%);
+	background-color: rgba(basic.$admin-magenta-color, 0.08);
 }
 
 %markdown_em {
-	color: color.adjust(variables.$wp-admin-blue-color, $lightness: -10%);
-	background-color: rgba(variables.$wp-admin-blue-color, 0.1);
+	color: color.adjust(vars.$wp-admin-blue-color, $lightness: -10%);
+	background-color: rgba(vars.$wp-admin-blue-color, 0.1);
 }
 
 %markdown_strong {
@@ -44,28 +44,28 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 }
 
 %markdown_green {
-	color: color.adjust(variables.$green-color, $lightness: -10%);
-	background-color: rgba(variables.$green-color, 0.1);
+	color: color.adjust(vars.$green-color, $lightness: -10%);
+	background-color: rgba(vars.$green-color, 0.1);
 }
 
 %markdown_red {
-	color: color.adjust(variables.$red-color, $lightness: -10%);
-	background-color: rgba(variables.$red-color, 0.1);
+	color: color.adjust(vars.$red-color, $lightness: -10%);
+	background-color: rgba(vars.$red-color, 0.1);
 }
 
 %markdown_red_on_red {
-	color: color.adjust(variables.$red-color, $lightness: -30%);
-	background-color: rgba(variables.$yellow-color, 0.2);
+	color: color.adjust(vars.$red-color, $lightness: -30%);
+	background-color: rgba(vars.$yellow-color, 0.2);
 }
 
 %markdown_gold {
-	color: color.adjust(variables.$yellow-color, $lightness: -10%);
-	background-color: rgba(variables.$yellow-color, 0.1);
+	color: color.adjust(vars.$yellow-color, $lightness: -10%);
+	background-color: rgba(vars.$yellow-color, 0.1);
 }
 
 .zukit-settings {
 
-	font-family: zukit-basic.$basic-font-family;
+	font-family: basic.$basic-font-family;
 
 	#wpfooter, #update-nag, .update-nag {
 		display: none;
@@ -115,7 +115,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 						    margin: 0 auto;
 						}
 					}
-					@include variables.breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
+					@include vars.breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
 						width: 100%;
 					}
 				}
@@ -188,7 +188,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 		.components-base-control__help.components-base-control__help {
 			margin-bottom: 8px !important;
 		}
-		@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
+		@include vars.breakpoint-width(LESS_SETTINGS_BREAK) {
 			flex-direction: column;
 			align-items: flex-start;
 			.components-base-control__label {
@@ -205,15 +205,15 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 		// Settings Main Screen -------------------------------------------------------------------]
 
 		.#{$skeleton-content-class} {
-			background-color: zukit-basic.$page-basic-color;
+			background-color: basic.$page-basic-color;
 			.components-editor-notices__dismissible {
 				z-index: 29;
 				.components-notice__content div {
 					display: inline-block;
 				}
 				.components-notice__dismiss {
-					transition: background-color variables.$transition-time variables.$transition-function,
-								border-color variables.$transition-time variables.$transition-function;
+					transition: background-color vars.$transition-time vars.$transition-function,
+								border-color vars.$transition-time vars.$transition-function;
 					border-radius: 5px;
 					border: 1px solid transparent;
 					&:hover {
@@ -223,10 +223,10 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 				}
 				// I just don't like notifications with a white background
 				.is-info {
-					background-color: rgba(variables.$blue-color, 0.1);
+					background-color: rgba(vars.$blue-color, 0.1);
 				}
 				.is-warning {
-					background-color: rgba(variables.$yellow-color, 0.1);
+					background-color: rgba(vars.$yellow-color, 0.1);
 				}
 
 				.__code {
@@ -249,8 +249,8 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 					margin-left: 10px;
 					padding: 3px 6px;
 					border-width: 0;
-					background-color: zukit-basic.$admin-error-bg-color;
-					color: zukit-basic.$admin-error-color;
+					background-color: basic.$admin-error-bg-color;
+					color: basic.$admin-error-color;
 					pointer-events: none;
 					cursor: default;
 					font-weight: 400;
@@ -285,9 +285,9 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 			}
 
 			.block-editor-block-list__block {
-				background-color: zukit-basic.$settings-color;
-				max-width: variables.$settings-max-width;
-				border: 1px solid zukit-basic.$settings-border-color;
+				background-color: basic.$settings-color;
+				max-width: vars.$settings-max-width;
+				border: 1px solid basic.$settings-border-color;
 				border-top-width: 0;
 				border-bottom-width: 0;
 				box-shadow: 0 1px 1px rgba(black, 0.04);
@@ -295,38 +295,38 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 			}
 
 			.components-panel__body-title .components-button {
-				font-size: zukit-basic.$panel-title-font-size;
-				font-weight: zukit-basic.$panel-title-font-weight;
+				font-size: basic.$panel-title-font-size;
+				font-weight: basic.$panel-title-font-weight;
 			}
 
 			.components-base-control,
 				.components-button:not(.zukit-select-item__button):not(.__plugin_actions):not(.__exclude):not(.components-panel__body-toggle) {
-				font-size: zukit-basic.$basic-font-size !important;
-				line-height: zukit-basic.$basic-line-height !important;
-				color: variables.$admin-grey-blue-color;
+				font-size: basic.$basic-font-size !important;
+				line-height: basic.$basic-line-height !important;
+				color: vars.$admin-grey-blue-color;
 			}
 
 			.components-base-control .components-toggle-control__label {
-				min-width: zukit-basic.$settings-left-width;
+				min-width: basic.$settings-left-width;
 			}
 
 			h2, h3, h4, h5, h6 {
 				&.__subtitle {
-					font-size: zukit-basic.$basic-font-size;
+					font-size: basic.$basic-font-size;
 					font-weight: 600;
-					color: zukit-basic.$admin-darker-brown;
+					color: basic.$admin-darker-brown;
 				}
 			}
 			.__subtitle {
 				.components-panel__body-toggle {
-					font-size: zukit-basic.$basic-font-size;
+					font-size: basic.$basic-font-size;
 					font-weight: 600;
-					color: zukit-basic.$admin-darker-brown;
+					color: basic.$admin-darker-brown;
 				}
 			}
 
 			.editor-post-title {
-				background-color: rgba(variables.$admin-grey-blue-color, 0.3);
+				background-color: rgba(vars.$admin-grey-blue-color, 0.3);
 				box-shadow: 0 0 2px rgba(black, 0.3) inset;
 				padding: 0 48px;
 				.editor-post-title__block {
@@ -337,16 +337,16 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 					justify-content: space-between;
 					max-width: none;
 					h1 {
-						font-size: zukit-basic.$plugin-title-size;
-						font-family: zukit-basic.$plugin-font-family;
+						font-size: basic.$plugin-title-size;
+						font-family: basic.$plugin-font-family;
 					}
 					.block-editor-block-icon {
-						width: zukit-basic.$plugin-icon-width;
-						height: zukit-basic.$plugin-icon-height;
+						width: basic.$plugin-icon-width;
+						height: basic.$plugin-icon-height;
 						svg {
-							max-width: zukit-basic.$plugin-icon-width;
-							max-height: zukit-basic.$plugin-icon-height;
-							height: zukit-basic.$plugin-icon-height;
+							max-width: basic.$plugin-icon-width;
+							max-height: basic.$plugin-icon-height;
+							height: basic.$plugin-icon-height;
 						}
 					}
 				}
@@ -355,14 +355,14 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 			.__note {
 				padding: 1em;
 				line-height: 1.7;
-				border: 1px solid zukit-basic.$admin-gold-color;
+				border: 1px solid basic.$admin-gold-color;
 				border-radius: 5px;
 				margin-bottom: 2em;
-				background-color: rgba(zukit-basic.$admin-gold-color, 0.2);
+				background-color: rgba(basic.$admin-gold-color, 0.2);
 				.__code {
 					@extend %markdown_basic;
 					@extend %markdown_code;
-					background-color: rgba(zukit-basic.$admin-gold-color, 0.2);
+					background-color: rgba(basic.$admin-gold-color, 0.2);
 					@include instyle.in('^.is-green') { @extend %markdown_green; }
 					@include instyle.in('^.is-red') { @extend %markdown_red; }
 					@include instyle.in('^.is-gold') { @extend %markdown_gold; }
@@ -376,14 +376,14 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 					background-color: transparent;
 					margin: 0;
 					padding: 0 1px;
-					color: variables.$brown-color;
+					color: vars.$brown-color;
 				}
 			}
 
 			.editor-post-title + .__note {
 				display: inline-block;
-				margin: zukit-basic.$main-note-margin;
-				width: calc(100% - #{(zukit-basic.$main-note-margin * 2) + zukit-basic.$main-note-margin});
+				margin: basic.$main-note-margin;
+				width: calc(100% - #{(basic.$main-note-margin * 2) + basic.$main-note-margin});
 			}
 
 			.__select_label {
@@ -401,7 +401,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 			.__select_block {
 				display: flex;
 				justify-content: space-between;
-				@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
+				@include vars.breakpoint-width(LESS_SETTINGS_BREAK) {
 					flex-direction: column;
 				}
 			}
@@ -411,7 +411,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 				justify-content: flex-start;
 				align-items: center;
 				margin-bottom: 8px;
-				min-width: zukit-basic.$settings-left-min-width;
+				min-width: basic.$settings-left-min-width;
 				.components-base-control__field {
 					margin-bottom: 0;
 				}
@@ -424,11 +424,11 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 
 			.components-base-control__help {
 				margin: 0 0 1em 1em;
-				color: zukit-basic.$toggle-help-color;
+				color: basic.$toggle-help-color;
 				font-size: 13px;
 				letter-spacing: 0.5px;
 				text-align: right;
-				@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
+				@include vars.breakpoint-width(LESS_SETTINGS_BREAK) {
 					margin-left: 0;
 					text-align: left;
 				}
@@ -464,7 +464,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 					margin-bottom: 0;
 				}
 
-				@include variables.breakpoint-width(LESS_SETTINGS_BREAK) {
+				@include vars.breakpoint-width(LESS_SETTINGS_BREAK) {
 					flex-direction: column;
 					.components-base-control__field {
 						margin-bottom: 0.5em;
@@ -477,7 +477,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 				align-items: flex-start;
 				justify-content: space-between;
 				.components-base-control__field {
-					min-width: zukit-basic.$settings-left-min-width;
+					min-width: basic.$settings-left-min-width;
 				}
 				.components-base-control__help {
 					margin-top: 27px;
@@ -488,7 +488,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 		// Settings Sidebar -----------------------------------------------------------------------]
 
 		.#{$skeleton-sidebar-class} {
-			background-color: zukit-basic.$sidebar-color;
+			background-color: basic.$sidebar-color;
 
 			.block-editor-block-card__title, .components-panel__body-toggle {
 				font-weight: 600;
@@ -496,28 +496,28 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 			.block-editor-block-card__title {
 				margin-left: 0.5em;
 				margin-bottom: 0.5em;
-				font-size: zukit-basic.$basic-font-size;
+				font-size: basic.$basic-font-size;
 			}
 
 			.block-editor-block-card__description {
-				color: zukit-basic.$admin-darker-brown;
+				color: basic.$admin-darker-brown;
 				.__code {
-					color: zukit-basic.$admin-dark-brown;
-					background-color: rgba(zukit-basic.$admin-light-brown, 0.2);
+					color: basic.$admin-dark-brown;
+					background-color: rgba(basic.$admin-light-brown, 0.2);
 				}
 			}
 			.__plugin_info {
 				.__code {
-					color: variables.$wp-admin-blue-color;
-					background-color: rgba(variables.$wp-admin-blue-color, 0.15);
+					color: vars.$wp-admin-blue-color;
+					background-color: rgba(vars.$wp-admin-blue-color, 0.15);
 				}
 			}
 
 			.block-editor-block-card .block-editor-block-icon svg {
-				width: zukit-basic.$settings-sidebar-icon-size;
-				height: zukit-basic.$settings-sidebar-icon-size;
-				max-width: zukit-basic.$settings-sidebar-icon-size;
-				max-height: zukit-basic.$settings-sidebar-icon-size;
+				width: basic.$settings-sidebar-icon-size;
+				height: basic.$settings-sidebar-icon-size;
+				max-width: basic.$settings-sidebar-icon-size;
+				max-height: basic.$settings-sidebar-icon-size;
 			}
 
 			.components-panel__body.is-opened {
@@ -526,7 +526,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 				}
 			}
 
-			@include variables.breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
+			@include vars.breakpoint-width(LESS_SETTINGS_SIDEBAR_BREAK) {
 				display: none;
 			}
 		}
@@ -538,7 +538,7 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 				opacity: 0.8;
 				&:not(.is-checked) {
 					.components-form-toggle__track {
-						border-color: rgba(variables.$wp-admin-blue-color, 0.8);
+						border-color: rgba(vars.$wp-admin-blue-color, 0.8);
 					}
 				}
 			}
@@ -548,8 +548,8 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 					letter-spacing: normal;
 					margin: 0;
 					padding: 0 3px;
-					color: color.adjust(variables.$wp-admin-blue-color, $lightness: -10%);
-					background-color: rgba(variables.$wp-admin-blue-color, 0.05);
+					color: color.adjust(vars.$wp-admin-blue-color, $lightness: -10%);
+					background-color: rgba(vars.$wp-admin-blue-color, 0.05);
 				}
 			}
 		}
@@ -596,19 +596,19 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 				position: relative;
 			    width: 100%;
 			    color: white;
-				font-size: zukit-basic.$basic-font-size;
+				font-size: basic.$basic-font-size;
 			    font-weight: 600;
-				transition: background-color variables.$transition-time variables.$transition-function;
+				transition: background-color vars.$transition-time vars.$transition-function;
 				box-shadow: 0px 0px 0px 1px rgba(black, 0.2) inset;
 
-				background-color: zukit-basic.$admin-blue-color;
-				border-color: color.adjust(zukit-basic.$admin-blue-color, $lightness: -(zukit-basic.$hover-shadow) * 1%) !important;
+				background-color: basic.$admin-blue-color;
+				border-color: color.adjust(basic.$admin-blue-color, $lightness: -(basic.$hover-shadow) * 1%) !important;
 				&:not(.is-loading):hover:enabled {
-					background-color: color.adjust(zukit-basic.$admin-blue-color, $lightness: -(zukit-basic.$hover-darken) * 1%);
+					background-color: color.adjust(basic.$admin-blue-color, $lightness: -(basic.$hover-darken) * 1%);
 					color: #fff !important;
 				}
 				&:not(.is-loading):active:enabled {
-					background-color: color.adjust(zukit-basic.$admin-blue-color, $lightness: -(zukit-basic.$hover-shadow) * 1%);
+					background-color: color.adjust(basic.$admin-blue-color, $lightness: -(basic.$hover-shadow) * 1%);
 					color: #fff !important;
 				}
 				&.is-loading {
@@ -631,15 +631,15 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 					margin-right: 8px;
 				}
 
-				@each $color-name, $color-value in zukit-basic.$admin-colors {
+				@each $color-name, $color-value in basic.$admin-colors {
 					&.#{$color-name} {
 						background-color: $color-value;
-						border-color: color.adjust($color-value, $lightness: -(zukit-basic.$hover-shadow) * 1%) !important;
+						border-color: color.adjust($color-value, $lightness: -(basic.$hover-shadow) * 1%) !important;
 			            &:hover:enabled {
-			                background-color: color.adjust($color-value, $lightness: -(zukit-basic.$hover-darken) * 1%);
+			                background-color: color.adjust($color-value, $lightness: -(basic.$hover-darken) * 1%);
 			            }
 						&:active:enabled {
-							background-color: color.adjust($color-value, $lightness: -(zukit-basic.$hover-shadow) * 1%);
+							background-color: color.adjust($color-value, $lightness: -(basic.$hover-shadow) * 1%);
 						}
 					}
 				}
@@ -649,13 +649,13 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 		.__help {
 			padding-top: 5px;
 			padding: 5px 10px;
-			border-radius: 0 0 zukit-basic.$help-border-radius zukit-basic.$help-border-radius;
+			border-radius: 0 0 basic.$help-border-radius basic.$help-border-radius;
 			margin-top: -1px;
-			@each $color-name, $color-value in zukit-basic.$admin-colors {
+			@each $color-name, $color-value in basic.$admin-colors {
 				&.#{$color-name} {
-		            background-color: rgba($color-value, zukit-basic.$help-color-opacity);
+		            background-color: rgba($color-value, basic.$help-color-opacity);
 					.__code {
-						background-color: rgba($color-value, zukit-basic.$help-code-color-opacity);
+						background-color: rgba($color-value, basic.$help-code-color-opacity);
 						max-height: 17px;
 						padding: 0 3px;
 					}
@@ -671,18 +671,18 @@ $skeleton-sidebar-class: zukit-skeleton__sidebar;
 		.dashicons{
 			width: 100%;
 			height: 100%;
-			font-size: zukit-basic.$select-item-size;
+			font-size: basic.$select-item-size;
 		}
 	}
 }
 
 // NOTE: Не удалить ли???
 
-.zukit_red { color: zukit-basic.$admin-red-color;}
-.zukit_green { color: zukit-basic.$admin-green-color;}
-.zukit_magenta { color: zukit-basic.$admin-magenta-color;}
-.zukit_gold { color: zukit-basic.$admin-gold-color;}
-.zukit_blue { color: zukit-basic.$admin-blue-color;}
+.zukit_red { color: basic.$admin-red-color;}
+.zukit_green { color: basic.$admin-green-color;}
+.zukit_magenta { color: basic.$admin-magenta-color;}
+.zukit_gold { color: basic.$admin-gold-color;}
+.zukit_blue { color: basic.$admin-blue-color;}
 
 .zukit_bold { font-weight: 600; letter-spacing: 0.5pt;}
 .zukit_grand { font-weight: 600; font-size: 110%; letter-spacing: 1pt; text-transform: uppercase;}

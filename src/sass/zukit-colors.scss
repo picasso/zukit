@@ -1,84 +1,84 @@
-@use "zukit-basic";
-@use "variables";
+@use "zukit-basic" as basic;
+@use "variables" as vars;
 
 // Vars Definition --------------------------------------------------------------------------------]
 
-.js_red_color { color: variables.$red-color; }
-.js_orange_color { color: variables.$orange-color; }
-.js_yellow_color { color: variables.$yellow-color; }
-.js_lime_color { color: variables.$lime-color; }
-.js_green_color { color: variables.$green-color; }
-.js_blue_sky_color { color: variables.$blue-sky-color; }
-.js_blue_color { color: variables.$blue-color; }
-.js_violet_color { color: variables.$violet-color; }
-.js_brown_color { color: variables.$brown-color; }
-.js_grey_color { color: variables.$dark-blue-grey; }
+.js_red_color { color: vars.$red-color; }
+.js_orange_color { color: vars.$orange-color; }
+.js_yellow_color { color: vars.$yellow-color; }
+.js_lime_color { color: vars.$lime-color; }
+.js_green_color { color: vars.$green-color; }
+.js_blue_sky_color { color: vars.$blue-sky-color; }
+.js_blue_color { color: vars.$blue-color; }
+.js_violet_color { color: vars.$violet-color; }
+.js_brown_color { color: vars.$brown-color; }
+.js_grey_color { color: vars.$dark-blue-grey; }
 
-.js_red_bright_color { color: variables.$red-bright-color; }
+.js_red_bright_color { color: vars.$red-bright-color; }
 
 // Additional colors ------------------------------------------------------------------------------]
 
-.js_grey_dark_blue { color: variables.$dark-blue-grey; }
-.js_grey_dark { color: variables.$dark-grey; }
-.js_grey_light { color: variables.$light-grey; }
-.js_grey_light_more { color: variables.$light-grey-more; }
-.js_yellow_light { color: variables.$light-yellow; }
-.js_yellow_dark { color: variables.$dark-yellow; }
-.js_black_blue { color: variables.$black-blue; }
+.js_grey_dark_blue { color: vars.$dark-blue-grey; }
+.js_grey_dark { color: vars.$dark-grey; }
+.js_grey_light { color: vars.$light-grey; }
+.js_grey_light_more { color: vars.$light-grey-more; }
+.js_yellow_light { color: vars.$light-yellow; }
+.js_yellow_dark { color: vars.$dark-yellow; }
+.js_black_blue { color: vars.$black-blue; }
 
-.js_gold_green_color { color: variables.$gold-green-color; }
+.js_gold_green_color { color: vars.$gold-green-color; }
 
 // Wordpress basics -------------------------------------------------------------------------------]
 
-.js_wp_alert_yellow { color: variables.$wp-alert-yellow; }
-.js_wp_alert_red { color: variables.$wp-alert-red; }
-.js_wp_alert_green { color: variables.$wp-alert-green; }
-.js_wp_gray_900 { color: variables.$wp-gray-900; }
-.js_wp_gray_700 { color: variables.$wp-gray-700; }
-.js_wp_gray_600 { color: variables.$wp-gray-600; }
-.js_wp_gray_400 { color: variables.$wp-gray-400; }
-.js_wp_gray_200 { color: variables.$wp-gray-200; }
-.js_wp_blue_medium_100 { color: variables.$wp-blue-medium-100; }
-.js_wp_blue_medium_500 { color: variables.$wp-blue-medium-500; }
-.js_wp_light_gray_500 { color: variables.$wp-light-gray-500; }
+.js_wp_alert_yellow { color: vars.$wp-alert-yellow; }
+.js_wp_alert_red { color: vars.$wp-alert-red; }
+.js_wp_alert_green { color: vars.$wp-alert-green; }
+.js_wp_gray_900 { color: vars.$wp-gray-900; }
+.js_wp_gray_700 { color: vars.$wp-gray-700; }
+.js_wp_gray_600 { color: vars.$wp-gray-600; }
+.js_wp_gray_400 { color: vars.$wp-gray-400; }
+.js_wp_gray_200 { color: vars.$wp-gray-200; }
+.js_wp_blue_medium_100 { color: vars.$wp-blue-medium-100; }
+.js_wp_blue_medium_500 { color: vars.$wp-blue-medium-500; }
+.js_wp_light_gray_500 { color: vars.$wp-light-gray-500; }
 
-.js_wp_admin_blue_color { color: variables.$wp-admin-blue-color; }
-.js_wp_link_blue { color: variables.$wp-link-blue; }
+.js_wp_admin_blue_color { color: vars.$wp-admin-blue-color; }
+.js_wp_link_blue { color: vars.$wp-link-blue; }
 
 // Social colors ----------------------------------------------------------------------------------]
 
-.js_facebook_color { color: variables.$facebook-color; }
-.js_twitter_color { color: variables.$twitter-color; }
-.js_googleplus_color { color: variables.$googleplus-color; }
-.js_instagram_color { color: variables.$instagram-color; }
-.js_youtube_color { color: variables.$youtube-color; }
-.js_pinterest_color { color: variables.$pinterest-color; }
-.js_vk_color { color: variables.$vk-color; }
-.js_rss_feed_color { color: variables.$rss-feed-color; }
-.js_at_color { color: variables.$at-color; }
-.js_flickr_pink_color { color: variables.$flickr-pink-color; }
-.js_flickr_blue_color { color: variables.$flickr-blue-color; }
+.js_facebook_color { color: vars.$facebook-color; }
+.js_twitter_color { color: vars.$twitter-color; }
+.js_googleplus_color { color: vars.$googleplus-color; }
+.js_instagram_color { color: vars.$instagram-color; }
+.js_youtube_color { color: vars.$youtube-color; }
+.js_pinterest_color { color: vars.$pinterest-color; }
+.js_vk_color { color: vars.$vk-color; }
+.js_rss_feed_color { color: vars.$rss-feed-color; }
+.js_at_color { color: vars.$at-color; }
+.js_flickr_pink_color { color: vars.$flickr-pink-color; }
+.js_flickr_blue_color { color: vars.$flickr-blue-color; }
 
 // Admin colors -----------------------------------------------------------------------------------]
 
-.js_admin_grey_color { color: zukit-basic.$admin-grey-color; }
-.js_admin_light_yellow { color: zukit-basic.$admin-light-yellow; }
-.js_admin_light_brown { color: zukit-basic.$admin-light-brown; }
-.js_admin_dark_brown { color: zukit-basic.$admin-dark-brown; }
-.js_admin_magenta_color { color: zukit-basic.$admin-magenta-color; }
-.js_admin_error_color { color: zukit-basic.$admin-error-color; }
-.js_admin_error_bg_color { color: zukit-basic.$admin-error-bg-color; }
-.js_admin_green_color { color: zukit-basic.$admin-green-color; }
-.js_admin_gold_color { color: zukit-basic.$admin-gold-color; }
+.js_admin_grey_color { color: basic.$admin-grey-color; }
+.js_admin_light_yellow { color: basic.$admin-light-yellow; }
+.js_admin_light_brown { color: basic.$admin-light-brown; }
+.js_admin_dark_brown { color: basic.$admin-dark-brown; }
+.js_admin_magenta_color { color: basic.$admin-magenta-color; }
+.js_admin_error_color { color: basic.$admin-error-color; }
+.js_admin_error_bg_color { color: basic.$admin-error-bg-color; }
+.js_admin_green_color { color: basic.$admin-green-color; }
+.js_admin_gold_color { color: basic.$admin-gold-color; }
 
-.js_admin_grey_blue_color { color: variables.$admin-grey-blue-color; }
-.js_admin_light_blue { color: variables.$admin-light-blue; }
-.js_admin_dark { color: variables.$admin-dark; }
-.js_admin_border_color { color: variables.$admin-border-color; }
-.js_admin_disable_border_color { color: variables.$admin-disable-border-color; }
-.js_admin_disable_background_color { color: variables.$admin-disable-background-color; }
-.js_admin_disable_text_color { color: variables.$admin-disable-text-color; }
+.js_admin_grey_blue_color { color: vars.$admin-grey-blue-color; }
+.js_admin_light_blue { color: vars.$admin-light-blue; }
+.js_admin_dark { color: vars.$admin-dark; }
+.js_admin_border_color { color: vars.$admin-border-color; }
+.js_admin_disable_border_color { color: vars.$admin-disable-border-color; }
+.js_admin_disable_background_color { color: vars.$admin-disable-background-color; }
+.js_admin_disable_text_color { color: vars.$admin-disable-text-color; }
 
-.js_admin_type_label_color { color: variables.$admin-type-label-color; }
-.js_admin_type_label_bg_color { color: variables.$admin-type-label-bg-color; }
-.js_admin_type_label_link_color { color: variables.$admin-type-label-link-color; }
+.js_admin_type_label_color { color: vars.$admin-type-label-color; }
+.js_admin_type_label_bg_color { color: vars.$admin-type-label-bg-color; }
+.js_admin_type_label_link_color { color: vars.$admin-type-label-link-color; }

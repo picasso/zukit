@@ -1,12 +1,12 @@
 @use "sass:color";
-@use "../variables";
-@use "../zukit-basic";
+@use "../variables" as vars;
+@use "../zukit-basic" as basic;
 
 // Admin Divider Component ------------------------------------------------------------------------]
 
 $list-input-margin: 8px;
 $list-input-border-radius: 6px;
-$list-input-basic-color: variables.$wp-admin-blue-color;
+$list-input-basic-color: vars.$wp-admin-blue-color;
 $list-input-item-color: rgba($list-input-basic-color, 0.1);
 $list-input-item-border-color: rgba($list-input-basic-color, 0.7);
 $list-input-item-text-color: color.adjust($list-input-basic-color, $lightness: -10%);
@@ -14,7 +14,7 @@ $list-input-padding: 10px;
 $_button-svg-default-size: 20px;
 $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 
-.#{zukit-basic.$listinput-component-class} {
+.#{basic.$listinput-component-class} {
 	display: flex;
 	flex-direction: column;
 
@@ -47,8 +47,8 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 				height: $list-input-close-size;
 				width: $list-input-close-size;
 				min-width: $list-input-close-size;
-				padding: 0 variables.half($list-input-padding);
-				margin-left: variables.half($list-input-padding);
+				padding: 0 vars.half($list-input-padding);
+				margin-left: vars.half($list-input-padding);
 				border: 0 none;
 				border-radius: 0;
 				background-color: transparent;

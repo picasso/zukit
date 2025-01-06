@@ -1,18 +1,18 @@
-@use "../variables";
-@use "../zukit-basic";
+@use "../variables" as vars;
+@use "../zukit-basic" as basic;
 
 // Admin Title Indicator Component ----------------------------------------------------------------]
 
 $title-indicator-color-opacity: 0.2;
-$title-indicator-color: variables.$wp-admin-blue-color;
+$title-indicator-color: vars.$wp-admin-blue-color;
 
-.#{zukit-basic.$title-indicator-class} {
+.#{basic.$title-indicator-class} {
 	padding: 0 12px 1px;
 	border-radius: 15px;
 	margin-left: 15px;
 	background-color: rgba($title-indicator-color, $title-indicator-color-opacity);
 	color: $title-indicator-color;
-	transition: opacity variables.$transition-short-time variables.$transition-function;
+	transition: opacity vars.$transition-short-time vars.$transition-function;
 	opacity: 1;
 
 	&.component-color-indicator {
@@ -24,7 +24,7 @@ $title-indicator-color: variables.$wp-admin-blue-color;
 		opacity: 0;
 	}
 
-	@each $name, $color in zukit-basic.$custom-colors {
+	@each $name, $color in basic.$custom-colors {
 		&.#{$name} {
 			background-color: rgba($color, $title-indicator-color-opacity);
 			color: $color;

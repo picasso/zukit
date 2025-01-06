@@ -1,5 +1,5 @@
-@use "../variables";
-@use "../zukit-basic";
+@use "../variables" as vars;
+@use "../zukit-basic" as basic;
 
 // Admin Text Control Component -------------------------------------------------------------------]
 
@@ -8,7 +8,7 @@ $advtext-button-height: 30px;
 $advtext-button-width: 36px; // svg 20px + margin 8px * 2
 $advtext-help-margin: -16px; // margin 8px * 2
 
-.#{zukit-basic.$advtext-component-class} {
+.#{basic.$advtext-component-class} {
 	display: flex;
 	align-items: flex-start;
 	justify-content: flex-start;
@@ -44,12 +44,12 @@ $advtext-help-margin: -16px; // margin 8px * 2
 		height: $advtext-button-height;
 		width: $advtext-button-width;
 		min-width: $advtext-button-width;
-		color: zukit-basic.$custom-button-text-color;
-		background-color: zukit-basic.$custom-button-color;
-		border: 1px solid zukit-basic.$custom-button-border-color;
+		color: basic.$custom-button-text-color;
+		background-color: basic.$custom-button-color;
+		border: 1px solid basic.$custom-button-border-color;
 		border-radius: 0 3px 3px 0;
 		box-shadow: none;
-		transition: background-color variables.$transition-time variables.$transition-function;
+		transition: background-color vars.$transition-time vars.$transition-function;
 		position: relative;
 
 		.dashicon {
@@ -67,8 +67,8 @@ $advtext-help-margin: -16px; // margin 8px * 2
 
 		&:hover {
 			box-shadow: none !important;
-			background-color: zukit-basic.$custom-button-hover-color !important;
-			color: zukit-basic.$custom-button-hover-text-color !important;
+			background-color: basic.$custom-button-hover-color !important;
+			color: basic.$custom-button-hover-text-color !important;
 		}
 	}
 }

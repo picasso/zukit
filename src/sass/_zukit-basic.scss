@@ -1,7 +1,7 @@
 @use "sass:color";
-@use "variables";
+@use "variables" as vars;
 
-$brand-color: variables.$violet-color;
+$brand-color: vars.$violet-color;
 
 $admin-grey-color: #e5e5e5;
 $admin-light-yellow: #ffffa5;
@@ -14,9 +14,9 @@ $admin-error-color: #cc2027;
 $admin-error-bg-color: #f2c1c2;
 
 $admin-green-color: #1a937d;
-$admin-blue-color: variables.$some-blue;
+$admin-blue-color: vars.$some-blue;
 $admin-gold-color: #e8a723;
-$admin-red-color: variables.$some-red;
+$admin-red-color: vars.$some-red;
 
 $hover-darken: 10;
 $hover-shadow: 15;
@@ -30,20 +30,20 @@ $admin-colors: (
 	'light-yellow': $admin-light-yellow,
 	'light-brown': $admin-light-brown,
 	'error': $admin-error-color,
-	'admin-blue': variables.$wp-admin-blue-color
+	'admin-blue': vars.$wp-admin-blue-color
 );
 
 $custom-colors: (
-	'red': 		variables.$red-color,
-	'orange': 	variables.$orange-color,
-	'yellow': 	variables.$yellow-color,
-	'green': 	variables.$green-color,
-	'lime':		variables.$lime-color,
-	'blue': 	variables.$blue-color,
-	'blue-sky': variables.$blue-sky-color,
-	'violet': 	variables.$violet-color,
-	'brown':	variables.$some-brown,
-	'grey':		variables.$dark-blue-grey,
+	'red': 		vars.$red-color,
+	'orange': 	vars.$orange-color,
+	'yellow': 	vars.$yellow-color,
+	'green': 	vars.$green-color,
+	'lime':		vars.$lime-color,
+	'blue': 	vars.$blue-color,
+	'blue-sky': vars.$blue-sky-color,
+	'violet': 	vars.$violet-color,
+	'brown':	vars.$some-brown,
+	'grey':		vars.$dark-blue-grey,
 );
 
 
@@ -52,15 +52,15 @@ $custom-colors: (
 $page-basic-color: rgba($admin-grey-color, 0.3);
 $settings-color: white;
 $sidebar-color: white;
-$settings-border-color: variables.$admin-border-color;
+$settings-border-color: vars.$admin-border-color;
 $toggle-help-color: #006287; //rgba($dark-blue-grey, 0.5);
 $help-color-opacity: 0.1;
 $help-code-color-opacity: 0.08;
 $help-border-radius: 5px;
-$custom-button-color: rgba(variables.$wp-admin-blue-color, 0.1);
-$custom-button-border-color: rgba(variables.$wp-admin-blue-color, 0.7);
-$custom-button-text-color: color.adjust(variables.$wp-admin-blue-color, $lightness: -10%);
-$custom-button-hover-color: variables.$wp-admin-blue-color;
+$custom-button-color: rgba(vars.$wp-admin-blue-color, 0.1);
+$custom-button-border-color: rgba(vars.$wp-admin-blue-color, 0.7);
+$custom-button-text-color: color.adjust(vars.$wp-admin-blue-color, $lightness: -10%);
+$custom-button-hover-color: vars.$wp-admin-blue-color;
 $custom-button-hover-text-color: white;
 
 // sizes ------------------------------------------------------------------------------------------]

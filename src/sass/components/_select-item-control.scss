@@ -1,27 +1,27 @@
 @use "../instyle";
-@use "../variables";
-@use "../zukit-basic";
+@use "../variables" as vars;
+@use "../zukit-basic" as basic;
 
 // Admin Select Item Component --------------------------------------------------------------------]
 
 $select-item-digits-height: 60px;
 $select-item-wrapper-padding: 5px;
 $select-item-null-stripe-size: 5px;
-$select-item-hover-color: zukit-basic.$brand-color;
-$select-item-bg-hover-color: rgba(zukit-basic.$brand-color, 0.08);
-$select-item-border-hover-color: rgba(zukit-basic.$brand-color, 0.4);
+$select-item-hover-color: basic.$brand-color;
+$select-item-bg-hover-color: rgba(basic.$brand-color, 0.08);
+$select-item-border-hover-color: rgba(basic.$brand-color, 0.4);
 
-$select-item-selected-color: variables.$wp-gray-900;
+$select-item-selected-color: vars.$wp-gray-900;
 $select-item-selected-bg-color: rgba($select-item-selected-color, 0.07);
 $select-item-selected-border-color: rgba($select-item-selected-color, 0.4);
 
-$select-item-disabled-color: zukit-basic.$brand-color;
+$select-item-disabled-color: basic.$brand-color;
 $select-item-disabled-bg-color: rgba($select-item-disabled-color, 0.07);
 $select-item-disabled-border-color: rgba($select-item-disabled-color, 0.4);
 
 $select-item-basic-border-color: rgb(25, 30, 35);
 
-.#{zukit-basic.$selectitem-component-class} {
+.#{basic.$selectitem-component-class} {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
@@ -39,15 +39,15 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		width: 100%;
 	}
 
-	.#{zukit-basic.$selectitem-component-class}__button-wrapper {
+	.#{basic.$selectitem-component-class}__button-wrapper {
 		border-radius: 4px;
 		display: flex;
 		flex-direction: column;
 		flex-shrink: 0;
 		list-style: none;
-		margin: variables.$admin-button-wrapper-margin 0;
-		padding: variables.$admin-button-wrapper-padding;
-		width: calc(100% - #{variables.twice(variables.$admin-button-wrapper-padding)});
+		margin: vars.$admin-button-wrapper-margin 0;
+		padding: vars.$admin-button-wrapper-padding;
+		width: calc(100% - #{vars.twice(vars.$admin-button-wrapper-padding)});
 		z-index: 0;
 
 		&.is-selected {
@@ -91,7 +91,7 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 				height: 100%;
                 pointer-events: none;
 				background-color: transparent;
-				border-color: rgba(variables.$wp-gray-200, 0.4);
+				border-color: rgba(vars.$wp-gray-200, 0.4);
 				color: transparent;
             }
         }
@@ -102,24 +102,24 @@ $select-item-basic-border-color: rgb(25, 30, 35);
             }
         }
 
-        @include instyle.in('<.__2columns') { width: calc(50% - #{variables.twice(variables.$admin-button-wrapper-padding)}); }
-        @include instyle.in('<.__3columns') { width: calc(33% - #{variables.twice(variables.$admin-button-wrapper-padding)}); }
-		@include instyle.in('<.__4columns') { width: calc(25% - #{variables.twice(variables.$admin-button-wrapper-padding)}); }
-		@include instyle.in('<.__5columns') { width: calc(20% - #{variables.twice(variables.$admin-button-wrapper-padding)}); }
+        @include instyle.in('<.__2columns') { width: calc(50% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
+        @include instyle.in('<.__3columns') { width: calc(33% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
+		@include instyle.in('<.__4columns') { width: calc(25% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
+		@include instyle.in('<.__5columns') { width: calc(20% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
 
 		@include instyle.in('<.__box') {
 			padding: 0 !important;
 			&:first-child {
 				.components-button {
-					border-top-left-radius: variables.$admin-control-border-radius !important;
-					border-bottom-left-radius: variables.$admin-control-border-radius !important;
+					border-top-left-radius: vars.$admin-control-border-radius !important;
+					border-bottom-left-radius: vars.$admin-control-border-radius !important;
 				}
 			}
 			&:last-child {
 				.components-button {
-					border-right-width: variables.$admin-control-border-box-size !important;
-					border-top-right-radius: variables.$admin-control-border-radius !important;
-					border-bottom-right-radius: variables.$admin-control-border-radius !important;
+					border-right-width: vars.$admin-control-border-box-size !important;
+					border-top-right-radius: vars.$admin-control-border-radius !important;
+					border-bottom-right-radius: vars.$admin-control-border-radius !important;
 				}
 			}
 		}
@@ -133,14 +133,14 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 				box-shadow: none;
 				// need here to add more CSS specificity
 				.components-button {
-					background-color: variables.$admin-control-selected-color;
-					color: variables.$admin-control-text-color;
+					background-color: vars.$admin-control-selected-color;
+					color: vars.$admin-control-text-color;
 				}
 			}
 		}
 	}
 
-	.#{zukit-basic.$selectitem-component-class}__button.components-button {
+	.#{basic.$selectitem-component-class}__button.components-button {
 		align-items: center;
 		background-color: white;
 		border: 1px solid rgba($select-item-basic-border-color, 0.2);
@@ -151,8 +151,8 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		padding: 0;
 		width: 100%;
 		transition-property: background-color, color, border-color;
-		transition-duration: variables.$transition-time;
-		transition-timing-function: variables.$transition-function;
+		transition-duration: vars.$transition-time;
+		transition-timing-function: vars.$transition-function;
 		box-shadow: none !important;
 
 		&:hover:not(:disabled) {
@@ -161,7 +161,7 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 			border-color: $select-item-border-hover-color !important;
 		}
 		&:focus:not(:disabled) {
-			box-shadow: 0 0 0 1px variables.$wp-admin-blue-color !important;
+			box-shadow: 0 0 0 1px vars.$wp-admin-blue-color !important;
 		}
 		&.is-clickable {
 			pointer-events: all;
@@ -180,7 +180,7 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 			  currentColor,
 			  currentColor $select-item-null-stripe-size,
 			  rgba(black, 0.05) $select-item-null-stripe-size,
-			  rgba(black, 0.05) variables.twice($select-item-null-stripe-size)
+			  rgba(black, 0.05) vars.twice($select-item-null-stripe-size)
 			);
 		}
 
@@ -196,7 +196,7 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 			width: 100%;
 			font-size: 1.5em;
 			font-weight: 700;
-			font-family: variables.$admin-control-font-family;
+			font-family: vars.$admin-control-font-family;
 			@include instyle.in('<.is-large') {
 				font-size: 3em;
 			}
@@ -205,33 +205,33 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		@include instyle.in('<.__selector') {
 			background-color: transparent;
 			&:hover {
-				background-color: variables.$admin-control-hover-color !important;
-				color: variables.$admin-control-hover-text-color !important;
+				background-color: vars.$admin-control-hover-color !important;
+				color: vars.$admin-control-hover-text-color !important;
 			}
 			@include instyle.in('^.is-selected') {
-				background-color: variables.$admin-control-selected-color;
-				color: variables.$admin-control-text-color;
+				background-color: vars.$admin-control-selected-color;
+				color: vars.$admin-control-text-color;
 			}
 		}
 
 		@include instyle.in('<.__box') {
-			border: variables.$admin-control-border-box-size solid variables.$admin-control-border-color;
+			border: vars.$admin-control-border-box-size solid vars.$admin-control-border-color;
 			border-radius: 0 !important;
 			border-right-width: 0;
 		}
 
 		@include instyle.in('<.__digits') {
 			height: $select-item-digits-height;
-			background-color: rgba(variables.$wp-admin-blue-color, 0.1);
+			background-color: rgba(vars.$wp-admin-blue-color, 0.1);
 			&:hover {
-				background-color: variables.$admin-control-hover-color !important;
-				color: variables.$admin-control-hover-text-color !important;
+				background-color: vars.$admin-control-hover-color !important;
+				color: vars.$admin-control-hover-text-color !important;
 			}
 			span {
 				width: 100%;
 				font-size: 3em;
 				font-weight: 700;
-				font-family: variables.$admin-control-font-family;
+				font-family: vars.$admin-control-font-family;
 			}
 		}
 	}
