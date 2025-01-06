@@ -3,6 +3,12 @@ text eol=lf
 .gitattributes export-ignore
 .gitignore export-ignore
 package-lock.json export-ignore
+.markdownlint.json export-ignore
+eslint.config.js export-ignore
+prettier.config.cjs export-ignore
+wp-sass.config.cjs export-ignore
+wp-scripts.config.cjs export-ignore
+zukit.code-workspace export-ignore
 
 # Archive ignore stuff
 
