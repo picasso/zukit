@@ -1,5 +1,5 @@
 <?php
-// Plugin Addon Class ---------------------------------------------------------]
+// Plugin Addon Class -----------------------------------------------------------------------------]
 
 class zukit_Addon {
 
@@ -9,7 +9,7 @@ class zukit_Addon {
 	protected $options;
 	protected $options_key;
 	protected $dir;
-    protected $uri;
+	protected $uri;
 	protected $version;
 
 	private $nonce;
@@ -17,8 +17,8 @@ class zukit_Addon {
 	public function register($plugin) {
 
 		$this->plugin = $plugin ?? null;
-		if(empty($this->plugin)) {
-			_doing_it_wrong(__FUNCTION__, '"Addon" cannot be used without plugin!');
+		if (empty($this->plugin)) {
+			_doing_it_wrong(__FUNCTION__, '"Addon" cannot be used without plugin!', $this->version);
 		} else {
 			$this->dir = $this->plugin->dir;
 			$this->uri = $this->plugin->uri;
@@ -26,39 +26,52 @@ class zukit_Addon {
 
 			$this->config = array_merge($this->config_defaults(), $this->config());
 			$this->name = $this->get('name') ?? 'zuaddon';
-			$this->nonce = $this->get_callable('nonce') ?? $this->name.'_ajax_nonce';
+			$this->nonce = $this->get_callable('nonce') ?? $this->name . '_ajax_nonce';
 
-			$this->options_key = $this->name.'_options';
+			$this->options_key = $this->name . '_options';
 			$this->init_options();
 			$this->construct_more_inner();
 			$this->construct_more();
 		}
 	}
 
-	// Configuration management -----------------------------------------------]
+	// Configuration management -------------------------------------------------------------------]
 
-	protected function config() { return []; }
-	protected function config_defaults() { return []; }
+	protected function config() {
+		return [];
+	}
+	protected function config_defaults() {
+		return [];
+	}
 
 	// 'construct_more' is only called after the add-on is registered by the plugin!
-	protected function construct_more() {}
+	protected function construct_more() {
+	}
 	// 'construct_more_inner' is needed for classes that will inherit from 'zukit_Addon'
 	// but to keep 'construct_more' free for users of the framework
-	protected function construct_more_inner() {}
+	protected function construct_more_inner() {
+	}
 
-	public function init() {}
-	public function admin_init() {}
+	public function init() {
+	}
+	public function admin_init() {
+	}
 
-	public function enqueue() {}
-	public function admin_enqueue($hook) {}
-	public function clean() {}
-	public function ajax($action, $value) { return null; }
+	public function enqueue() {
+	}
+	public function admin_enqueue($hook) {
+	}
+	public function clean() {
+	}
+	public function ajax($action, $value) {
+		return null;
+	}
 
-	// Options management -----------------------------------------------------]
+	// Options management -------------------------------------------------------------------------]
 
 	public function init_options() {
 		$options = $this->plugin->options();
-		if(!isset($options[$this->options_key]) && !is_null($this->get('options'))) {
+		if (!isset($options[$this->options_key]) && !is_null($this->get('options'))) {
 			$this->options = $this->get('options');
 			$this->plugin->set_option($this->options_key, $this->options, true);
 		} else {
@@ -73,7 +86,7 @@ class zukit_Addon {
 	}
 
 	public function options($options = null) {
-		if(!is_null($options)) $this->options = $options[$this->options_key] ?? [];
+		if (!is_null($options)) $this->options = $options[$this->options_key] ?? [];
 		return $this->options;
 	}
 
@@ -103,9 +116,10 @@ class zukit_Addon {
 		return $this->plugin->get_option($key, $default);
 	}
 
-	// Redirect to parent methods ---------------------------------------------]
+	// Redirect to parent methods -----------------------------------------------------------------]
 
-	protected function extend_parent_redirects() {}
+	protected function extend_parent_redirects() {
+	}
 
 	public function __call($method, $args) {
 		$available_methods = [
@@ -128,9 +142,9 @@ class zukit_Addon {
 			'sprintf_dir',
 			'sprintf_uri',
 		];
-		if(!in_array($method, array_merge($available_methods, $this->extend_parent_redirects() ?? []))) {
+		if (!in_array($method, array_merge($available_methods, $this->extend_parent_redirects() ?? []))) {
 			// if we have 'zukit_Exchange' trait - then transfer processing further
-			if(method_exists($this, 'call_addon_provider')) {
+			if (method_exists($this, 'call_addon_provider')) {
 				return $this->call_addon_provider($method, $args);
 			}
 			$this->logc('?Trying to call an unavailable parent method', [
@@ -164,32 +178,32 @@ class zukit_Addon {
 	// we need an additional backtrace shift to compensate for the nested call
 	protected function log(...$params) {
 		$this->plugin->debug_line_shift(1);
-        $this->plugin->log(...$params);
+		$this->plugin->log(...$params);
 		$this->plugin->debug_line_shift(0);
-    }
+	}
 	protected function logc($context, ...$params) {
 		$this->plugin->debug_line_shift(1);
 		$this->plugin->logc($context, ...$params);
 		$this->plugin->debug_line_shift(0);
 	}
 
-	// Common interface to parent methods with availability check -------------]
+	// Common interface to parent methods with availability check ---------------------------------]
 
 	// NOTE: only public functions and property can be called with this helper
 	protected function with_another($prop, $func, ...$params) {
-		if(property_exists($this->plugin, $prop)) {
+		if (property_exists($this->plugin, $prop)) {
 			$another = $this->plugin->{$prop};
-			if(method_exists($another, $func)) return call_user_func_array([$another, $func], $params);
+			if (method_exists($another, $func)) return call_user_func_array([$another, $func], $params);
 		}
 		return null;
 	}
 
 	protected function call_parent($func, ...$params) {
-		if(method_exists($this->plugin, $func)) return call_user_func_array([$this->plugin, $func], $params);
+		if (method_exists($this->plugin, $func)) return call_user_func_array([$this->plugin, $func], $params);
 		else return null;
 	}
 
-	// Helpers ----------------------------------------------------------------]
+	// Helpers ------------------------------------------------------------------------------------]
 
 	protected function get($key, $from_plugin = false, $default_value = null) {
 		return $this->plugin->get($key, $default_value, $from_plugin ? null : $this->config);

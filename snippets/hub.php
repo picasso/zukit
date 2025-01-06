@@ -31,14 +31,14 @@ class zukit_Snippets extends zukit_SingletonLogging {
 
 	protected function construct_more() {
 		$this->prefix = 'zu_snippets';
-        $this->version = '1.4.1';
+		$this->version = '1.4.1';
 		$this->init_inline_style_scripts();
 	}
 }
 
-// Common Interface to helpers ------------------------------------------------]
+// Common Interface to helpers --------------------------------------------------------------------]
 
-if(!function_exists('zu_snippets')) {
+if (!function_exists('zu_snippets')) {
 	function zu_snippets() {
 		return zukit_Snippets::instance();
 	}
@@ -47,7 +47,7 @@ if(!function_exists('zu_snippets')) {
 // A special version of the 'sprintf' function that removes the extra spaces
 // from the format string resulting from the 'human-readable' HTML template
 
-if(!function_exists('zu_sprintf')) {
+if (!function_exists('zu_sprintf')) {
 	function zu_sprintf($format, ...$params) {
 		// remove HTML comments first
 		$format = preg_replace('/<!--[^>]*?>/m', '', $format);
@@ -72,18 +72,18 @@ if(!function_exists('zu_sprintf')) {
 		$output = call_user_func_array('sprintf', $params);
 
 		// remove multiple space inside tags
-		if(preg_match_all('/(<[^>]*?>)/', $output, $matches)) {
-			  foreach($matches[1] as $tag) {
-				  $tag_compressed = preg_replace('/\s+/', ' ', $tag);
-				  $tag_compressed = preg_replace('/\s+>/', '>', $tag_compressed);
-				  $tag_compressed = preg_replace('/\s+\/>/', '/>', $tag_compressed);
-				  // add a space before the closing tag if there are no quotes or no space
-				  $tag_compressed = preg_replace('/([^\s|\"])\/>/', '$1 />', $tag_compressed);
-				  $output = str_replace($tag, $tag_compressed, $output);
-			  }
-		  }
-		  // replace an intentional 'whitespace' with a space
-		  return str_replace(['<whitespace/>', '<whitespace>'], ' ', $output);
+		if (preg_match_all('/(<[^>]*?>)/', $output, $matches)) {
+			foreach ($matches[1] as $tag) {
+				$tag_compressed = preg_replace('/\s+/', ' ', $tag);
+				$tag_compressed = preg_replace('/\s+>/', '>', $tag_compressed);
+				$tag_compressed = preg_replace('/\s+\/>/', '/>', $tag_compressed);
+				// add a space before the closing tag if there are no quotes or no space
+				$tag_compressed = preg_replace('/([^\s|\"])\/>/', '$1 />', $tag_compressed);
+				$output = str_replace($tag, $tag_compressed, $output);
+			}
+		}
+		// replace an intentional 'whitespace' with a space
+		return str_replace(['<whitespace/>', '<whitespace>'], ' ', $output);
 	}
 
 	function zu_printf(...$params) {
@@ -101,13 +101,13 @@ if(!function_exists('zu_sprintf')) {
 	}
 }
 
-if(!function_exists('_zu_log')) {
-    function _zu_log(...$params) {
+if (!function_exists('_zu_log')) {
+	function _zu_log(...$params) {
 		zu_snippets()->log_with(0, null, ...$params);
-    }
+	}
 	function _zu_logc($context, ...$params) {
 		zu_snippets()->log_with(0, $context, ...$params);
-    }
+	}
 	function _zu_logd($info, $var) {
 		zu_snippets()->logd($info, $var);
 	}

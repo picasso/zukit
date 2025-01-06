@@ -1,7 +1,7 @@
 <?php
 trait zusnippets_Loader {
 
-	// SVG loaders ------------------------------------------------------------]
+	// SVG loaders --------------------------------------------------------------------------------]
 
 	public function loader($loader = 0, $duration = 0.6, $classes = 'zu-loader', $opacity = 0.2) {
 
@@ -383,7 +383,7 @@ trait zusnippets_Loader {
 			$wrapper_closing
 		);
 
-		if($getAll) return $loaders;
+		if ($getAll) return $loaders;
 
 		$loader = ($loader < 0 || $loader > count($loaders)) ? $default_loader :  $loader;
 

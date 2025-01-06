@@ -1,9 +1,9 @@
 <?php
 trait zusnippets_Slugs {
 
-	// Slug & Ancestor functions ----------------------------------------------]
+	// Slug & Ancestor functions ------------------------------------------------------------------]
 
-    public function get_slug($post_id = null) {
+	public function get_slug($post_id = null) {
 		return basename(get_permalink($post_id));
 	}
 
@@ -34,11 +34,11 @@ trait zusnippets_Slugs {
 
 	public function get_top_ancestor($post_id = null, $skip_attachments = true) {
 
-		if(empty($post_id)) $post_id = get_the_ID();
-		if($skip_attachments && is_attachment()) return $post_id;
+		if (empty($post_id)) $post_id = get_the_ID();
+		if ($skip_attachments && is_attachment()) return $post_id;
 		$parents = get_post_ancestors($post_id);
 		// Get the top Level page->ID count base 1, array base 0 so -1
-		$parent_id = ($parents) ? $parents[count($parents)-1] : null;
+		$parent_id = ($parents) ? $parents[count($parents) - 1] : null;
 		return empty($parent_id) ? $post_id : $parent_id;
 	}
 

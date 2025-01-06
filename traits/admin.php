@@ -1,6 +1,6 @@
 <?php
 
-// Plugin Admin Trait ---------------------------------------------------------]
+// Plugin Admin Trait -----------------------------------------------------------------------------]
 
 trait zukit_Admin {
 
@@ -16,56 +16,65 @@ trait zukit_Admin {
 			'title' 		=>	sprintf('%2$s %1$s', __('Options', 'zukit'), $this->data['Name'] ?? 'unknown'),
 			'menu' 			=>	$this->data['Name'] ?? 'unknown',
 			'permissions' 	=>	'manage_options',
-			'slug' 			=>	$this->prefix.'-settings',
+			'slug' 			=>	$this->prefix . '-settings',
 		];
 
 		$this->ops = array_merge($defaults, $options);
 
 		// if Zukit is requred then add the admin slug and class instance to the static property
-		if($this->get('zukit')) self::$zukit_items[$this->ops['slug']] = $this;
+		if ($this->get('zukit')) self::$zukit_items[$this->ops['slug']] = $this;
 
-		// Activation/Deactivation Hooks --------------------------------------]
+		// Activation/Deactivation Hooks ----------------------------------------------------------]
 
-		register_activation_hook($file, function() {
+		register_activation_hook($file, function () {
 			$this->on_activation();
 		});
 
-		register_deactivation_hook($file, function() {
+		register_deactivation_hook($file, function () {
 			delete_option($this->options_key);
 			$this->clean_addons();
 			$this->on_deactivation();
 		});
 
-		add_action('admin_init', function() {
-			register_setting($this->options_key.'_group', $this->options_key, []);
+		add_action('admin_init', function () {
+			register_setting($this->options_key . '_group', $this->options_key, []);
 		});
 
 		// add 'zukit-settings' class for Settings page only
-		add_action('admin_enqueue_scripts', function($hook) {
-			if($this->ends_with_slug($hook)) {
+		add_action('admin_enqueue_scripts', function ($hook) {
+			if ($this->ends_with_slug($hook)) {
 				$this->snippets('add_admin_body_class', 'zukit-settings');
 			}
 		});
 
 		add_action('admin_menu', [$this, 'admin_menu']);
-		add_filter('plugin_action_links_'.plugin_basename($file), [$this, 'admin_settings_link']);
+		add_filter('plugin_action_links_' . plugin_basename($file), [$this, 'admin_settings_link']);
 	}
 
-	protected function on_activation() {}
-	protected function on_deactivation() {}
-	protected function extend_info() {}
-	protected function extend_metadata($metadata) { return $metadata; }
-	protected function extend_actions() { return (object)null;}
+	protected function on_activation() {
+	}
+	protected function on_deactivation() {
+	}
+	protected function extend_info() {
+	}
+	protected function extend_metadata($metadata) {
+		return $metadata;
+	}
+	protected function extend_actions() {
+		return (object)null;
+	}
 
-	// Wordpress Admin Page ---------------------------------------------------]
+	// Wordpress Admin Page -----------------------------------------------------------------------]
 
 	public function info() {
 		$defaultFill = '?';
 		$expectedKeys = ['AuthorURI', 'Description', 'Name', 'Author', 'URI', 'GitHubURI'];
-		$data = array_merge(array_combine(
-		    $expectedKeys,
-		    array_fill(0, count($expectedKeys), $defaultFill)),
-  			$this->data
+		$data = array_merge(
+			array_combine(
+				$expectedKeys,
+				array_fill(0, count($expectedKeys), $defaultFill)
+			),
+			$this->data
 		);
 		$domain = $this->text_domain();
 		$github = preg_replace('/\.git$/', '', $data['GitHubURI']);
@@ -77,7 +86,8 @@ trait zukit_Admin {
 			'description'	=> __($data['Description'], $domain),
 		];
 
-		return array_merge([
+		return array_merge(
+			[
 				'version'		=> $this->version,
 				// yes, I know that should not use a variable as a text string
 				// 'Poedit' will pull these strings from the plugin description
@@ -105,9 +115,9 @@ trait zukit_Admin {
 	}
 
 	private function is_zukit_slug($hook) {
-		foreach(array_keys(self::$zukit_items) as $zukit_slug) {
+		foreach (array_keys(self::$zukit_items) as $zukit_slug) {
 			// if $zukit_slug is the current admin_slug() and $hook ends with $zukit_slug
-			if($zukit_slug === $this->admin_slug() && $this->ends_with_slug($hook, $zukit_slug)) return true;
+			if ($zukit_slug === $this->admin_slug() && $this->ends_with_slug($hook, $zukit_slug)) return true;
 		}
 		return false;
 	}
@@ -119,14 +129,13 @@ trait zukit_Admin {
 
 	public function do_with_instances($method, $params = null, $addon = false, $flatten = true) {
 		$results = [];
-		foreach(self::$zukit_items as $instance) {
-			if($addon) {
+		foreach (self::$zukit_items as $instance) {
+			if ($addon) {
 				$collected = $instance->do_addons($method, $params ?? [], ['collect' => true, 'single' => false]);
 				$results[] = $flatten ? $this->snippets('array_flatten', array_filter($collected)) : $collected;
-			} elseif(method_exists($instance, $method)) {
+			} elseif (method_exists($instance, $method)) {
 				$results[] = call_user_func_array([$instance, $method], $params ?? []);
-			}
-			else {
+			} else {
 				$this->logc('Unknown "Zukit instance" method!', [
 					'method'	=> $method,
 					'params'	=> $params,
@@ -147,11 +156,11 @@ trait zukit_Admin {
 			[$this, 'render_admin_page']
 		);
 
-		if($hook_suffix == false) return false;
+		if ($hook_suffix == false) return false;
 	}
 
 	public function render_admin_page() {
-		printf( '<div id="%1$s" class="block-editor__container"></div>', $this->prefix);
+		printf('<div id="%1$s" class="block-editor__container"></div>', $this->prefix);
 	}
 
 	public function admin_settings_link($links, $as_array = false) {
@@ -162,7 +171,7 @@ trait zukit_Admin {
 			$this->admin_slug()
 		);
 		$title = __('Settings', 'zukit');
-		if($as_array) return [$href, $title];
+		if ($as_array) return [$href, $title];
 
 		$settings_link = sprintf('<a href="%1$s">%2$s</a>', $href, $title);
 		array_unshift($links, $settings_link);

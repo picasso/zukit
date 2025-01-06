@@ -1,33 +1,34 @@
 <?php
 
-// Compatibility check for Zukit classes --------------------------------------]
+// Compatibility check for Zukit classes ----------------------------------------------------------]
 // use only PHP 5.* syntax!!
 
-if(!class_exists('Zukit')) {
+if (!class_exists('Zukit')) {
 	class Zukit {
 
 		private static $cache_time = HOUR_IN_SECONDS;
 
 		private static $requires = array(
 			'min_php'	=> '7.2.0',
-			'min_wp'	=> '5.3.0',
+			'min_wp'	=> '6.6.2',
 		);
 
 		private static $files = array();
 
 		// The constructor should always be private to prevent direct
-	    // construction calls with the `new` operator.
-		private function __construct() {}
+		// construction calls with the `new` operator.
+		private function __construct() {
+		}
 
-	    // should not be cloneable
-	    final public function __clone() {
-	        _doing_it_wrong(__FUNCTION__, 'This class should not be cloneable');
-	    }
+		// should not be cloneable
+		final public function __clone() {
+			_doing_it_wrong(__FUNCTION__, 'This class should not be cloneable', '2.0.0');
+		}
 
-	    // should not be restorable from strings
-	    final public function __wakeup() {
-	        _doing_it_wrong(__FUNCTION__, 'Unserializing instances of this class is forbidden');
-	    }
+		// should not be restorable from strings
+		final public function __wakeup() {
+			_doing_it_wrong(__FUNCTION__, 'Unserializing instances of this class is forbidden', '2.0.0');
+		}
 
 		public static function at_least($file, $params) {
 			$data = self::get_file_metadata($file);
@@ -37,10 +38,10 @@ if(!class_exists('Zukit')) {
 				$params
 			);
 
-			if(version_compare(self::$requires['min_php'], $params['min_php'], '<')) {
+			if (version_compare(self::$requires['min_php'], $params['min_php'], '<')) {
 				self::$requires['min_php'] = $params['min_php'];
 			}
-			if(version_compare(self::$requires['min_wp'], $params['min_wp'], '<')) {
+			if (version_compare(self::$requires['min_wp'], $params['min_wp'], '<')) {
 				self::$requires['min_wp'] = $params['min_wp'];
 			}
 		}
@@ -49,25 +50,25 @@ if(!class_exists('Zukit')) {
 			// try from cache first
 			$cache_id = wp_normalize_path(str_replace(WP_CONTENT_DIR, '', $file));
 			$meta = get_transient($cache_id);
-			if($meta !== false) return $meta;
+			if ($meta !== false) return $meta;
 
 			$theme_root = WP_CONTENT_DIR . '/themes';
 			$is_theme = strpos($file, $theme_root) !== false;
 
 			$default_headers = array(
 				'GitHubURI'			=> 'GitHub URI',
-		        'Version'     		=> 'Version',
-		        'Description' 		=> 'Description',
-		        'Author'      		=> 'Author',
-		        'AuthorURI'   		=> 'Author URI',
-		        'TextDomain'  		=> 'Text Domain',
-		        'DomainPath'  		=> 'Domain Path',
-		        'Network'     		=> 'Network',
-		        'RequiresWP'  		=> 'Requires at least',
-		        'RequiresPHP' 		=> 'Requires PHP',
-		    );
+				'Version'     		=> 'Version',
+				'Description' 		=> 'Description',
+				'Author'      		=> 'Author',
+				'AuthorURI'   		=> 'Author URI',
+				'TextDomain'  		=> 'Text Domain',
+				'DomainPath'  		=> 'Domain Path',
+				'Network'     		=> 'Network',
+				'RequiresWP'  		=> 'Requires at least',
+				'RequiresPHP' 		=> 'Requires PHP',
+			);
 
-			if($is_theme) {
+			if ($is_theme) {
 				$stylesheet = get_stylesheet();
 				$file = sprintf('%s/%s/style.css', $theme_root, get_stylesheet());
 				$default_headers = array_merge(array(
@@ -110,7 +111,7 @@ if(!class_exists('Zukit')) {
 		public static function ver_2($version = null) {
 			global $wp_version;
 			$parts = explode('.', is_null($version) ? $wp_version : $version);
-			return $parts[0] .'.'. (isset($parts[1]) ? $parts[1] : '*');
+			return $parts[0] . '.' . (isset($parts[1]) ? $parts[1] : '*');
 		}
 
 		public static function is_compatible($file, $params = []) {
@@ -118,30 +119,32 @@ if(!class_exists('Zukit')) {
 			self::at_least($file, $params);
 			$not_compat = self::not_compat();
 
-			if($not_compat['php'] || $not_compat['wp']) {
+			if ($not_compat['php'] || $not_compat['wp']) {
 				$data = self::get_file_metadata($file);
 				$screen = function_exists('get_current_screen') ? get_current_screen() : null;
 
-				$notice = sprintf($not_compat['php'] ?
-					'<b>"%1$s"</b> requires at least <b>PHP %2$s</b> and is not compatible with %3$s.' :
-					'<b>"%1$s"</b> requires at least <b>WordPress %2$s</b> and is not compatible with WP %3$s.',
+				$notice = sprintf(
+					$not_compat['php'] ?
+						'<b>"%1$s"</b> requires at least <b>PHP %2$s</b> and is not compatible with %3$s.' :
+						'<b>"%1$s"</b> requires at least <b>WordPress %2$s</b> and is not compatible with WP %3$s.',
 					$data['Name'],
 					self::ver_2(self::$requires[$not_compat['php'] ? 'min_php' : 'min_wp']),
 					self::ver_2($not_compat['php'] ? phpversion() : null)
 				);
 
-				$message = sprintf('%1$s<br/>The plugin cannot be activated!<br/><br/>
+				$message = sprintf(
+					'%1$s<br/>The plugin cannot be activated!<br/><br/>
 					<a href="%2$s">Go Back</a>',
 					$notice,
 					admin_url($screen && $screen->id === 'plugins' ? 'plugins.php' : '')
 				);
 
-				add_action('admin_notices', function() use($file, $notice) {
-			        printf('<div class="notice notice-error"><p>%1$s</p></div>', $notice);
+				add_action('admin_notices', function () use ($file, $notice) {
+					printf('<div class="notice notice-error"><p>%1$s</p></div>', $notice);
 					deactivate_plugins($file, true);
 				});
 
-				register_activation_hook($file, function() use($message) {
+				register_activation_hook($file, function () use ($message) {
 					wp_die($message);
 				});
 
@@ -161,17 +164,17 @@ if(!class_exists('Zukit')) {
 		public static function keypath($file, $replace = '', $without = ['themes', 'plugins']) {
 			$dirname = pathinfo($file)['extension'] ? dirname($file) : $file;
 			$file_id = str_replace(WP_CONTENT_DIR, $replace, $dirname);
-			if(!empty($without)) $file_id = str_replace($without, '', $file_id);
+			if (!empty($without)) $file_id = str_replace($without, '', $file_id);
 			return trim($file_id, '/');
 		}
 	}
 }
 
 // load Zukit classes if they not were loaded in other plugin/theme
-if(Zukit::should_load()) {
+if (Zukit::should_load()) {
 	require_once('zukit-plugin.php');
 
-	if(!function_exists('zu_snippets')) {
+	if (!function_exists('zu_snippets')) {
 		require_once('snippets/hub.php');
 	}
 }

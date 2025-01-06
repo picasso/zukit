@@ -13,7 +13,7 @@ trait zukit_BlockMeta {
 
 		// NB:	'show_in_rest' => true will be added to all meta
 
-		// Examples -----------------------------------------------------------]
+		// Examples -------------------------------------------------------------------------------]
 
 		// return [
 		//	// Copyright meta
@@ -56,17 +56,17 @@ trait zukit_BlockMeta {
 
 	protected function register_metakeys() {
 		// Get all block meta
-		$this->metakeys = $this->block_metakeys() ?? [];
+		$this->metakeys = (array) $this->block_metakeys() ?? [];
 
-		if(empty($this->metakeys)) return;
+		if (empty($this->metakeys)) return;
 
-		foreach($this->metakeys as $meta) {
+		foreach ($this->metakeys as $meta) {
 
 			$meta_key = isset($meta['key']) ? $meta['key'] : null;
-			if(empty($meta_key)) continue;
+			if (empty($meta_key)) continue;
 
 			$settings = $meta;
-			if(!isset($settings['show_in_rest'])) $settings['show_in_rest'] = true;
+			if (!isset($settings['show_in_rest'])) $settings['show_in_rest'] = true;
 			unset($settings['key']);
 
 			register_meta('post', $meta_key, $settings);

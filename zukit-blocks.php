@@ -3,7 +3,7 @@
 require_once('traits/block-attributes.php');
 require_once('traits/block-metakeys.php');
 
-// Basic Blocks Class ---------------------------------------------------------]
+// Basic Blocks Class -----------------------------------------------------------------------------]
 
 class zukit_Blocks extends zukit_Addon {
 
@@ -115,7 +115,7 @@ class zukit_Blocks extends zukit_Addon {
 		}
 	}
 
-	// Scripts & Styles management --------------------------------------------]
+	// Scripts & Styles management ----------------------------------------------------------------]
 
 	private function script_defaults($kind = null, $key = null) {
 		$defaults = [
@@ -238,7 +238,7 @@ class zukit_Blocks extends zukit_Addon {
 		$this->admin_enqueue_script($this->handle, $js_params);
 	}
 
-	// Blocks list, parsing and other helpers ---------------------------------]
+	// Blocks list, parsing and other helpers -----------------------------------------------------]
 
 	// normalize block name to include namespace, if provided as non-namespaced
 	protected function full_name($name) {
