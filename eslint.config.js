@@ -1,9 +1,10 @@
 import js from '@eslint/js'
-import wordpressPlugin from '@wordpress/eslint-plugin'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import importSortPlugin from 'eslint-plugin-simple-import-sort'
 import globals from 'globals'
+
+import wordpressPlugin from '@wordpress/eslint-plugin'
 
 export default [
 	js.configs.recommended,
@@ -91,6 +92,7 @@ export default [
 					groups: [
 						['^\\u0000'],
 						['^lodash-es', '^react', '^@?\\w'],
+						['^@wordpress/'],
 						['^components', '^data', '^hooks', '^plugins'],
 						['^\\.'],
 					],
