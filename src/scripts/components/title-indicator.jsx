@@ -1,9 +1,7 @@
 // WordPress dependencies
-
-const { ColorIndicator } = wp.components
+import { ColorIndicator } from '@wordpress/components'
 
 // Internal dependencies
-
 import { mergeClasses } from '../utils.jsx'
 
 // Panel Title Indicator Component

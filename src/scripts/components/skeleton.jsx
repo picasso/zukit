@@ -12,16 +12,13 @@ import {
 } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { compose } = wp.compose
-const { RawHTML } = wp.element
-const { BlockIcon } = wp.blockEditor
-const { withNotices, SlotFillProvider } = wp.components
-const { useState, useCallback, useEffect, useMemo } = wp.element
+import { BlockIcon } from '@wordpress/block-editor'
+import { SlotFillProvider, withNotices } from '@wordpress/components'
+import { compose } from '@wordpress/compose'
+import { RawHTML, useCallback, useEffect, useMemo, useState } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 
 // Internal dependencies
-
 import { ajaxDoAction } from '../fetch.js'
 import NoticesContext from '../hooks/use-notices.jsx'
 import { useOptions } from '../hooks/use-options.js'

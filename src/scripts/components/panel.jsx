@@ -1,9 +1,7 @@
 // WordPress dependencies
-
-const { PanelBody } = wp.components
+import { PanelBody } from '@wordpress/components'
 
 // Internal dependencies
-
 import { usePanelsContext } from '../hooks/use-panels.js'
 import { mergeClasses } from '../utils.jsx'
 

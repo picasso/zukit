@@ -1,10 +1,8 @@
 // WordPress dependencies
-
-const { PanelRow, Button, Spinner } = wp.components
-const { forwardRef } = wp.element
+import { Button, PanelRow, Spinner } from '@wordpress/components'
+import { forwardRef } from '@wordpress/element'
 
 // Internal dependencies
-
 import { mergeClasses, simpleMarkdown } from '../utils.jsx'
 
 // Zukit Action Button Component

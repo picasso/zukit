@@ -1,13 +1,11 @@
 import { forEach, get, includes, isEmpty, isNil, repeat, sortBy } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { createHigherOrderComponent } = wp.compose
-const { withSelect, useSelect } = wp.data
+import { createHigherOrderComponent } from '@wordpress/compose'
+import { useSelect, withSelect } from '@wordpress/data'
+import { __ } from '@wordpress/i18n'
 
 // Internal dependencies
-
 import { isNum } from '../utils.jsx'
 import { defaultGetter, defaultMerger, setupStore } from './generic-store.js'
 

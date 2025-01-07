@@ -1,13 +1,11 @@
 import { reduce } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { useState, useCallback, useEffect } = wp.element
-const { BaseControl, ToggleControl } = wp.components
+import { BaseControl, ToggleControl } from '@wordpress/components'
+import { useCallback, useEffect, useState } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 
 // Internal dependencies
-
 import { alterClassWithClientId, cssWithClientId } from '../jquery-helpers.js'
 import { mergeClasses } from '../utils.jsx'
 import Loader from './loader.jsx'

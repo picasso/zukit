@@ -1,15 +1,13 @@
 import { debounce, isEmpty, isFunction, isNil } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { ENTER } = wp.keycodes
-const { Button, TextControl, Tooltip } = wp.components
-const { useCallback, useState, useEffect } = wp.element
-const { useInstanceId } = wp.compose
+import { Button, TextControl, Tooltip } from '@wordpress/components'
+import { useInstanceId } from '@wordpress/compose'
+import { useCallback, useEffect, useState } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
+import { ENTER } from '@wordpress/keycodes'
 
 // Internal dependencies
-
 import { mergeClasses, uniqueValue } from '../utils.jsx'
 import ConditionalWrap from './conditional-wrap.jsx'
 

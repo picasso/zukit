@@ -1,11 +1,9 @@
 import { isNil } from 'lodash-es'
 
 // WordPress dependencies
-
-const { RawHTML } = wp.element
+import { RawHTML } from '@wordpress/element'
 
 // Internal dependencies
-
 import { useLoaders } from '../data/use-store.js'
 import { mergeClasses } from '../utils.jsx'
 

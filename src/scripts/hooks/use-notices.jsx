@@ -1,7 +1,6 @@
 // WordPress dependencies
-
-const { useContext, createContext } = wp.element
-const { createHigherOrderComponent } = wp.compose
+import { createHigherOrderComponent } from '@wordpress/compose'
+import { createContext, useContext } from '@wordpress/element'
 
 // Context to make Notices be accessible by many components in the tree,
 // and at different nesting levels

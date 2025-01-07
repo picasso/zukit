@@ -19,11 +19,9 @@ import {
 } from 'lodash-es'
 
 // WordPress dependencies
-
-const { apiFetch } = wp
+import apiFetch from '@wordpress/api-fetch'
 
 // Internal dependencies
-
 import { messageWithError, toJSON } from './utils.jsx'
 
 const cacheKey = 'cache'

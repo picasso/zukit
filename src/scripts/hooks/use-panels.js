@@ -1,11 +1,9 @@
 import { forEach, get, isFunction, isPlainObject, mapValues, set } from 'lodash-es'
 
 // WordPress dependencies
-
-const { createContext, useContext, useCallback, useReducer } = wp.element
+import { createContext, useCallback, useContext, useReducer } from '@wordpress/element'
 
 // Internal dependencies
-
 import { ajaxUpdateOptions } from '../fetch.js'
 import { checkDependency } from '../utils.jsx'
 

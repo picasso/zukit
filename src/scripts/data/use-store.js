@@ -10,12 +10,10 @@ import {
 } from 'lodash-es'
 
 // WordPress dependencies
-
-const { useSelect, useDispatch } = wp.data
-const { useRef, useReducer } = wp.element
+import { useDispatch, useSelect } from '@wordpress/data'
+import { useReducer, useRef } from '@wordpress/element'
 
 // Internal dependencies
-
 import { useCoreDataGeneric, useSvgFromFileGeneric } from './core-store.js'
 import { setupStore } from './generic-store.js'
 

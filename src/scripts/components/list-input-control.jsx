@@ -1,16 +1,14 @@
 import { has, includes, isArray, isEmpty, isNil, join, map, pull, split } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { ENTER } = wp.keycodes
-const { compose, useInstanceId } = wp.compose
-const { BaseControl, Button, TextControl, Tooltip } = wp.components
-const { useState, useCallback, useMemo } = wp.element
-const { isEmail, isURL } = wp.url
+import { BaseControl, Button, TextControl, Tooltip } from '@wordpress/components'
+import { compose, useInstanceId } from '@wordpress/compose'
+import { useCallback, useMemo, useState } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
+import { ENTER } from '@wordpress/keycodes'
+import { isEmail, isURL } from '@wordpress/url'
 
 // Internal dependencies
-
 import { withNoticesContext } from '../hooks/use-notices.jsx'
 import { scrollTop } from '../jquery-helpers.js'
 import { getKey, mergeClasses, messageWithError } from '../utils.jsx'

@@ -1,9 +1,7 @@
 // WordPress dependencies
-
-const { ToggleControl } = wp.components
+import { ToggleControl } from '@wordpress/components'
 
 // Internal dependencies
-
 import { mergeClasses, simpleMarkdown } from '../utils.jsx'
 import ZukitDivider from './divider.jsx'
 

@@ -1,13 +1,11 @@
 import { defaultsDeep, forEach, get, has, map, set } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { createRoot } = wp.element
-const { SelectControl, Button } = wp.components
+import { Button, SelectControl } from '@wordpress/components'
+import { createRoot } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 
 // Internal dependencies
-
 import ZukitDivider from './components/divider.jsx'
 import ZukitSkeleton from './components/skeleton.jsx'
 import ZukitToggle from './components/toggle.jsx'

@@ -1,13 +1,11 @@
 import { defaults, get, keys } from 'lodash-es'
 
 // WordPress dependencies
+import apiFetch from '@wordpress/api-fetch'
 // https://developer.wordpress.org/block-editor/packages/packages-data/
-
-const { registerStore } = wp.data
-const { apiFetch } = wp
+import { registerStore } from '@wordpress/data'
 
 // Internal dependencies
-
 import { requestURL } from '../fetch.js'
 export { requestURL }
 

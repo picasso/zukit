@@ -1,8 +1,7 @@
 import { isString, trim } from 'lodash-es'
 
 // WordPress dependencies
-
-const { createElement } = wp.element
+import { createElement } from '@wordpress/element'
 
 // Conditional Wrap Component
 // condition ? wrap(children) : children

@@ -1,6 +1,5 @@
 // WordPress dependencies
-
-const { Path, G, SVG } = wp.components
+import { G, Path, SVG } from '@wordpress/components'
 
 // Zukit Notice icons
 

@@ -36,9 +36,8 @@ import {
 } from 'lodash-es'
 
 // WordPress dependencies
-
-const { useEffect, useRef } = wp.element
-const { usePrevious } = wp.compose
+import { usePrevious } from '@wordpress/compose'
+import { useEffect, useRef } from '@wordpress/element'
 
 // log levels (but errors are always shown!):
 //

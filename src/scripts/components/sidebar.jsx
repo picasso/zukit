@@ -1,13 +1,18 @@
 import { get, isEmpty, isNil, map, omitBy, pickBy, some } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { useCallback } = wp.element
-const { createSlotFill, PanelBody, PanelRow, Button, ExternalLink, Spinner } = wp.components
+import {
+	Button,
+	createSlotFill,
+	ExternalLink,
+	PanelBody,
+	PanelRow,
+	Spinner,
+} from '@wordpress/components'
+import { useCallback } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 
 // Internal dependencies
-
 import { checkDependency, mergeClasses, simpleMarkdown } from '../utils.jsx'
 import ZukitActionButton from './action-button.jsx'
 import ZukitToggle from './toggle.jsx'

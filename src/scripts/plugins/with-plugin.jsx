@@ -12,19 +12,17 @@ import {
 } from 'lodash-es'
 
 // WordPress dependencies
-
-const { createHigherOrderComponent, compose } = wp.compose
-const {
-	PluginSidebarMoreMenuItem,
+import { Fill, PanelBody } from '@wordpress/components'
+import { compose, createHigherOrderComponent } from '@wordpress/compose'
+import { withDispatch, withSelect } from '@wordpress/data'
+import {
 	PluginDocumentSettingPanel,
 	PluginPostStatusInfo,
 	PluginSidebar,
-} = wp.editPost
-const { Fill, PanelBody } = wp.components
-const { withSelect, withDispatch } = wp.data
+	PluginSidebarMoreMenuItem,
+} from '@wordpress/edit-post'
 
 // Internal dependencies
-
 import { useForceUpdater } from '../data/use-store.js'
 
 // Higher-order component which renders the original component inside requested SlotFills

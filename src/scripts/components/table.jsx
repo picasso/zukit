@@ -1,13 +1,11 @@
 import { forEach, get, isEmpty, isNil, isPlainObject, map, noop } from 'lodash-es'
 
 // WordPress dependencies
-
-const { RawHTML, useState, useCallback, useEffect } = wp.element
-const { Spinner, Tooltip, ExternalLink } = wp.components
-const { BlockIcon } = wp.blockEditor
+import { BlockIcon } from '@wordpress/block-editor'
+import { ExternalLink, Spinner, Tooltip } from '@wordpress/components'
+import { RawHTML, useCallback, useEffect, useState } from '@wordpress/element'
 
 // Internal dependencies
-
 import { getExternalData, hexToRGBA, mergeClasses, simpleMarkdown } from '../utils.jsx'
 import ConditionalWrap from './conditional-wrap.jsx'
 

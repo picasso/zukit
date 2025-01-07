@@ -1,6 +1,5 @@
 // WordPress dependencies
-
-const { createElement } = wp.element
+import { createElement } from '@wordpress/element'
 
 // Alternative RawHTML Component
 

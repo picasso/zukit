@@ -1,13 +1,11 @@
 import { castArray, map } from 'lodash-es'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { Fragment } = wp.element
-const { Button, Icon, Modal } = wp.components
+import { Button, Icon, Modal } from '@wordpress/components'
+import { Fragment } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 
 // Internal dependencies
-
 import { error as errorIcon, info as infoIcon, warning as warningIcon } from '../icons.jsx'
 import { mergeClasses, simpleMarkdown } from '../utils.jsx'
 

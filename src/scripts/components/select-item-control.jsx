@@ -11,11 +11,9 @@ import {
 } from 'lodash-es'
 
 // WordPress dependencies
-
-const { BaseControl, Tooltip, Button, ButtonGroup } = wp.components
+import { BaseControl, Button, ButtonGroup, Tooltip } from '@wordpress/components'
 
 // Internal dependencies
-
 import { getKey, mergeClasses } from '../utils.jsx'
 import ConditionalWrap from './conditional-wrap.jsx'
 

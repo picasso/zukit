@@ -1,11 +1,9 @@
 import { castArray, forEach, isFunction, isPlainObject, keys, reduce, set, unset } from 'lodash-es'
 
 // WordPress dependencies
-
-const { useCallback, useReducer, useRef } = wp.element
+import { useCallback, useReducer, useRef } from '@wordpress/element'
 
 // Internal dependencies
-
 import { ajaxUpdateOptions } from '../fetch.js'
 
 // The state update logic with the useReducer() -------------------------------]

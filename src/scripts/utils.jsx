@@ -32,10 +32,9 @@ import {
 import clsx from 'clsx'
 
 // WordPress dependencies
-
-const { __ } = wp.i18n
-const { Path, G, SVG } = wp.components
-const { getCategories, setCategories, registerBlockCollection } = wp.blocks
+import { getCategories, registerBlockCollection, setCategories } from '@wordpress/blocks'
+import { G, Path, SVG } from '@wordpress/components'
+import { __ } from '@wordpress/i18n'
 
 let extData = null
 // Gets JSON data from PHP
