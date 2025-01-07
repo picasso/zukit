@@ -446,7 +446,21 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	public function zukit_enqueue($hook) {
 		if ($this->is_zukit_slug($hook)) {
 			// dependencies for Zukit script & styles
-			$js_deps = ['wp-edit-post', 'lodash'];
+			// obtained from `php` asset which is generated automatically by `wp-scripts`
+			$js_deps = [
+				'lodash',
+				'react-jsx-runtime',
+				'wp-api-fetch',
+				'wp-block-editor',
+				'wp-blocks',
+				'wp-components',
+				'wp-compose',
+				'wp-data',
+				'wp-element',
+				'wp-i18n',
+				'wp-keycodes',
+				'wp-url',
+			];
 			$css_deps = ['wp-edit-post'];
 			// params for 'zukit' script
 			$zukit_params = [

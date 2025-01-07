@@ -24,7 +24,18 @@ class zukit_Blocks extends zukit_Addon {
 	// filename with common colors that could be available in JS
 	private static $colors_filename = 'zukit-colors';
 	private static $zukit_colors = null;
-	private static $basic_colors = ['red', 'orange', 'yellow', 'green', 'lime', 'blue', 'blue-sky', 'violet', 'brown', 'grey'];
+	private static $basic_colors = [
+		'red',
+		'orange',
+		'yellow',
+		'green',
+		'lime',
+		'blue',
+		'blue-sky',
+		'violet',
+		'brown',
+		'grey'
+	];
 
 	// Add functions for blocks with attributes
 	use zukit_BlockAttributes;
@@ -122,8 +133,22 @@ class zukit_Blocks extends zukit_Addon {
 			// front-end script & style
 			'script'	=> [
 				'add_prefix'	=> false,
-				// данные получены из `php` asset что генерятся автоматически by `wp-scropts`
-				'deps'			=> ['lodash', 'react-jsx-runtime'],
+				// obtained from `php` asset which is generated automatically by `wp-scripts`
+				'deps'			=> [
+					'lodash',
+					'react-jsx-runtime',
+					'wp-api-fetch',
+					'wp-block-editor',
+					'wp-blocks',
+					'wp-components',
+					'wp-compose',
+					'wp-data',
+					'wp-edit-post',
+					'wp-element',
+					'wp-i18n',
+					'wp-keycodes',
+					'wp-url'
+				],
 				'data'			=> [$this, 'jsdata_defaults'],
 				'handle'		=> $this->handle,
 			],
