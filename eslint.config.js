@@ -7,12 +7,12 @@ import globals from 'globals'
 
 export default [
 	js.configs.recommended,
-
+	{
+		files: ['src/scripts/**/*.{js,jsx,ts,tsx}', '*.mjs', '*.cjs'],
+	},
 	{
 		...reactPlugin.configs.flat.recommended,
 
-		ignores: ['dist'],
-		files: ['src/scripts/**/*.{js,jsx,ts,tsx}', '*.mjs', '*.cjs'],
 		settings: { react: { version: 'detect' } },
 		languageOptions: {
 			globals: {
@@ -98,4 +98,7 @@ export default [
 			],
 		},
 	},
+	// `ignores` should be the last item in config
+	// https://github.com/eslint/eslint/issues/17400#issuecomment-1647463901
+	{ ignores: ['dist/**'] },
 ]
