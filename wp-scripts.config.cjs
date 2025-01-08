@@ -5,6 +5,9 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const path = require('path')
 
+// remove default `RtlCssPlugin` plugin
+const defaultPlugins = defaultConfig.plugins.filter((p) => p.constructor?.name !== 'RtlCssPlugin')
+
 module.exports = {
 	...defaultConfig,
 	context: path.resolve(__dirname, 'src'),
@@ -20,11 +23,11 @@ module.exports = {
 		path: path.resolve(__dirname, 'dist'),
 	},
 	plugins: [
-		...defaultConfig.plugins,
+		...defaultPlugins,
 		new CleanWebpackPlugin({
 			protectWebpackAssets: false,
 			cleanOnceBeforeBuildPatterns: ['**/*', '!*.js'],
-			cleanAfterEveryBuildPatterns: ['*-rtl.css', '*asset.php', '*-colors.min.js'],
+			cleanAfterEveryBuildPatterns: ['*asset.php', '*-colors.min.js'],
 		}),
 	],
 	stats: {

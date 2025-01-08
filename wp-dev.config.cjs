@@ -5,6 +5,9 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 const path = require('path')
 
+// remove default `RtlCssPlugin` plugin
+const defaultPlugins = defaultConfig.plugins.filter((p) => p.constructor?.name !== 'RtlCssPlugin')
+
 module.exports = {
 	...defaultConfig,
 	context: path.resolve(__dirname, 'src'),
@@ -17,18 +20,15 @@ module.exports = {
 		path: path.resolve(__dirname, 'dist'),
 	},
 	plugins: [
-		...defaultConfig.plugins,
-		new BrowserSyncPlugin(
-			{
-				// browse to http://localhost:3002/ during development,
-				host: 'localhost',
-				port: 3002,
-				https: true,
-				open: false,
-				proxy: 'https://dr.local/wp-admin',
-			},
-			// { injectCss: true },
-		),
+		...defaultPlugins,
+		new BrowserSyncPlugin({
+			// browse to http://localhost:3002/ during development,
+			host: 'localhost',
+			port: 3002,
+			https: true,
+			open: false,
+			proxy: 'https://dr.local/wp-admin',
+		}),
 	],
 	stats: {
 		children: false,

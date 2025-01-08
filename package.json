@@ -24,11 +24,10 @@
 		"---------": "",
 		"lint:eslint": "eslint src/scripts",
 		"lint:fix": "npm run lint:eslint -- --fix",
-		"format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
-		"format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+		"format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,scss}\"",
+		"format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,scss}\"",
 		"----------": "",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"check-engines": "wp-scripts check-engines",
 		"packages-update": "wp-scripts packages-update"
 	},
 	"dependencies": {
