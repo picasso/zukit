@@ -48,6 +48,7 @@ export default [
 			// general
 			semi: ['warn', 'never'],
 			'no-console': 'warn',
+			'no-var': 'warn',
 			'object-shorthand': 'warn',
 			'no-useless-catch': 'warn',
 			'no-empty-pattern': 'warn',
