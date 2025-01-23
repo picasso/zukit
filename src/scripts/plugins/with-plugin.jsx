@@ -20,7 +20,7 @@ import {
 	PluginPostStatusInfo,
 	PluginSidebar,
 	PluginSidebarMoreMenuItem,
-} from '@wordpress/edit-post'
+} from '@wordpress/editor'
 
 // Internal dependencies
 import { useForceUpdater } from '../data/use-store.js'
