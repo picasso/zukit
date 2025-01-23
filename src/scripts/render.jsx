@@ -86,6 +86,7 @@ export function selectOption(optionData, options, updateOptions, withPath = null
 							value={value}
 							onChange={(value) => updateOptions({ [selectId]: value })}
 							options={selectOptions}
+							__nextHasNoMarginBottom
 						/>
 						{defaultValue !== undefined && (
 							<Button

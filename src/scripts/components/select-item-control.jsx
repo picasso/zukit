@@ -146,6 +146,7 @@ const SelectItemControl = ({
 			className={baseClassName}
 			label={label}
 			help={help}
+			__nextHasNoMarginBottom={true}
 		>
 			<ConditionalWrap condition={withoutControl} wrap="<div>" className={baseClassName}>
 				<ButtonGroup aria-label={label}>

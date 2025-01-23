@@ -133,6 +133,7 @@ const ListInputControl = ({
 	return (
 		<BaseControl
 			className={mergeClasses(cprefix, { __fullwidth: isCombined || isInputCombined })}
+			__nextHasNoMarginBottom
 		>
 			{isCombined && (
 				<div className="__sidebyside __list">
@@ -207,6 +208,7 @@ const ListInputControl = ({
 							value={currentItem}
 							onChange={setCurrentItem}
 							onKeyDown={onKeyDown}
+							__nextHasNoMarginBottom
 							{...(isInputCombined ? { id: controlId } : {})}
 						/>
 						<Button

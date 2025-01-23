@@ -77,7 +77,11 @@ const LoaderControl = ({
 	const noLoader = <span>{__('none', 'zukit')}</span>
 
 	return (
-		<BaseControl className={mergeClasses(cprefix, className)} label={label}>
+		<BaseControl
+			className={mergeClasses(cprefix, className)}
+			label={label}
+			__nextHasNoMarginBottom
+		>
 			<SelectItemControl
 				withoutControl
 				columns={3}
@@ -96,6 +100,7 @@ const LoaderControl = ({
 				label={__('Reveal Loader', 'zukit')}
 				checked={revealLoader}
 				onChange={onReveal}
+				__nextHasNoMarginBottom
 			/>
 		</BaseControl>
 	)

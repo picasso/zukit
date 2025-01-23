@@ -17,6 +17,7 @@ const ZukitToggle = ({ className, withDivider, label, help, checked, onChange })
 				help={simpleMarkdown(help, { br: true })}
 				checked={!!checked}
 				onChange={onChange}
+				__nextHasNoMarginBottom
 			/>
 		</>
 	)

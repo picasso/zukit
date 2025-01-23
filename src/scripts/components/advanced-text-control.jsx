@@ -180,6 +180,7 @@ const AdvTextControl = ({
 					value={(withDebounce ? temporaryValue : value) || ''}
 					onChange={onValidatedChange}
 					onKeyDown={onEnter}
+					__nextHasNoMarginBottom
 					{...(isCombined ? { id: controlId } : {})}
 				/>
 				{withButton && (
