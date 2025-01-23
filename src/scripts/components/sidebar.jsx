@@ -118,7 +118,7 @@ const ZukitSidebar = ({
 					<Button
 						className="__plugin_actions admin-blue"
 						icon={'admin-settings'}
-						isSecondary
+						variant="secondary"
 						onClick={resetAllOptions}
 					>
 						{__('Reset Plugin Options', 'zukit')}
@@ -174,7 +174,7 @@ const ZukitSidebar = ({
 									'is-loading': get(actionLoading, value),
 								})}
 								icon={icon}
-								isSecondary
+								variant="secondary"
 								onClick={() => ajaxAction(value)}
 							>
 								{label}

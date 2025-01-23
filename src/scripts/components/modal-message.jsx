@@ -38,7 +38,7 @@ const ModalMessage = ({
 						<Fragment key={key}>{button}</Fragment>
 					))}
 					{!withoutCloseButton && (
-						<Button isPrimary onClick={onClose}>
+						<Button variant="primary" onClick={onClose}>
 							{__('Close')}
 						</Button>
 					)}

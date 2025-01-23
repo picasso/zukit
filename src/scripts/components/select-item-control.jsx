@@ -21,20 +21,22 @@ import ConditionalWrap from './conditional-wrap.jsx'
 
 const cname = 'zukit-select-item'
 const buttonPossibleProps = [
-	'href',
-	'target',
+	'accessibleWhenDisabled',
+	'description',
 	'disabled',
+	'href',
 	'icon',
+	'iconPosition',
 	'iconSize',
-	'shortcut',
-	'onMouseDown',
-	'isPrimary',
-	'isTertiary',
-	'isPressed',
 	'isBusy',
-	'isDefault',
-	'isLink',
 	'isDestructive',
+	'isPressed',
+	'label',
+	'shortcut',
+	'showTooltip',
+	'text',
+	'tooltipPosition',
+	'target',
 ]
 
 const SelectItemControl = ({
@@ -96,8 +98,8 @@ const SelectItemControl = ({
 						'is-selected': selectedItem === value && !isDisabled,
 						// 'is-clickable': fillNull && value === null,
 					})}
-					isSecondary={isSecondary}
-					isSmall={isSmall}
+					variant={isSecondary ? 'secondary' : 'primary'}
+					size={isSmall ? 'small' : 'default'}
 					onClick={() => (isDisabled ? false : onClick(value))}
 					style={style || smartStyle(buttonStyle, isDisabled, value, selectedItem)}
 					{...pick(additionalProps, buttonPossibleProps)}

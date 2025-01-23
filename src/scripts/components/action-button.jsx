@@ -24,7 +24,7 @@ const ZukitActionButton = (
 						className,
 					)}
 					icon={icon}
-					isSecondary
+					variant="secondary"
 					onClick={() => onClick(value)}
 					ref={ref}
 				>

@@ -151,7 +151,7 @@ const ListInputControl = ({
 						<Tooltip text={__('Remove', 'zukit')} position="top center">
 							<Button
 								className="__remove"
-								isSecondary
+								variant="secondary"
 								icon={closeIcon}
 								onClick={() => onRemoveItem(val)}
 							/>
@@ -162,7 +162,7 @@ const ListInputControl = ({
 					<Button
 						className="__edit __plugin_actions __auto admin-blue"
 						icon="admin-settings"
-						isSecondary
+						variant="secondary"
 						onClick={() => setEditMode(true)}
 					>
 						{__('Modify', 'zukit')}
@@ -212,14 +212,14 @@ const ListInputControl = ({
 						<Button
 							className="__add __plugin_actions admin-blue"
 							icon="tag"
-							isSecondary
+							variant="secondary"
 							onClick={onAddItem}
 						>
 							{__('Add', 'zukit')}
 						</Button>
 						<Button
 							className="__reset __plugin_actions magenta"
-							isSecondary
+							variant="secondary"
 							icon="trash"
 							onClick={onReset}
 						>

@@ -89,7 +89,7 @@ export function selectOption(optionData, options, updateOptions, withPath = null
 						/>
 						{defaultValue !== undefined && (
 							<Button
-								isSecondary
+								variant="secondary"
 								className="__reset"
 								onClick={() => updateOptions({ [selectId]: defaultValue })}
 							>
