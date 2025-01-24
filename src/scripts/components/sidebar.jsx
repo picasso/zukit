@@ -120,6 +120,7 @@ const ZukitSidebar = ({
 						icon={'admin-settings'}
 						variant="secondary"
 						onClick={resetAllOptions}
+						__next40pxDefaultSize
 					>
 						{__('Reset Plugin Options', 'zukit')}
 					</Button>
@@ -176,6 +177,7 @@ const ZukitSidebar = ({
 								icon={icon}
 								variant="secondary"
 								onClick={() => ajaxAction(value)}
+								__next40pxDefaultSize
 							>
 								{label}
 								{get(actionLoading, value) && <Spinner />}

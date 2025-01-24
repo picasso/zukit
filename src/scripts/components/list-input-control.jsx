@@ -155,6 +155,7 @@ const ListInputControl = ({
 								variant="secondary"
 								icon={closeIcon}
 								onClick={() => onRemoveItem(val)}
+								__next40pxDefaultSize
 							/>
 						</Tooltip>
 					</div>
@@ -165,6 +166,7 @@ const ListInputControl = ({
 						icon="admin-settings"
 						variant="secondary"
 						onClick={() => setEditMode(true)}
+						__next40pxDefaultSize
 					>
 						{__('Modify', 'zukit')}
 					</Button>
@@ -216,6 +218,7 @@ const ListInputControl = ({
 							icon="tag"
 							variant="secondary"
 							onClick={onAddItem}
+							__next40pxDefaultSize
 						>
 							{__('Add', 'zukit')}
 						</Button>
@@ -224,6 +227,7 @@ const ListInputControl = ({
 							variant="secondary"
 							icon="trash"
 							onClick={onReset}
+							__next40pxDefaultSize
 						>
 							{__('Reset All', 'zukit')}
 						</Button>

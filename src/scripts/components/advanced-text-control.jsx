@@ -198,6 +198,7 @@ const AdvTextControl = ({
 							})}
 							icon={controlIcon}
 							onClick={onClick}
+							__next40pxDefaultSize
 						/>
 					</ConditionalWrap>
 				)}

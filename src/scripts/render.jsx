@@ -93,6 +93,7 @@ export function selectOption(optionData, options, updateOptions, withPath = null
 								variant="secondary"
 								className="__reset"
 								onClick={() => updateOptions({ [selectId]: defaultValue })}
+								__next40pxDefaultSize
 							>
 								{__('Reset', 'zukit')}
 							</Button>

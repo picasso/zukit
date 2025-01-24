@@ -102,6 +102,7 @@ const SelectItemControl = ({
 					size={isSmall ? 'small' : 'default'}
 					onClick={() => (isDisabled ? false : onClick(value))}
 					style={style || smartStyle(buttonStyle, isDisabled, value, selectedItem)}
+					__next40pxDefaultSize
 					{...pick(additionalProps, buttonPossibleProps)}
 				>
 					{fillNull && value === null ? (

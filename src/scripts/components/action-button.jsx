@@ -27,6 +27,7 @@ const ZukitActionButton = (
 					variant="secondary"
 					onClick={() => onClick(value)}
 					ref={ref}
+					__next40pxDefaultSize
 				>
 					{label}
 					{isLoading && <Spinner />}
