@@ -149,7 +149,7 @@ const ListInputControl = ({
 				{map(items, (val) => (
 					<div className="__list-item" key={getKey(val)}>
 						<span>{val}</span>
-						<Tooltip text={__('Remove', 'zukit')} position="top center">
+						<Tooltip text={__('Remove', 'zukit')} placement="top">
 							<Button
 								className="__remove"
 								variant="secondary"
