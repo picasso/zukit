@@ -95,9 +95,15 @@ export function isWrongId(id) {
 // Ensures the ids array contains numbers
 export function getIds(items, asString = false) {
 	// always ensure the ids array contains numbers.
-	// And remove all elements with "empty" value (undefined, null)
+	// and remove all elements with "empty" value (undefined, null)
 	if (!items || items.length === 0) return asString ? '' : []
-	const ids = compact(map(items, (value) => value && value.id && parseInt(value.id, 10)))
+	const ids = compact(
+		map(items, (value) => {
+			if (isString(value)) return parseInt(value, 10)
+			if (value?.id) return parseInt(value.id, 10)
+			return null
+		}),
+	)
 	return asString ? join(ids, ',') : ids
 }
 
