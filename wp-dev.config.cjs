@@ -2,11 +2,13 @@
 // See https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/#advanced-usage
 
 const defaultConfig = require('@wordpress/scripts/config/webpack.config')
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+// const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 const path = require('path')
 
 // remove default `RtlCssPlugin` plugin
-const defaultPlugins = defaultConfig.plugins.filter((p) => p.constructor?.name !== 'RtlCssPlugin')
+const defaultPlugins = defaultConfig.plugins.filter(
+	(p) => p.constructor?.name !== 'RtlCssPlugin' && p.constructor?.name !== 'CleanWebpackPlugin',
+)
 
 module.exports = {
 	...defaultConfig,
@@ -21,14 +23,14 @@ module.exports = {
 	},
 	plugins: [
 		...defaultPlugins,
-		new BrowserSyncPlugin({
-			// browse to http://localhost:3002/ during development,
-			host: 'localhost',
-			port: 3002,
-			https: true,
-			open: false,
-			proxy: 'https://dr.local/wp-admin',
-		}),
+		// new BrowserSyncPlugin({
+		// 	// browse to http://localhost:3002/ during development,
+		// 	host: 'localhost',
+		// 	port: 3002,
+		// 	https: true,
+		// 	open: false,
+		// 	proxy: 'https://dr.local/wp-admin',
+		// }),
 	],
 	stats: {
 		children: false,
