@@ -1,3 +1,5 @@
+import './debug-load.js'
+
 import * as components from './components/blocks-index.js'
 import * as data from './data/use-store.js'
 import debug from './debug.js'
@@ -7,7 +9,6 @@ import * as jq from './jquery-helpers.js'
 import * as plugins from './plugins/with-plugin.jsx'
 import { blocksSet as render } from './render.jsx'
 import { blocksSet as utils } from './utils.jsx'
-
 wp.zukit = {
 	fetch,
 	utils,

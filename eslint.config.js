@@ -22,7 +22,7 @@ export default [
 				process: true,
 				wp: true,
 				jQuery: true,
-				Zubug: true,
+				dev: true,
 			},
 
 			ecmaVersion: 2021,

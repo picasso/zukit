@@ -2,6 +2,7 @@
 import {
 	castArray,
 	cloneDeepWith,
+	compact,
 	concat,
 	difference,
 	findKey,
@@ -12,32 +13,34 @@ import {
 	includes,
 	isArray,
 	isBoolean,
+	isDate,
 	isElement,
 	isEmpty,
 	isEqual,
 	isFunction,
+	isMap,
 	isNil,
 	isNumber,
 	isObject,
+	isSet,
 	isString,
 	isUndefined,
 	join,
 	keys,
 	map,
 	mapValues,
-	merge,
 	pick,
+	reduce,
+	set,
 	slice,
 	split,
 	startsWith,
 	take,
 	transform,
 	trimStart,
+	union,
+	uniq,
 } from 'lodash-es'
-
-// WordPress dependencies
-import { usePrevious } from '@wordpress/compose'
-import { useEffect, useRef } from '@wordpress/element'
 
 // log levels (but errors are always shown!):
 //
@@ -72,17 +75,29 @@ import { useEffect, useRef } from '@wordpress/element'
 //      '#' - bold, '#a79635'
 //      '^' - bold, цвет зависит от функции и конфига
 
+const logMode = {
+	none: 0,
+	short: 10,
+	changes: 11,
+	default: 20,
+	normal: 21,
+	verbose: 30,
+	full: 31,
+}
+
 // some internal vars
 const config = {
-	level: 'default',
+	level: logMode.default,
+	withoutCaller: true, // skip output of 'caller' name
+	localDates: true, // convert 'dates' with 'toLocaleString()'
 	simplify: true, // когда установлено, то пытается упростить вывод
 	//  - например, заменяет вывод массива с одним элементом на
 	//  на вывод element[0] как объекта и т.д.
 	clone: false, // clone logged values if true
-
 	mods: {
 		default: false, // do not use colors, do not simplify (почти как console.log)
 		ignoreNext: false, // do not output next error
+		func: false, // console function to use
 	},
 	colors: {
 		ok: false,
@@ -109,7 +124,7 @@ const _dim = (s) => `${_markers.d}${s}${_markers.d}`
 const _param = (s, alt) => `${_markers.p[0]}${s}${alt ? ' : ' : ''}${alt ?? ''}${_markers.p[1]}`
 const _opaque = (s) => `${_markers.o[0]}${s}${_markers.o[1]}`
 
-let dcolors = {
+const dcolors = {
 	basic: '#a79635',
 	name: '#e56a17',
 
@@ -117,6 +132,7 @@ let dcolors = {
 	query: '#cc0096',
 	ok: '#1f993f',
 	info: '#0070c9',
+	info2: '#0070c9',
 	data: '#a79635',
 
 	white: '#ffffff',
@@ -125,38 +141,57 @@ let dcolors = {
 	accentBg: '#fff7e5',
 	colored: '#0f5d9a',
 	coloredBg: '#ecffe5',
-	dim: 'rgba(0,0,51,0.2)',
+	dim: 0.6, // 'rgba(45,93,149,0.7)',
 
-	// cyan not used, maybe later?
-	cyan: '#00b3b0',
+	cyan: '#00D1D4', // '#00b3b0',
+	green: '#00A862',
 }
 
-const mods = { alert: '!', query: '?', ok: '*', info: '+', data: '#' }
+const modRegex = /^[!|?|*|+|#|^|@|&|%|$|>]/
+const mods = {
+	alert: '!',
+	query: '?',
+	ok: '*',
+	info: '+',
+	info2: '@',
+	data: '#',
+	cyan: '&',
+	green: '%',
+	name: '$',
+}
 const arrowSymbol = ' ' + _colored('⇢') + ' '
-const chevronSymbol = ' ' + _bold('»') + ' ' // ' » ';
+const chevronSymbol = ' ' + _bold('»') + ' '
 const compactKeysCount = 6
 
+// convert 'string' level to number
 function logLevel(newLevel = '') {
 	if (newLevel) {
-		if (includes(['short', 1], newLevel)) config.level = 1
-		else if (includes(['default', 'normal', 2], newLevel)) config.level = 2
-		else if (includes(['verbose', 'full', 3], newLevel)) config.level = 3
-		else if (includes(['none', 0], newLevel)) config.level = 0
+		config.level = has(logMode, newLevel) ? logMode[newLevel] : config.level
 	}
 	return config.level
 }
 
-// требует восстановления!
-function canIlog(message, isData = false) {
-	let permission = !(/level defaults|ready\(\)/gi.test(message) && config.level == 1)
-	permission = isData ? !(config.level < 3) : permission
-	return config.level == 0 ? false : permission
+// returns array of log levels based on its code
+function logNames(level) {
+	if (isString(level)) return [level]
+	const names = reduce(
+		logMode,
+		(acc, val, name) => {
+			if (val === level) acc.push(name)
+			return acc
+		},
+		[],
+	)
+	return isEmpty(names) ? ['none'] : names
 }
 
 /* eslint-disable no-console */
 function logWithColors(message, ...data) {
 	const colored = !config.mods.default
 	let func = config.colors.info && colored ? console.info : console.log
+	if (config.mods.func) func = config.mods.func
+	// replace 'predefined' symbols
+	message = message.replace(/{->}/g, arrowSymbol).replace(/{>>}/g, chevronSymbol)
 	// if starts with '>' - then make it as collapsed group
 	if (message.startsWith('>')) {
 		message = message.replace(/^>/, '')
@@ -164,6 +199,7 @@ function logWithColors(message, ...data) {
 	}
 
 	const colors = getColors(colorBy(message))
+
 	let { format, items } = parseWithColors(stripColorModifiers(message), colors)
 	if (!isEmpty(data)) format = format + '  '
 
@@ -177,7 +213,13 @@ function logWithColors(message, ...data) {
 			items.push(...newItems)
 		} else {
 			format = format + (isString(value) ? '%s' : '%o')
-			items.push(config.clone ? cloneValue(value) : value)
+			items.push(
+				config.clone
+					? cloneValue(value)
+					: config.localDates && isDate(value)
+						? value.toLocaleString()
+						: value,
+			)
 		}
 	})
 
@@ -186,9 +228,7 @@ function logWithColors(message, ...data) {
 }
 
 function log(message, ...data) {
-	if (!canIlog(message)) return
-
-	let loglevel = logLevel()
+	const loglevel = logLevel()
 	if (loglevel == 0) return
 
 	if (isString(message)) {
@@ -197,38 +237,22 @@ function log(message, ...data) {
 	} else {
 		console.log(message, ...data)
 	}
-	// удалить после восстановления логирования Аякс
-	// if(message) {
-	//     message = message.trim();
-	//
-	//     let colors = [ colorBy(message, true),  dcolors.name, null ];
-	//     let param_regex = /\[\s*([^\]]+)]/i;
-	//     // let color2 = /loading =|ver /ig.test(message) ? dcolors.navigate : dcolors.name;
-	//
-	//     if(param_regex.test(message)) {
-	//         let matches = param_regex.exec(message);
-	//
-	//         if(/ajax\s*\w*\s*request/ig.test(message)) colors = dcolors.ajaxInit;
-	//         else if(/ajax\s*\w*\s*response/ig.test(message)) colors = dcolors.ajaxResponse;
-	//         else if(/ajax\s*\w*\s*error/ig.test(message)) colors = dcolors.ajaxError;
-	//
-	//         const messages = [message.replace(matches[0], '[ '), matches[1], ' ]'];
-	//         logWithColors(messages, colors, ...data);
-	//     } else {
-	//         logWithColors([message], colors, ...data);
-	//     }
-	// }
 }
 
 function logVerbose(...data) {
-	if (logLevel() > 2) log(...data)
+	if (logLevel() > 21) log(...data)
 }
 
 function logGroup(groupName, groupData, params) {
 	let shouldCloseGroup = true
 	// if starts with '<' - then just close group
 	if (!groupName.startsWith('<')) {
-		const { withoutNil = false, withoutIndex = false, arrayName = groupName } = params ?? {}
+		const {
+			withoutNil = false,
+			withoutIndex = false,
+			arrayName = groupName,
+			resolveFuncData = false,
+		} = params ?? {}
 		if (groupName.startsWith('-') || groupName.startsWith('+')) {
 			const func = groupName.startsWith('+') ? _accented : _dim
 			logWithColors(
@@ -239,17 +263,14 @@ function logGroup(groupName, groupData, params) {
 		} else {
 			logWithColors(`>${groupName}`)
 			if (isNil(groupData)) shouldCloseGroup = false
-			if (isFunction(groupData)) groupData = groupData()
-			forEach(groupData, (value, key) => {
-				if (!(withoutNil && isNil(value))) {
-					const indexName = withoutIndex ? '' : `[${key}]`
-					const keyName =
-						groupName && isArray(groupData) ? `${arrayName}${indexName}` : key
-					if (isFunction(value)) {
-						console.dir(value)
-					} else logWithColors(`^${_accented(keyName)} ${arrowSymbol} `, value)
-				}
-			})
+			if (resolveFuncData && isFunction(groupData)) groupData = groupData()
+			const config = { withoutNil, withoutIndex, arrayName, groupName, groupData }
+
+			if (isMap(groupData) || isSet(groupData)) {
+				groupData.forEach((value, key) => doGroupItem(value, key, config))
+			} else {
+				forEach(groupData, (value, key) => doGroupItem(value, key, config))
+			}
 		}
 	}
 	if (shouldCloseGroup) console.groupEnd()
@@ -257,126 +278,135 @@ function logGroup(groupName, groupData, params) {
 	resetAllModifiers()
 }
 
+function doGroupItem(value, key, { withoutNil, withoutIndex, arrayName, groupName, groupData }) {
+	if (!(withoutNil && isNil(value))) {
+		const indexName = withoutIndex ? '' : `[${key}]`
+		const keyName = groupName && isArray(groupData) ? `${arrayName}${indexName}` : key
+		if (isFunction(value)) {
+			console.dir(value)
+		} else logWithColors(`^${_accented(keyName)}${arrowSymbol}`, value)
+	}
+}
+
+function logReducer(name, mode, action, next, prev) {
+	const devMode = logNames(mode)
+	if (includes(devMode, 'none')) return
+
+	const hasChanged = !isEqual(prev, next)
+	const data = includes(devMode, 'changes')
+		? null
+		: {
+				action,
+				prev,
+				state: hasChanged ? next : '=prev',
+			}
+
+	logGroup(
+		`?${name} [${action.type ?? String(action)}] - {${
+			hasChanged ? '*effective change' : '#same as the previous'
+		}}`,
+		data,
+	)
+	if (includes(devMode, 'changes')) {
+		if (!hasChanged) {
+			logGroup('+action', [action])
+			logGroup('+current state', [prev])
+		} else {
+			const [updated, updatedKeys] = onlyChanges(next, prev ?? {})
+			const { next: nval, prev: pval } = updated
+			const updatedProps = uniq(concat(keys(nval), keys(pval)))
+			logGroup('+updated keys', [`[${updatedProps.join(', ')}]`])
+			forEach(updatedProps, (prop) => {
+				const subkeys = updatedKeys[prop] ?? null
+				logGroup(`+${prop}`, [
+					subkeys ? `changes for [${subkeys.join(', ')}]:` : 'value:',
+					'  {* now }  ',
+					fixValue(nval[prop], prop, next),
+					'  {! was }  ',
+					fixValue(pval[prop], prop, prev),
+				])
+			})
+		}
+		logGroupClose()
+	}
+}
+
+function logGroupClose() {
+	logGroup('<')
+}
+
 function logExpanded(...data) {
 	console.dir(...data)
 }
 
-function logColapsed(...data) {
-	console.log(...data)
-}
-
-function logSmart(value, len) {
-	const length = len ?? keys(value).length
-	if (length < compactKeysCount) logColapsed(value)
-	else logExpanded(value)
-}
-
 function warn(message, ...data) {
 	if (logLevel() === 0) return
-	if (!canIlog(message)) return
-	if (message) console.warn(message, ...data)
-	console.trace()
+
+	if (message) {
+		config.mods.default = true
+		config.mods.func = console.warn
+		logWithColors(message, ...data)
+	} else {
+		console.trace()
+	}
 }
 
 function error(message, ...data) {
 	// ignore errors when requested
 	if (config.mods.ignoreNext) return
-	if (isEmpty(data)) console.error(message)
-	else {
-		console.error(message)
-		console.info('Error data:', ...data)
+	config.mods.default = true
+	config.mods.func = console.error
+	logWithColors(`!${message}`)
+	if (!isEmpty(data)) {
+		log('-!{Error data}', ...data)
 	}
 }
 
 function logAsOneString(chunks, ...data) {
-	const message = isArray(chunks) ? join(chunks, ' ') : String(chunks)
-	logWithColors(
-		message.replace(/\s+/g, ' ').replace(/\s*\]/g, ']').replace(/\[\s*/g, '['),
-		...data,
-	)
-}
-
-// требует восстановления!
-// log ajax request and its options
-function logRequestResponse(type, route, options, response, method = 'GET') {
-	const messages = {
-		request: ` «« Initiating Ajax ${method} request with route [${route}]`,
-		error: ` »» Ajax ${method} error received from [${route}]`,
-		response: ` »» Ajax ${method} response received from [${route}]`,
-	}
-	let message = get(messages, type) || `? Ajax ${type}`
-	let logData = response ? response : options
-	if (response) {
-		logData = merge(logData, { timestamp: new Date().toString() })
-		if (isEmpty(response)) {
-			message += ` : response is empty `
-		}
-	}
-	// Log request URL and its data (options or response) if presented
-	if (isEmpty(logData)) {
-		log(message)
-	} else {
-		log(`>${message}`)
-		logGroup(logData)
-	}
-	// start/stop timing if was set in defaults
-	if (config.timing) {
-		if (response) console.timeEnd(route)
-		else console.time(route)
-	}
+	let message = isArray(chunks) ? join(chunks, ' ') : String(chunks)
+	// remove extra spaces
+	message = message.replace(/\s+/g, ' ').replace(/\s*\]/g, ']').replace(/\[\s*/g, '[')
+	logWithColors(message, ...data)
 }
 
 /* eslint-enable no-console */
 
 // Debugging in components ----------------------------------------------------]
 
-// just display the label every time the component is rendered
-function renderComponent(maybeClientId) {
-	const [clientId, clientId2] = castArray(maybeClientId)
-	const component = componentName(
-		clientId2 ? 'renderComponentWithId,renderComponent' : 'renderComponent',
-	)
-	const id = (clientId ?? clientId2) ? withId(clientId ?? clientId2) : ''
-	config.colors.ok = true
-	logAsOneString(`${_bold(component)}${id} {render}`)
-}
-
 // display variables and their values, possibly simplifying the data
-function dataInComponent(data, marker = false) {
+function dataInComponent(data, marker = '') {
 	// delayed value creation - if the 'data' is a function,
 	// then we replace it with the value returned from the function
 	if (isFunction(data)) data = data()
 
-	const component = componentName('dataInComponent')
+	const cname = componentName('dataInComponent')
 	const dataKeys = keys(data)
 	const isSingleKey = dataKeys.length === 1
-	const key = isSingleKey ? first(dataKeys) : join(map(dataKeys, _accented), `, `)
+	const key = isSingleKey ? first(dataKeys) : join(map(dataKeys, _accented), ', ')
 	const value = isSingleKey ? data[key] : data
 	const withName = !startsWith(marker, '-')
 	const altName =
 		!!stripColorModifiers(marker) && marker ? `:${_colored(stripColorModifiers(marker))}` : ''
-	const message = `${withName ? _bold(component) : ''}${altName} ${arrowSymbol} value for ${isSingleKey ? _accented(key) : key}`
+	const message = `${caller(cname, withName)}${altName} ${arrowSymbol} value for ${
+		isSingleKey ? _accented(key) : key
+	}`
 	config.colors.data = true
 	if (isSimpleType(value)) {
 		logAsOneString(message, value)
 	} else {
 		logAsOneString(message)
-		logSimplified(value)
+		logExpanded(value)
 	}
 }
 
 // display a formatted string and possibly some data
-function infoInComponent(messageData, ...data) {
-	const [message, clientId] = castArray(messageData)
+function infoInComponent(message, ...data) {
 	// minus - a special sign to skip the function name
 	const colorMod = stripColorModifiers(message, true)
-	const id = clientId ? withId(clientId) : ''
-	const component = componentName(
-		clientId ? 'infoInComponentWithId,infoInComponent' : 'infoInComponent',
-	)
-	const withName = startsWith(message, '-') ? false : component !== '?'
-	const spacer = withName || id ? ` ${arrowSymbol} ` : ''
-	const info = `${colorMod}${withName ? _bold(component) : ''}${id}${spacer}${stripColorModifiers(message)}`
+	const cname = componentName('infoInComponent')
+	const withName = startsWith(message, '-') ? false : cname !== '?'
+	const spacer = withName ? ` ${arrowSymbol} ` : ''
+	const info = `${colorMod}${caller(cname, withName)}${spacer}${stripColorModifiers(message)}`
 	config.colors.info = true
 	if (data.length === 0 || (data.length === 1 && isCompactType(data[0]))) {
 		logAsOneString(info, ...data)
@@ -386,70 +416,10 @@ function infoInComponent(messageData, ...data) {
 	}
 }
 
-// trace changes in component props and state
-function useTraceUpdate(props, state = {}, trackClientId = false) {
-	const ref = useRef({
-		key: componentName(
-			trackClientId ? 'useTraceUpdate,useTraceUpdateWithId' : 'useTraceUpdate',
-		),
-		id: trackClientId ? withId(props) : '',
-	})
-
-	const prevProps = usePrevious(props)
-	const prevState = usePrevious(state)
-
-	useEffect(() => {
-		const { id, key } = ref.current ?? {}
-		const propKeys = changedKeys(props, prevProps)
-		const stateKeys = changedKeys(state, prevState)
-
-		const propsChanged = propKeys[0].length || propKeys[1] || propKeys[2]
-		const stateChanged = stateKeys[0].length || stateKeys[1] || stateKeys[2]
-
-		if (propsChanged && !stateChanged)
-			logAsOneString(`Traced changes${id} ${_param(key, 'props')}`)
-		if (!propsChanged && stateChanged)
-			logAsOneString(`Traced changes${id} ${_param(key, 'state')}`)
-		if (propsChanged && stateChanged)
-			logAsOneString(`Traced changes${id} ${_param(key, 'props & state')}`)
-
-		if (propsChanged) logChanges(propKeys, prevProps, props)
-		if (stateChanged) logChanges(stateKeys, prevState, state)
-	}, [props, prevProps, state, prevState])
-}
-
-// to log 'aka' Mounting and Unmounting events
-function useMountUnmount() {
-	const ref = useRef({
-		component: componentName('useMountUnmount'),
-	})
-	useEffect(() => {
-		const { component } = ref.current ?? {}
-		config.colors.query = true
-		logAsOneString(`${_bold(component)} ${arrowSymbol} ${_colored('componentDidMount')}`)
-		return () => {
-			config.colors.query = true
-			logAsOneString(`${_bold(component)} ${arrowSymbol} ${_opaque('componentWillUnmount$')}`)
-		}
-	}, [])
-}
-
-// to trace several instances of one component on the page --------------------]
-
-function withId(id) {
-	return ` with ID ${_bold(shortenId(id))}`
-}
-
-function useTraceUpdateWithId(props, state = {}) {
-	useTraceUpdate(props, state, true)
-}
-
-function infoInComponentWithId(clientId, message, ...data) {
-	infoInComponent([message, clientId], ...data)
-}
-
-function renderComponentWithId(clientId) {
-	renderComponent(clientId)
+// log only changes between 'data' and 'prevData'
+function logDataWasNow(data, prevData) {
+	const dataKeys = changedKeys(data, prevData)
+	logChanges(dataKeys, prevData, data)
 }
 
 // Helpers for colored console & components debuging --------------------------]
@@ -459,7 +429,6 @@ function resetAllModifiers() {
 	config.mods = mapValues(config.mods, () => false)
 }
 
-const modRegex = /^[!|?|*|+|#|^|>]/
 function stripColorModifiers(string, returnMod = false) {
 	// minus - a special sign to skip the function name - first remove it
 	const str = trimStart(string, '-')
@@ -481,16 +450,27 @@ function colorBy(message) {
 	return color
 }
 
+function hexToRgb(hex) {
+	return hex
+		.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => '#' + r + r + g + g + b + b)
+		.substring(1)
+		.match(/.{2}/g)
+		.map((x) => parseInt(x, 16))
+}
+
 function getColors(main = dcolors.basic) {
 	const [mainColor, mainBold, mainOpaque] = isArray(main)
 		? main
 		: [main, false, { color: dcolors.white, bg: main }]
 	const weightBold = 'font-weight: bold;'
-	const weightNormal = mainBold ? weightBold : 'font-weight: normal;'
+	const weightRegular = 'font-weight: normal;'
+	const weightNormal = mainBold ? weightBold : weightRegular
 	const padding = 'padding: 0 2px 0 2px;'
 	const paddingBg = 'padding: 1px 3px 1px 3px;'
 	const rounded = 'border-radius: 3px;'
 	const opaque = mainOpaque ?? config.colors.opaque ?? { color: dcolors.white, bg: dcolors.alert }
+	const mainRgb = hexToRgb(mainColor)
+	const dimColor = `rgba(${mainRgb[0]},${mainRgb[1]},${mainRgb[2]},${dcolors.dim})`
 	return {
 		normal: `${weightNormal} color: ${mainColor}`,
 		accent: `${weightBold} ${paddingBg} ${rounded} color: ${dcolors.accent}; background: ${dcolors.accentBg}`,
@@ -498,17 +478,10 @@ function getColors(main = dcolors.basic) {
 		params: `${weightBold} ${padding} color: ${dcolors.name}`,
 		colored: `${weightBold} ${paddingBg} ${rounded} color: ${dcolors.colored}; background: ${dcolors.coloredBg}`,
 		opaque: `${weightBold} ${paddingBg} ${rounded} color: ${opaque.color}; background: ${opaque.bg}`,
-		dim: `${weightBold} ${paddingBg} ${rounded} color: ${dcolors.dim}`,
+		dim: `${weightRegular} ${padding} ${rounded} color: ${dimColor}`,
 	}
 }
 
-// старая реализация через regex, сохранил тут для идей
-// const fixed = { '*':'#1','_':'#2','~':'#3','{':'#4','}':'#5' };
-// const fixed = { '*':'#1','_':'#2' };
-// const inverted = _.invert(fixed);
-// replace the characters that will be used for formatting (then we will restore them)
-// const safe = s => s.replace(/[*_]/g, m => fixed[m]); // /[*_~{}]/g
-// const restore = s => s.replace(/(#1|#2)/g, m => inverted[m]); // /(#1|#2|#3|#4|#5)/g
 const tokenFormat = (t) => `${t}%c`
 
 function parseWithColors(message, colors) {
@@ -516,7 +489,7 @@ function parseWithColors(message, colors) {
 	const { a, b, c, d, p, o } = _markers // accented, bold, colored, dim, param, opaque
 	let isComplete = true
 	let format = '%c'
-	let items = [normal]
+	const items = [normal]
 	let token = ''
 	// ±text± as 'accented'
 	// §text§ as 'bold'
@@ -609,14 +582,14 @@ function parseWithColors(message, colors) {
 }
 
 function isSimpleType(val) {
-	return isNil(val) || isBoolean(val) || isString(val) || isNumber(val)
+	return isNil(val) || isBoolean(val) || isString(val) || isNumber(val) || isDate(val)
 }
 
 function isCompactType(val) {
 	return isSimpleType(val) || (isObject(val) && keys(val).length < compactKeysCount)
 }
 
-function changedKeys(next, prev) {
+function changedKeys(next, prev, allKeys = false) {
 	const updated = []
 	forEach(next, (val, key) => {
 		if (prev && prev[key] !== val) {
@@ -627,6 +600,7 @@ function changedKeys(next, prev) {
 	const prevKeys = keys(prev)
 	const added = difference(nextKeys, prevKeys)
 	const removed = difference(prevKeys, nextKeys)
+	if (allKeys) return concat(updated, removed)
 	// 'added' keys will also be included in 'updated', so we exclude them
 	return [
 		difference(updated, added),
@@ -635,18 +609,12 @@ function changedKeys(next, prev) {
 	]
 }
 
-function shortenId(props, forStorage = false) {
-	const clientId = get(props, 'clientId', props)
-	const shortened = isString(clientId) ? clientId.slice(-4) : 0
-	return forStorage ? shortened : shortened === 0 ? '?' : `✷✷✷-${shortened}`
-}
-
 function cloneValue(value) {
 	// do nothing for null & undefined
 	if (isNil(value)) return value
 	// first try with lodash 'cloneDeepWith'
 	const nodeCloner = (value) => (isElement(value) ? value.cloneNode(true) : undefined)
-	let cloned = cloneDeepWith(value, nodeCloner)
+	const cloned = cloneDeepWith(value, nodeCloner)
 	if (!isEmpty(cloned)) return cloned
 	// try with JSON if 'cloneDeepWith' failed
 	const seen = new WeakSet()
@@ -660,30 +628,7 @@ function cloneValue(value) {
 	return JSON.parse(JSON.stringify(value, circularReplacer))
 }
 
-function logSimplified(val) {
-	if (config.simplify) {
-		const valKeys = keys(val)
-		const firstKey = first(valKeys)
-		const value = valKeys.length === 1 ? val[firstKey] : val
-
-		if (valKeys.length === 1) {
-			const kind = isArray(val) ? `at ${_accented('index')}` : `for ${_accented('key')}`
-			const message = `value ${kind} ${_param(firstKey)}`
-			if (isSimpleType(value)) {
-				logAsOneString(message, value)
-			} else {
-				logAsOneString(message)
-				logSimplified(value)
-			}
-		} else {
-			logSmart(val, valKeys.length)
-		}
-	} else {
-		logSmart(val)
-	}
-}
-
-function logAddedRemoved(added, removed) {
+function logAddedRemoved(added, removed, name = null) {
 	const addedKeys = added ? (added.length > 1 ? 'keys' : 'key') : false
 	const removedKeys = removed ? (removed.length > 1 ? 'keys' : 'key') : false
 	let message = addedKeys || removedKeys ? chevronSymbol : ''
@@ -701,7 +646,7 @@ function logAddedRemoved(added, removed) {
 				: removed
 		message += `removed ${_bold(removedKeys)} ${_param(join(keys, ', '))}`
 	}
-	if (message) logAsOneString(message)
+	if (message) logAsOneString(name ? `${name} ${message}` : message)
 }
 
 function logWasNow(was, now, keys) {
@@ -723,13 +668,13 @@ function logWasNow(was, now, keys) {
 		}
 	} else {
 		logAsOneString(`${_colored('was')}`)
-		logSmart(wasValue)
+		logExpanded(wasValue)
 		logAsOneString(
 			changed
 				? `${_colored('now')} changed for ${_bold('keys')} ${_param(join(changed, ', '))}`
 				: `${_colored('now')}`,
 		)
-		logSmart(nowValue)
+		logExpanded(nowValue)
 		if (isEqual(wasValue, nowValue)) {
 			logAsOneString(`{!Attention} ${_bold('they are equal!')}`)
 		}
@@ -752,58 +697,130 @@ function logChanges(keys, prevValues, values) {
 				logAsOneString([message, `${_param('function')}`])
 			} else {
 				const [changed, addedKeys, removedKeys] = changedKeys(value, prevValues[key])
-				logAddedRemoved(addedKeys, removedKeys)
-				const firstKey = first(changed)
-				if (!changed.length && !addedKeys?.length && !removedKeys?.length) {
-					logAsOneString(
-						`${message} ${arrowSymbol} changed itself but the keys unchanged {something is wrong!}`,
-					)
-					logWasNow(prevValues[key], value, changed)
-				} else {
-					const keyMsg = `${message} @1 ${_bold('@2')} ${_param(join(changed, ', '))}`
-					if (isArray(value)) {
-						const arrayMsg = keyMsg
-							.replace('@2', changed.length === 1 ? 'index' : 'indexes')
-							.replace('@1', 'at')
-						if (changed.length === 1 && isSimpleType(value[firstKey])) {
-							logAsOneString(
-								arrayMsg,
-								prevValues[key][firstKey],
-								arrowSymbol,
-								value[firstKey],
-							)
-						} else {
-							logAsOneString(arrayMsg)
-							logWasNow(prevValues[key], value, changed)
-						}
+				logAddedRemoved(addedKeys, removedKeys, changed.length ? null : message)
+				if (changed.length) {
+					const firstKey = first(changed)
+					if (!changed.length && !addedKeys?.length && !removedKeys?.length) {
+						logAsOneString(
+							`${message} ${arrowSymbol} changed itself but the keys unchanged {something is wrong!}`,
+						)
+						logWasNow(prevValues[key], value, changed)
 					} else {
-						if (has(value, '$$typeof')) {
-							logAsOneString([message, `${_param('React Component')}`])
-						} else {
-							const objMsg = keyMsg
-								.replace('@2', changed.length === 1 ? 'key' : 'keys')
-								.replace('@1', 'for')
+						const keyMsg = `${message} @1 ${_bold('@2')} ${_param(join(changed, ', '))}`
+						if (isArray(value)) {
+							const arrayMsg = keyMsg
+								.replace('@2', changed.length === 1 ? 'index' : 'indexes')
+								.replace('@1', 'at')
 							if (changed.length === 1 && isSimpleType(value[firstKey])) {
 								logAsOneString(
-									objMsg,
+									arrayMsg,
 									prevValues[key][firstKey],
 									arrowSymbol,
 									value[firstKey],
 								)
 							} else {
-								logAsOneString(objMsg)
-								logWasNow(
-									pick(prevValues[key], changed),
-									pick(value, changed),
-									changed,
-								)
+								logAsOneString(arrayMsg)
+								logWasNow(prevValues[key], value, changed)
+							}
+						} else {
+							if (has(value, '$$typeof')) {
+								logAsOneString([message, `${_param('React Component')}`])
+							} else {
+								const objMsg = keyMsg
+									.replace('@2', changed.length === 1 ? 'key' : 'keys')
+									.replace('@1', 'for')
+								if (changed.length === 1 && isSimpleType(value[firstKey])) {
+									logAsOneString(
+										objMsg,
+										prevValues[key][firstKey],
+										arrowSymbol,
+										value[firstKey],
+									)
+								} else {
+									logAsOneString(objMsg)
+									logWasNow(
+										pick(prevValues[key], changed),
+										pick(value, changed),
+										changed,
+									)
+								}
 							}
 						}
 					}
+				} else if (addedKeys?.length || removedKeys?.length) {
+					logWasNow(prevValues[key], value, concat(addedKeys, removedKeys))
 				}
 			}
 		}
 	})
+}
+
+function onlyChanges(next, prev, updated, parentKey = '', keys = {}) {
+	updated = updated ?? { next: {}, prev: {} }
+	const isIndex = isArray(next)
+	const updatedKeys = []
+	// special trick to include 'removed' keys in processing
+	// we add 'removed' keys to 'next' with 'undefined' value
+	const removedKeys = difference(keys(prev), keys(next))
+	if (removedKeys.length) {
+		if (isIndex)
+			next = map(prev, (item, i) => (includes(removedKeys, String(i)) ? undefined : item))
+		else next = transform(removedKeys, (acc, key) => (acc[key] = undefined), { ...prev })
+	}
+	forEach(next, (val, key) => {
+		const prevValue = prev?.[key]
+		const updateKey = parentKey ? parentKey + (isIndex ? `[${key}]` : `.${key}`) : key
+		if (prevValue !== val) {
+			if (anyOf(val, prevValue, [isUndefined, isSimpleType, isFunction])) {
+				if (!includes(removedKeys, String(key))) set(updated, `next.${updateKey}`, val)
+				set(updated, `prev.${updateKey}`, prevValue)
+				if (!includes(updatedKeys, key)) updatedKeys.push(key)
+			} else {
+				;[updated, keys] = onlyChanges(val, prevValue, updated, updateKey, keys)
+			}
+		}
+	})
+	if (!isEmpty(updatedKeys)) {
+		const matches = /^([^[|.]+)/.exec(parentKey)
+		if (matches) set(keys, matches[1], union(updatedKeys, get(keys, matches[1], [])))
+		else set(keys, 'root', updatedKeys)
+	}
+	return [updated, keys]
+}
+
+function anyOf(v1, v2, func) {
+	const functions = castArray(func)
+	let result = false
+	forEach(functions, (f) => {
+		if (result) return false
+		if (f(v1) || f(v2)) result = true
+	})
+	return result
+}
+
+function testOnlyChanges(next, prev) {
+	const [updated, keys] = onlyChanges(next, prev)
+	logExpanded(updated.next)
+	logExpanded(keys)
+}
+
+function fixValue(value, key, set) {
+	if (value === '') return '""'
+	if (isFunction(value)) return tryFuncName(value)
+	if (set && isArray(set[key])) {
+		const compacted = compact(value)
+		return compacted.length === 1 ? compacted[0] : compacted.length ? compacted : undefined
+	}
+	return value
+}
+
+function tryFuncName(value) {
+	const matches = String(value).match(/\s([\w|_]+[^(]+).*$/ms)
+	return matches ? `{^function} ${matches[1]}()` : '{^function()}'
+}
+
+function caller(name, localMod = true) {
+	return name && localMod ? `${_bold(name)}` : ''
 }
 
 // Get function & component names from stack ----------------------------------]
@@ -814,8 +831,10 @@ function skipFrames(name, prev) {
 	return prevFrames + frames
 }
 
-function componentName(prevFrames = 0) {
+function componentName(prevFrames = 0, asFuncGetter = false) {
+	if (!asFuncGetter && config.withoutCaller) return null
 	const [name] = findOnStack(skipFrames('componentName', prevFrames))
+	if (asFuncGetter) return name
 	// component name should start with UpperCase
 	if (name[0] === name[0].toUpperCase()) return name
 	// maybe we have function?
@@ -833,42 +852,39 @@ function funcFromStack(frames, index = 0) {
 	return (get(split(frames[index], '@'), 0, '?') || '?').replace(/[<|/]+$/g, '')
 }
 
-export default {
-	get level() {
-		return logLevel()
-	},
-	set level(val) {
-		logLevel(val)
-	},
-
-	set ignoreNext(val) {
-		config.mods.ignoreNext = val
-	},
+const devHelpers = {
+	// get level() {
+	// 	return logLevel()
+	// },
+	// set level(val) {
+	// 	logLevel(val)
+	// },
 
 	log,
 	logVerbose,
 	logGroup,
+	logReducer,
+	logGroupClose,
+	logDataWasNow,
+	logExpanded,
 	warn,
 	error,
-	shortenId,
+	onlyChanges,
+	testOnlyChanges,
+	funcName: componentName,
 
-	render: renderComponent,
 	data: dataInComponent,
 	info: infoInComponent,
-	useTrace: useTraceUpdate,
-	useMU: useMountUnmount,
-
-	useTraceWithId: useTraceUpdateWithId,
-	renderWithId: renderComponentWithId,
-	infoWithId: infoInComponentWithId,
-
-	request(route, options, method) {
-		logRequestResponse('request', route, options, null, method)
-	},
-	response(route, data, method) {
-		logRequestResponse('response', route, null, data, method)
-	},
-	requestError(route, error, method) {
-		logRequestResponse('error', route, null, error, method)
-	},
 }
+
+export default devHelpers
+
+const markers = {
+	_accented,
+	_bold,
+	_colored,
+	_dim,
+	_param,
+	_opaque,
+}
+export { logNames, isSimpleType, markers }
