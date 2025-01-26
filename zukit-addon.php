@@ -54,6 +54,10 @@ class zukit_Addon {
 
 	public function init() {
 	}
+	// 'init_inner' is needed for classes that will inherit from 'zukit_Addon'
+	// but to keep 'init' free for users of the framework	
+	public function init_inner() {
+	}
 	public function admin_init() {
 	}
 
@@ -69,7 +73,7 @@ class zukit_Addon {
 
 	// Options management -------------------------------------------------------------------------]
 
-	public function init_options() {
+	final public function init_options() {
 		$options = $this->plugin->options();
 		if (!isset($options[$this->options_key]) && !is_null($this->get('options'))) {
 			$this->options = $this->get('options');
@@ -79,40 +83,40 @@ class zukit_Addon {
 		}
 	}
 
-	public function extend_parent_options($parent_options) {
+	final public function extend_parent_options($parent_options) {
 		$options = $this->get('options');
 		$parent_options[$this->options_key] = $options;
 		return $parent_options;
 	}
 
-	public function options($options = null) {
+	final public function options($options = null) {
 		if (!is_null($options)) $this->options = $options[$this->options_key] ?? [];
 		return $this->options;
 	}
 
-	protected function get_option($key, $default = null) {
+	final protected function get_option($key, $default = null) {
 		return $this->plugin->get_option($key, $default, $this->options);
 	}
 
-	protected function is_option($key, $check_value = true) {
+	final protected function is_option($key, $check_value = true) {
 		return $this->plugin->is_option($key, $check_value, $this->options);
 	}
 
-	protected function del_option($key) {
+	final protected function del_option($key) {
 		$this->options = $this->plugin->del_option($key, $this->options);
 		return $this->plugin->set_option($this->options_key, $this->options, true);
 	}
 
-	protected function set_option($key, $value, $rewrite_array = false) {
+	final protected function set_option($key, $value, $rewrite_array = false) {
 		$this->options = $this->plugin->set_option($key, $value, $rewrite_array, $this->options);
 		return $this->plugin->set_option($this->options_key, $this->options, true);
 	}
 
-	protected function is_parent_option($key, $check_value = true) {
+	final protected function is_parent_option($key, $check_value = true) {
 		return $this->plugin->is_option($key, $check_value);
 	}
 
-	protected function get_parent_option($key, $default = null) {
+	final protected function get_parent_option($key, $default = null) {
 		return $this->plugin->get_option($key, $default);
 	}
 
@@ -121,7 +125,7 @@ class zukit_Addon {
 	protected function extend_parent_redirects() {
 	}
 
-	public function __call($method, $args) {
+	final public function __call($method, $args) {
 		$available_methods = [
 			'ajax_error',
 			'ajax_nonce',
@@ -158,30 +162,30 @@ class zukit_Addon {
 		return is_callable($func) ? call_user_func_array($func, $args) : null;
 	}
 
-	protected function enqueue_style($file, $params = []) {
+	final protected function enqueue_style($file, $params = []) {
 		// enforce_defaults: $is_style, $is_frontend, $params
 		$params_with_defaults = $this->plugin->enforce_defaults(true, true, $params);
 		return $this->plugin->enqueue_style($this->filename($file, $params), $params_with_defaults);
 	}
-	protected function enqueue_script($file, $params = []) {
+	final protected function enqueue_script($file, $params = []) {
 		$params_with_defaults = $this->plugin->enforce_defaults(false, true, $params);
 		return $this->plugin->enqueue_script($this->filename($file, $params), $params_with_defaults);
 	}
-	protected function admin_enqueue_style($file, $params = []) {
+	final protected function admin_enqueue_style($file, $params = []) {
 		$params_with_defaults = $this->plugin->enforce_defaults(true, false, $params);
 		return $this->plugin->admin_enqueue_style($this->filename($file, $params), $params_with_defaults);
 	}
-	protected function admin_enqueue_script($file, $params = []) {
+	final protected function admin_enqueue_script($file, $params = []) {
 		$params_with_defaults = $this->plugin->enforce_defaults(false, false, $params);
 		return $this->plugin->admin_enqueue_script($this->filename($file, $params), $params_with_defaults);
 	}
 	// we need an additional backtrace shift to compensate for the nested call
-	protected function log(...$params) {
+	final protected function log(...$params) {
 		$this->plugin->debug_line_shift(1);
 		$this->plugin->log(...$params);
 		$this->plugin->debug_line_shift(0);
 	}
-	protected function logc($context, ...$params) {
+	final protected function logc($context, ...$params) {
 		$this->plugin->debug_line_shift(1);
 		$this->plugin->logc($context, ...$params);
 		$this->plugin->debug_line_shift(0);
@@ -190,7 +194,7 @@ class zukit_Addon {
 	// Common interface to parent methods with availability check ---------------------------------]
 
 	// NOTE: only public functions and property can be called with this helper
-	protected function with_another($prop, $func, ...$params) {
+	final protected function with_another($prop, $func, ...$params) {
 		if (property_exists($this->plugin, $prop)) {
 			$another = $this->plugin->{$prop};
 			if (method_exists($another, $func)) return call_user_func_array([$another, $func], $params);
@@ -198,18 +202,18 @@ class zukit_Addon {
 		return null;
 	}
 
-	protected function call_parent($func, ...$params) {
+	final protected function call_parent($func, ...$params) {
 		if (method_exists($this->plugin, $func)) return call_user_func_array([$this->plugin, $func], $params);
 		else return null;
 	}
 
 	// Helpers ------------------------------------------------------------------------------------]
 
-	protected function get($key, $from_plugin = false, $default_value = null) {
+	final protected function get($key, $from_plugin = false, $default_value = null) {
 		return $this->plugin->get($key, $default_value, $from_plugin ? null : $this->config);
 	}
 
-	protected function get_callable($key, $from_plugin = false, $default_value = null) {
+	final protected function get_callable($key, $from_plugin = false, $default_value = null) {
 		return $this->plugin->get_callable($key, $default_value, $from_plugin ? null : $this->config);
 	}
 

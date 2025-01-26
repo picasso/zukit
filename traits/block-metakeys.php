@@ -57,7 +57,6 @@ trait zukit_BlockMeta {
 	protected function register_metakeys() {
 		// Get all block meta
 		$this->metakeys = (array) $this->block_metakeys() ?? [];
-
 		if (empty($this->metakeys)) return;
 
 		foreach ($this->metakeys as $meta) {

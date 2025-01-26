@@ -229,9 +229,13 @@ class zukit_Plugin extends zukit_SingletonScripts {
 		$swap_param_and_return = $options['swap'] ?? false;
 		$single_param = $options['single'] ?? true;
 		$collected = ($options['collect'] ?? false) ? [] : null;
+
 		foreach ($this->addons as $addon) {
 			if (method_exists($addon, $action)) {
+				// call `init_inner` before `init` call
+				if ($action === 'init') $addon->init_inner();
 				$return = call_user_func_array([$addon, $action], $single_param ? [$param] : ($param ?? []));
+
 				if (!is_null($collected)) $collected[get_class($addon)] = $return;
 				if ($swap_param_and_return) $param = $return;
 			} else {
