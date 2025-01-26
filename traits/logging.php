@@ -147,7 +147,7 @@ trait zukit_Logging {
 	// │ # # # Context # # # │
 	// ╚─────────────────────╝
 	private function context_label($context) {
-		if (empty($context)) return null;
+		if (empty($context) || !is_string($context)) return null;
 		$mod = substr($context, 0, 1);
 		$mod = in_array($mod, ['!', '?', '*']) ? $mod : '#';
 		$context = preg_replace('/^[!|?|*]/', '', $context);
