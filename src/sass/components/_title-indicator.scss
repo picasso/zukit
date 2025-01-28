@@ -24,7 +24,7 @@ $title-indicator-color: vars.$wp-admin-blue-color;
 			vertical-align: text-bottom;
 			border-radius: revert;
 		}
-		&.boxed {
+		&.boxed.boxed {
 			width: 32px;
 			height: 20px;
 			display: flex;
