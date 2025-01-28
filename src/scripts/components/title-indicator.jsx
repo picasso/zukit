@@ -1,24 +1,20 @@
-// WordPress dependencies
+// wordpress dependencies
 import { ColorIndicator } from '@wordpress/components'
 
-// Internal dependencies
+// internal dependencies
 import { mergeClasses } from '../utils.jsx'
 
-// Panel Title Indicator Component
+// Title Indicator component
+const titleIndicatorPrefix = 'zukit-title-indicator'
 
-const panelIndicatorPrefix = 'zukit-title-indicator'
-
-const TitleIndicator = ({ className, isColor, title, value, colored, ...props }) => (
-	<span className={className}>
+const TitleIndicator = ({ className, isColor, title, value, colored, boxed, ...props }) => (
+	<span className={mergeClasses(titleIndicatorPrefix, className, { [colored]: colored })}>
 		{title}
 		{value &&
 			(isColor ? (
-				<ColorIndicator className={panelIndicatorPrefix} colorValue={value} {...props} />
+				<ColorIndicator className="__indicator" colorValue={value} {...props} />
 			) : (
-				<span
-					className={mergeClasses(panelIndicatorPrefix, { [colored]: colored })}
-					{...props}
-				>
+				<span className={mergeClasses('__indicator', { boxed })} {...props}>
 					{value}
 				</span>
 			))}

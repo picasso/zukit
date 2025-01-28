@@ -1,5 +1,6 @@
-@use "../variables" as vars;
-@use "../zukit-basic" as basic;
+@use 'sass:color';
+@use '../variables' as vars;
+@use '../zukit-basic' as basic;
 
 // Admin Title Indicator Component ----------------------------------------------------------------]
 
@@ -7,27 +8,40 @@ $title-indicator-color-opacity: 0.2;
 $title-indicator-color: vars.$wp-admin-blue-color;
 
 .#{basic.$title-indicator-class} {
-	padding: 0 12px 1px;
-	border-radius: 15px;
-	margin-left: 15px;
-	background-color: rgba($title-indicator-color, $title-indicator-color-opacity);
-	color: $title-indicator-color;
-	transition: opacity vars.$transition-short-time vars.$transition-function;
-	opacity: 1;
+	display: flex;
+	align-items: center;
+	gap: 16px;
 
-	&.component-color-indicator {
-		display: inline-block;
-		vertical-align: text-bottom;
-		border-radius: revert;
-	}
-	.components-panel__body.is-opened & {
-		opacity: 0;
+	.__indicator {
+		padding: 0 12px 1px;
+		border-radius: 15px;
+		// margin-left: 15px;
+		background-color: rgba($title-indicator-color, $title-indicator-color-opacity);
+		transition: opacity vars.$transition-short-time vars.$transition-function;
+		opacity: 1;
+		&.component-color-indicator {
+			display: inline-block;
+			vertical-align: text-bottom;
+			border-radius: revert;
+		}
+		&.boxed {
+			width: 32px;
+			height: 20px;
+			display: flex;
+			align-items: stretch;
+			justify-content: center;
+			padding: 0;
+			background-color: transparent;
+		}
+		.components-panel__body.is-opened & {
+			opacity: 0;
+		}
 	}
 
 	@each $name, $color in basic.$custom-colors {
-		&.#{$name} {
+		&.#{$name} .__indicator {
 			background-color: rgba($color, $title-indicator-color-opacity);
-			color: $color;
+			color: color.adjust($color, $lightness: -10%);
 		}
 	}
 }
