@@ -183,10 +183,16 @@ export const withLoaders = createHigherOrderComponent(
 )
 
 // Custom hook which returns 'loader' by 'index' (all loaders if index is 'null')
-export const useLoaders = (index = null) => {
+export const useLoaders = (index = null, duration = null) => {
 	const { loaders = null } = useSelect((select) => {
 		return { loaders: select(ZUKIT_STORE).getValue('loaders') }
 	}, [])
-
-	return isEmpty(loaders) ? null : index === null ? loaders : get(loaders, index, null)
+	if (index && !isEmpty(loaders)) {
+		const loader = get(loaders, index, null)
+		if (loader && duration !== null) {
+			return loader.replace(/dur="[^"]*"/gm, `dur="${duration}"`)
+		}
+		return loader
+	}
+	return isEmpty(loaders) ? null : loaders
 }
