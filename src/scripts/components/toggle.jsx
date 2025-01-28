@@ -6,7 +6,6 @@ import { mergeClasses, simpleMarkdown } from '../utils.jsx'
 import ZukitDivider from './divider.jsx'
 
 // Zukit Toggle Component
-
 const ZukitToggle = ({ className, withDivider, label, help, checked, onChange }) => {
 	return (
 		<>

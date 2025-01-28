@@ -2,8 +2,7 @@ import { includes } from 'lodash-es'
 
 import { mergeClasses, toRange } from '../utils.jsx'
 
-// Zukit Divider Component
-
+// Zukit Divider component
 const defaultUnit = 'em'
 const defaultSize = 2
 

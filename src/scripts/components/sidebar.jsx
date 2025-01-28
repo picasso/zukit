@@ -18,7 +18,6 @@ import ZukitActionButton from './action-button.jsx'
 import ZukitToggle from './toggle.jsx'
 
 // Zukit Sidebar Component
-
 function availablePanels(panels, options) {
 	return pickBy(panels, (p) => checkDependency(p, options))
 }

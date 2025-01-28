@@ -1,12 +1,11 @@
-// WordPress dependencies
+// wordpress dependencies
 import { Button, PanelRow, Spinner } from '@wordpress/components'
 import { forwardRef } from '@wordpress/element'
 
-// Internal dependencies
+// internal dependencies
 import { mergeClasses, simpleMarkdown } from '../utils.jsx'
 
-// Zukit Action Button Component
-
+// Zukit Action Button component
 const ZukitActionButton = (
 	{ className, isLoading, icon, color, label, help, value, onClick },
 	ref,

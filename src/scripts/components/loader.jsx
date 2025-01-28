@@ -8,7 +8,6 @@ import { useLoaders } from '../data/use-store.js'
 import { mergeClasses } from '../utils.jsx'
 
 // Loader Component
-
 const Loader = ({ className, loaderHTML }) => {
 	return isNil(loaderHTML) ? null : (
 		<RawHTML className={mergeClasses('zu-loader', className)}>{loaderHTML}</RawHTML>

@@ -1,12 +1,11 @@
-// WordPress dependencies
+// wordpress dependencies
 import { PanelBody } from '@wordpress/components'
 
-// Internal dependencies
+// internal dependencies
 import { usePanelsContext } from '../hooks/use-panels.js'
 import { mergeClasses } from '../utils.jsx'
 
-// Zukit Panel Component
-
+// Zukit Panel component
 const ZukitPanel = ({ id, className, title, children, options = {}, ...props }) => {
 	const getPanel = usePanelsContext()
 	if (getPanel({ type: 'hidden', id })) return null

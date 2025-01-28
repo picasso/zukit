@@ -1,18 +1,17 @@
 import { debounce, isEmpty, isFunction, isNil } from 'lodash-es'
 
-// WordPress dependencies
+// wordpress dependencies
 import { Button, TextControl, Tooltip } from '@wordpress/components'
 import { useInstanceId } from '@wordpress/compose'
 import { useCallback, useEffect, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { ENTER } from '@wordpress/keycodes'
 
-// Internal dependencies
+// internal dependencies
 import { mergeClasses, uniqueValue } from '../utils.jsx'
 import ConditionalWrap from './conditional-wrap.jsx'
 
-// Zukit Advanced Text Control Component
-
+// Zukit Advanced Text Control component
 const labels = {
 	show: __('Show Password', 'zukit'),
 	hide: __('Hide Password', 'zukit'),
@@ -131,7 +130,7 @@ const AdvTextControl = ({
 		}
 	}, [debounceActive, value, onChange, temporaryValue, withoutValues, fallbackValue, strict])
 
-	// Validate ---------------------------------------------------------------]
+	// Validate -----------------------------------------------------------------------------------]
 
 	const withButton = isPassword || !withoutClear
 

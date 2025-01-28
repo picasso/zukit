@@ -60,7 +60,6 @@ function editorClasses(element, more = '', wp = null) {
 }
 
 // Zukit Skeleton Component
-
 const cprefix = 'zukit-skeleton'
 
 const ZukitSkeleton = ({

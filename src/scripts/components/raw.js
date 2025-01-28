@@ -1,8 +1,7 @@
-// WordPress dependencies
+// wordpress dependencies
 import { createElement } from '@wordpress/element'
 
-// Alternative RawHTML Component
-
+// alternative RawHTML component
 const RawHTML = ({ tag = 'p', children, ...props }) => {
 	return createElement(tag, {
 		dangerouslySetInnerHTML: { __html: children },

@@ -44,7 +44,6 @@ const getRowStyles = (index, colors, template = null) => {
 const makeRef = (row, id) => `${row}:${id}`
 
 // Zukit Table Component
-
 const ZukitTable = ({
 	className,
 	css = 'grid', // supports 'flex' and 'grid', 'flex' is obsolete implementation

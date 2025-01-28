@@ -1,6 +1,6 @@
 import { has, includes, isArray, isEmpty, isNil, join, map, pull, split } from 'lodash-es'
 
-// WordPress dependencies
+// wordpress dependencies
 import { BaseControl, Button, TextControl, Tooltip } from '@wordpress/components'
 import { compose, useInstanceId } from '@wordpress/compose'
 import { useCallback, useMemo, useState } from '@wordpress/element'
@@ -8,13 +8,12 @@ import { __ } from '@wordpress/i18n'
 import { ENTER } from '@wordpress/keycodes'
 import { isEmail, isURL } from '@wordpress/url'
 
-// Internal dependencies
+// internal dependencies
 import { withNoticesContext } from '../hooks/use-notices.jsx'
 import { scrollTop } from '../jquery-helpers.js'
 import { getKey, mergeClasses, messageWithError } from '../utils.jsx'
 
-// List Input Component
-
+// list Input Component
 const cprefix = 'zukit-list-input'
 const closeIcon = 'no-alt'
 

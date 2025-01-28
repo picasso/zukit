@@ -1,11 +1,10 @@
 import { isString, trim } from 'lodash-es'
 
-// WordPress dependencies
+// wordpress dependencies
 import { createElement } from '@wordpress/element'
 
-// Conditional Wrap Component
+// Conditional Wrap component
 // condition ? wrap(children) : children
-
 const ConditionalWrap = ({
 	condition, // if true 'children' will be wrapped in <WrappingComponent> component with additionalProps
 	wrap: WrappingComponent, // could be a string (for built-in components) or a class/function (for composite components)

@@ -1,18 +1,17 @@
 import { reduce } from 'lodash-es'
 
-// WordPress dependencies
+// wordpress dependencies
 import { BaseControl, ToggleControl } from '@wordpress/components'
 import { useCallback, useEffect, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 
-// Internal dependencies
+// internal dependencies
 import { alterClassWithClientId, cssWithClientId } from '../jquery-helpers.js'
 import { mergeClasses } from '../utils.jsx'
 import Loader from './loader.jsx'
 import SelectItemControl from './select-item-control.jsx'
 
-// Loader Control Component
-
+// Loader Control component
 const cprefix = 'zukit-loader-control'
 
 const LoaderControl = ({

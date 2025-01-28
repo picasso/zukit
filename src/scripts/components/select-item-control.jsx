@@ -18,7 +18,6 @@ import { getKey, mergeClasses } from '../utils.jsx'
 import ConditionalWrap from './conditional-wrap.jsx'
 
 // Select Item Component
-
 const cname = 'zukit-select-item'
 const buttonPossibleProps = [
 	'accessibleWhenDisabled',
