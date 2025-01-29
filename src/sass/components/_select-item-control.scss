@@ -1,6 +1,6 @@
-@use "../instyle";
-@use "../variables" as vars;
-@use "../zukit-basic" as basic;
+@use '../instyle';
+@use '../variables' as vars;
+@use '../zukit-basic' as basic;
 
 // Admin Select Item Component --------------------------------------------------------------------]
 
@@ -52,7 +52,8 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 
 		&.is-selected {
 			box-shadow: none;
-			.components-button, .components-button:hover {
+			.components-button,
+			.components-button:hover {
 				pointer-events: none;
 				background-color: $select-item-disabled-bg-color;
 				border-color: $select-item-disabled-border-color;
@@ -69,43 +70,43 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 			}
 		}
 
-		// &.is-selected {
-		//
-		// 	box-shadow: 0 0 1px 2px $admin-control-selected-color;
-		// 	@include in('<.__selector') {
-		// 		box-shadow: none;
-		// 	}
-		// }
-
-        &.is-disabled {
-            .components-button {
-                pointer-events: none;
+		&.is-disabled {
+			.components-button {
+				pointer-events: none;
 				background-color: $select-item-disabled-bg-color;
 				border-color: $select-item-disabled-border-color;
 				color: $select-item-disabled-color;
-            }
-        }
+			}
+		}
 		&.is-slot {
-            .components-button {
+			.components-button {
 				width: 100%;
 				height: 100%;
-                pointer-events: none;
+				pointer-events: none;
 				background-color: transparent;
 				border-color: rgba(vars.$wp-gray-200, 0.4);
 				color: transparent;
-            }
-        }
+			}
+		}
 		&.is-null {
-            .components-button {
+			.components-button {
 				width: 100%;
 				height: 100%;
-            }
-        }
+			}
+		}
 
-        @include instyle.in('<.__2columns') { width: calc(50% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
-        @include instyle.in('<.__3columns') { width: calc(33% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
-		@include instyle.in('<.__4columns') { width: calc(25% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
-		@include instyle.in('<.__5columns') { width: calc(20% - #{vars.twice(vars.$admin-button-wrapper-padding)}); }
+		@include instyle.in('<.__2columns') {
+			width: calc(50% - #{vars.twice(vars.$admin-button-wrapper-padding)});
+		}
+		@include instyle.in('<.__3columns') {
+			width: calc(33% - #{vars.twice(vars.$admin-button-wrapper-padding)});
+		}
+		@include instyle.in('<.__4columns') {
+			width: calc(25% - #{vars.twice(vars.$admin-button-wrapper-padding)});
+		}
+		@include instyle.in('<.__5columns') {
+			width: calc(20% - #{vars.twice(vars.$admin-button-wrapper-padding)});
+		}
 
 		@include instyle.in('<.__box') {
 			padding: 0 !important;
@@ -125,10 +126,18 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		}
 
 		@include instyle.in('<.__digits') {
-			&.__2columns { width: calc(50%); }
-			&.__3columns { width: calc(33%); }
-			&.__4columns { width: calc(25%); }
-			&.__5columns { width: calc(20%); }
+			&.__2columns {
+				width: calc(50%);
+			}
+			&.__3columns {
+				width: calc(33%);
+			}
+			&.__4columns {
+				width: calc(25%);
+			}
+			&.__5columns {
+				width: calc(20%);
+			}
 			&.is-selected {
 				box-shadow: none;
 				// need here to add more CSS specificity
@@ -166,9 +175,9 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 		&.is-clickable {
 			pointer-events: all;
 		}
-        svg {
-            fill: currentColor;
-        }
+		svg {
+			fill: currentColor;
+		}
 
 		.is-null {
 			width: 100%;
@@ -176,11 +185,11 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 			border-radius: 3px !important;
 			opacity: 0.1;
 			background: repeating-linear-gradient(
-			  45deg,
-			  currentColor,
-			  currentColor $select-item-null-stripe-size,
-			  rgba(black, 0.05) $select-item-null-stripe-size,
-			  rgba(black, 0.05) vars.twice($select-item-null-stripe-size)
+				45deg,
+				currentColor,
+				currentColor $select-item-null-stripe-size,
+				rgba(black, 0.05) $select-item-null-stripe-size,
+				rgba(black, 0.05) vars.twice($select-item-null-stripe-size)
 			);
 		}
 
@@ -234,5 +243,14 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 				font-family: vars.$admin-control-font-family;
 			}
 		}
+	}
+}
+
+// reset label for `components-base-control`
+.components-base-control {
+	.components-base-control__label {
+		text-transform: none;
+		font-size: inherit;
+		color: vars.$wp-admin-blue-color;
 	}
 }
