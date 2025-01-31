@@ -284,7 +284,7 @@ class zukit_Blocks extends zukit_Addon {
 		$block_name = $this->full_name($name);
 
 		// test for existence of block by its fully qualified name
-		$has_block = false !== strpos($post, '<!-- wp:' . $block_name . ' ');
+		$has_block = false !== strpos($post ?? '', '<!-- wp:' . $block_name . ' ');
 
 		if ($has_block) {
 			$preg_name = str_replace('/', '\/', $block_name);
