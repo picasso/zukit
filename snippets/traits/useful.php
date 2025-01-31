@@ -75,7 +75,10 @@ trait zusnippets_Useful {
 	}
 
 	public function to_bool($value, $null_on_failure = false) {
-		return filter_var($value, FILTER_VALIDATE_BOOLEAN, $null_on_failure ? FILTER_NULL_ON_FAILURE : null);
+		if ($null_on_failure)
+			return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+		else
+			return filter_var($value, FILTER_VALIDATE_BOOLEAN);
 	}
 
 	public function to_float($value) {
