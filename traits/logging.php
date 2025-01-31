@@ -219,8 +219,8 @@ trait zukit_Logging {
 }
 
 // last resort - this is debug for debugging without any classes
-if (!function_exists('zu_loge')) {
-	function zu_loge($info, $val = '$undefined', $use_print_r = false) {
+if (!function_exists('zu_log_errorfile')) {
+	function zu_log_errorfile($info, $val = '$undefined', $use_print_r = false) {
 		zukit_SingletonLogging::__log($info, $val, $use_print_r);
 	}
 }
