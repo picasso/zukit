@@ -9,13 +9,13 @@ import { __ } from '@wordpress/i18n'
 import { isNum } from '../utils.jsx'
 import { defaultGetter, defaultMerger, setupStore } from './generic-store.js'
 
-// Create and register Zukit Core Data store ----------------------------------]
+// create and register Zukit Core Data store ------------------------------------------------------]
 
 const ZUKIT_STORE = 'zukit/core'
 const FolderDepthSymbol = '\u00A0'
 const FolderDepthShift = 4
 
-// Custom Core Data state merger & getter -------------------------------------]
+// custom Core Data state merger & getter ---------------------------------------------------------]
 
 const basicKeys = ['loaders', 'galleries', 'folders']
 
@@ -76,9 +76,9 @@ const { register: registerCoreStore } = setupStore({
 
 registerCoreStore()
 
-// Custom hooks ---------------------------------------------------------------]
+// custom hooks -----------------------------------------------------------------------------------]
 
-// Custom hook which returns Generic Core Data
+// custom hook which returns Generic Core Data
 export const useCoreDataGeneric = (key, params) => {
 	const { data = null } = useSelect(
 		(select) => {
@@ -90,7 +90,7 @@ export const useCoreDataGeneric = (key, params) => {
 	return isEmpty(data) ? null : data
 }
 
-// Custom hook which returns SVG from file in folder
+// custom hook which returns SVG from file in folder
 export const useSvgFromFileGeneric = (name, folder = 'images/', router = null) => {
 	const { svg = null } = useSelect(
 		(select) => {
@@ -103,9 +103,9 @@ export const useSvgFromFileGeneric = (name, folder = 'images/', router = null) =
 	return isEmpty(svg) ? null : svg
 }
 
-// Get Folders/Galleries ------------------------------------------------------]
+// get Folders/Galleries --------------------------------------------------------------------------]
 
-// Higher-order component which add 'folders' to the original component
+// higher-order component which add 'folders' to the original component
 export const withFolders = createHigherOrderComponent(
 	withSelect((select) => {
 		return {
@@ -139,7 +139,7 @@ export const folderOptions = (folders, initialOption = null) => {
 	return options
 }
 
-// Custom hook which returns 'folder/folders' (all folders if folderId is 'null')
+// custom hook which returns 'folder/folders' (all folders if folderId is 'null')
 export const useFolders = (folderId = null) => {
 	const { folders = null } = useSelect((select) => {
 		return { folders: select(ZUKIT_STORE).getValue('folders') }
@@ -148,7 +148,7 @@ export const useFolders = (folderId = null) => {
 	return isEmpty(folders) ? null : folderId === null ? folders : get(folders, folderId, null)
 }
 
-// Custom hook which returns array with 'folder options'
+// custom hook which returns array with 'folder options'
 const emptyOps = [{ value: 0, label: __('Loading...', 'zukit') }]
 const initialOp = { value: 0, label: __('Select folder', 'zukit') }
 export const useFolderOptions = (withInitial = initialOp) => {
@@ -156,7 +156,7 @@ export const useFolderOptions = (withInitial = initialOp) => {
 	return isEmpty(folders) ? emptyOps : folderOptions(folders, withInitial)
 }
 
-// Custom hook which returns 'galleries' (all galleries if postId is 'null')
+// custom hook which returns 'galleries' (all galleries if postId is 'null')
 export const useGalleries = (postId = null) => {
 	const { galleries = null } = useSelect((select) => {
 		return { galleries: select(ZUKIT_STORE).getValue('galleries') }
@@ -165,9 +165,9 @@ export const useGalleries = (postId = null) => {
 	return isEmpty(galleries) ? null : postId === null ? galleries : get(galleries, postId, null)
 }
 
-// Get Loaders ----------------------------------------------------------------]
+// get Loaders ------------------------------------------------------------------------------------]
 
-// Higher-order component which add 'loaderHTML' to the original component
+// higher-order component which add 'loaderHTML' to the original component
 export const withLoaders = createHigherOrderComponent(
 	withSelect((select, { loader }) => {
 		const loaderIndex = isNum(loader) ? loader : null
@@ -182,7 +182,7 @@ export const withLoaders = createHigherOrderComponent(
 	'withLoaders',
 )
 
-// Custom hook which returns 'loader' by 'index' (all loaders if index is 'null')
+// custom hook which returns 'loader' by 'index' (all loaders if index is 'null')
 export const useLoaders = (index = null, duration = null) => {
 	const { loaders = null } = useSelect((select) => {
 		return { loaders: select(ZUKIT_STORE).getValue('loaders') }
@@ -190,7 +190,8 @@ export const useLoaders = (index = null, duration = null) => {
 	if (index && !isEmpty(loaders)) {
 		const loader = get(loaders, index, null)
 		if (loader && duration !== null) {
-			return loader.replace(/dur="[^"]*"/gm, `dur="${duration}"`)
+			if (duration === 0) return loader.replace(/dur="[^"]*"/gm, `dur="1000000s"`)
+			else return loader.replace(/dur="[^"]*"/gm, `dur="${duration}s"`)
 		}
 		return loader
 	}
