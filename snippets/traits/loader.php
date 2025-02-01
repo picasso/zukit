@@ -307,25 +307,33 @@ trait zusnippets_Loader {
 					            repeatCount="indefinite"
 							/>
 					    </circle>
-					    <circle cx="60" cy="15" r="9">
-					        <animate attributeName="r" from="9" to="9"
+						<circle cx="60" cy="15" r="9">
+					        <animate 
+								attributeName="r" 
+								from="9" to="9"
 								begin="0s" dur="%2$ss"
 								values="9;15;9" calcMode="linear"
 								repeatCount="indefinite"
 							 />
-					        <animate attributeName="fill-opacity" from="%6$" to="%6$"
+					        <animate 
+								attributeName="fill-opacity" 
+								from="%6$s" to="%6$s"
 								begin="0s" dur="%2$ss"
 								values=".5;1;.5" calcMode="linear"
 								repeatCount="indefinite"
 							/>
 					    </circle>
-					    <circle cx="105" cy="15" r="15">
-					        <animate attributeName="r" from="15" to="15"
+						<circle cx="105" cy="15" r="15">
+					        <animate 
+								attributeName="r" 
+								from="15" to="15"
 								begin="0s" dur="%2$ss"
 								values="15;9;15" calcMode="linear"
 								repeatCount="indefinite"
 							/>
-					        <animate attributeName="fill-opacity" from="%8$s" to="%8$s"
+					        <animate 
+								attributeName="fill-opacity" 
+								from="%8$s" to="%8$s"
 								begin="0s" dur="%2$ss"
 								values="1;.5;1" calcMode="linear"
 								repeatCount="indefinite"
