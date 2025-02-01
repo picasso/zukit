@@ -2,8 +2,8 @@ import { defaults, get, keys } from 'lodash-es'
 
 // WordPress dependencies
 import apiFetch from '@wordpress/api-fetch'
-// https://developer.wordpress.org/block-editor/packages/packages-data/
-import { registerStore } from '@wordpress/data'
+// https://developer.wordpress.org/block-editor/reference-guides/packages/packages-data/
+import { createReduxStore, register } from '@wordpress/data'
 
 // Internal dependencies
 import { requestURL } from '../fetch.js'
@@ -150,8 +150,8 @@ export function setupStore(params) {
 		: getReadOnlyActions()
 
 	return {
-		register: () =>
-			registerStore(name, {
+		register: () => {
+			const store = createReduxStore(name, {
 				reducer:
 					storeParams.reducer || getReducer(stateKey, initialState, storeParams.merger),
 				actions: storeParams.actions || actions,
@@ -160,6 +160,8 @@ export function setupStore(params) {
 				resolvers: storeParams.withoutResolvers
 					? undefined
 					: getResolvers(getRoute, router, actions, fetchKey),
-			}),
+			})
+			return register(store)
+		},
 	}
 }
