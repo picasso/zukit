@@ -23,7 +23,7 @@ trait zusnippets_Loader {
 		// index 0
 		$loaders[] = zu_sprintf(
 			'%1$s
-				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="5 5 30 30" preserveAspectRatio="xMidYMin slice">
+				<svg class="square" version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="5 5 30 30" preserveAspectRatio="xMidYMid meet">
 					<g fill="currentColor">
 						<path opacity="%6$s" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946s14.946-6.691,
 							14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634c0-6.425,5.209-11.634,
@@ -52,7 +52,7 @@ trait zusnippets_Loader {
 		// index 1
 		$loaders[] = zu_sprintf(
 			'%1$s
-				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="7 7 50 50" preserveAspectRatio="xMidYMin slice">
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="7 7 50 50" preserveAspectRatio="xMidYMid meet">
 					<g stroke-width="4" stroke-linecap="round" stroke="currentColor">
 					    <line y1="12" y2="20" transform="translate(32,32) rotate(180)">
 					        <animate attributeName="stroke-opacity" dur="%2$ss" values="1;.85;.7;.65;.55;.45;.35;.25;.15;.1;0;1" repeatCount="indefinite"/>
@@ -103,7 +103,7 @@ trait zusnippets_Loader {
 		// index 2
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 44 44" preserveAspectRatio="xMidYMin slice">
+			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 44 44" preserveAspectRatio="xMidYMid meet">
 			      <g fill="none" fill-rule="evenodd"  stroke="currentColor" stroke-width="2">
 			          <circle cx="22" cy="22" r="1">
 			              <animate attributeName="r"
@@ -155,7 +155,7 @@ trait zusnippets_Loader {
 		// index 3
 		$loaders[] = zu_sprintf(
 			'%1$s
-				<svg version="1.1" id="loader-%5$s" data-id="%5$s" xmlns="%4$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMin slice">
+				<svg version="1.1" id="loader-%5$s" data-id="%5$s" xmlns="%4$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
 					<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10">
 						<circle stroke-width="8" cx="50" cy="50" r="45" opacity="0.5"/>
 						<line stroke-width="4" x1="50" y1="50" x2="80" y2="50.5">
@@ -192,7 +192,7 @@ trait zusnippets_Loader {
 		// index 4
 		$loaders[] = zu_sprintf(
 			'%1$s
-				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMin slice">
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
 					<g fill="currentColor">
 						<path d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,
 							8.4-45.4-2-53.8-23.3c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
@@ -243,7 +243,7 @@ trait zusnippets_Loader {
 		$duration_long = $duration * 5;
 		$loaders[] = zu_sprintf(
 			'%1$s
-			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 55 55" preserveAspectRatio="xMidYMin slice">
+			  <svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 55 55" preserveAspectRatio="xMidYMid meet">
 					<g transform="matrix(1 0 0 -1 0 55)" fill="currentColor">
 					    <rect width="10" height="14" rx="3">
 					        <animate attributeName="height"
@@ -289,7 +289,7 @@ trait zusnippets_Loader {
 		// index 6
 		$loaders[] = zu_sprintf(
 			'%1$s
-				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 120 30" preserveAspectRatio="xMidYMin slice">
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 120 30" preserveAspectRatio="xMidYMid meet">
 					<g fill="currentColor">
 					    <circle cx="15" cy="15" r="15">
 					        <animate
@@ -355,7 +355,7 @@ trait zusnippets_Loader {
 		// index 7
 		$loaders[] = zu_sprintf(
 			'%1$s
-				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 64 64" preserveAspectRatio="xMidYMin slice">
+				<svg version="1.1" id="loader-%4$s" data-id="%4$s" xmlns="%3$s" viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet">
 				    <g stroke-width="0" fill="currentColor">
 				        <circle cx="24" cy="0" transform="translate(32,32)">
 				            <animate attributeName="r" dur="%2$ss" values="8;7;6;5;4;3;2;1;8" repeatCount="indefinite"></animate>
