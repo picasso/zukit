@@ -9,17 +9,17 @@ import {
 	some,
 } from 'lodash-es'
 
-// WordPress dependencies
+// wordpress dependencies
 import { useDispatch, useSelect } from '@wordpress/data'
 import { useReducer, useRef } from '@wordpress/element'
 
-// Internal dependencies
+// internal dependencies
 import { useCoreDataGeneric, useSvgFromFileGeneric } from './core-store.js'
 import { setupStore } from './generic-store.js'
 
 const emptyArray = []
 
-// Custom hooks ---------------------------------------------------------------]
+// custom hooks -----------------------------------------------------------------------------------]
 
 export function useForceUpdater() {
 	const [, forceUpdate] = useReducer((z) => z + 1, 0)
@@ -41,7 +41,7 @@ export function useRefDefaults(params, defaultValues = {}) {
 	return ref
 }
 
-// Setup and re-export Zukit Core store ---------------------------------------]
+// setup and re-export Zukit Core store -----------------------------------------------------------]
 
 export function setupCoreStore(router) {
 	return {
@@ -53,7 +53,7 @@ export function setupCoreStore(router) {
 // re-export all named imports
 export * from './core-store.js'
 
-// Setup but do not register Zukit Options store (router needed!) -------------]
+// setup but do not register Zukit Options store (router needed!) ---------------------------------]
 
 export function setupOptionsStore(router) {
 	const ZUKIT_OPTIONS_STORE = `zukit/${router}`
@@ -65,7 +65,7 @@ export function setupOptionsStore(router) {
 		router,
 	)
 
-	// Get/Set/Update Options -------------------------------------------------]
+	// Get/Set/Update Options ---------------------------------------------------------------------]
 
 	// Custom hook which returns 'option' by 'key'
 	const useGetOption = (key, defaultValue = null) => {
@@ -121,6 +121,6 @@ export function setupOptionsStore(router) {
 	}
 }
 
-// Re-export all named imports for creating Custom Store ----------------------]
+// re-export all named imports for creating Custom Store ------------------------------------------]
 
 export * from './generic-store.js'
