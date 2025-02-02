@@ -247,10 +247,12 @@ $select-item-basic-border-color: rgb(25, 30, 35);
 }
 
 // reset label for `components-base-control`
-.components-base-control {
-	.components-base-control__label {
-		text-transform: none;
-		font-size: inherit;
+.components-base-control,
+.components-select-control {
+	.components-base-control__label,
+	.components-input-control__label {
+		text-transform: none !important;
+		font-size: inherit !important;
 		color: vars.$wp-admin-blue-color;
 	}
 }
