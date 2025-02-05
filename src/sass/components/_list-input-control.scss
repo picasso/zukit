@@ -1,8 +1,8 @@
-@use "sass:color";
-@use "../variables" as vars;
-@use "../zukit-basic" as basic;
+@use 'sass:color';
+@use '../variables' as vars;
+@use '../zukit-basic' as basic;
 
-// Admin Divider Component ------------------------------------------------------------------------]
+// List Input Control Component -------------------------------------------------------------------]
 
 $list-input-margin: 8px;
 $list-input-border-radius: 6px;
@@ -75,7 +75,7 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 		margin-top: $list-input-margin;
 
 		.components-button {
-			margin: 15px 0 0 10px;
+			margin: 27px 0 0 10px;
 			height: 30px;
 			width: auto !important;
 			padding-right: 12px;
@@ -85,7 +85,8 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 			.components-base-control__help {
 				margin-left: 0 !important;
 			}
-			.__add, .__reset {
+			.__add,
+			.__reset {
 				margin-top: 0;
 				align-self: flex-start;
 				top: 26px;
@@ -97,7 +98,8 @@ $list-input-close-size: $_button-svg-default-size + $list-input-padding;
 			.components-base-control__field {
 				margin-bottom: 0;
 			}
-			.__add, .__reset {
+			.__add,
+			.__reset {
 				margin-top: 0;
 			}
 		}
