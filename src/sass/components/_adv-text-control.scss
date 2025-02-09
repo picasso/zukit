@@ -1,5 +1,5 @@
-@use "../variables" as vars;
-@use "../zukit-basic" as basic;
+@use '../variables' as vars;
+@use '../zukit-basic' as basic;
 
 // Admin Text Control Component -------------------------------------------------------------------]
 
@@ -51,6 +51,7 @@ $advtext-help-margin: -16px; // margin 8px * 2
 		box-shadow: none;
 		transition: background-color vars.$transition-time vars.$transition-function;
 		position: relative;
+		margin-left: 4px;
 
 		.dashicon {
 			margin: 0;
@@ -61,7 +62,7 @@ $advtext-help-margin: -16px; // margin 8px * 2
 			margin-bottom: 8px;
 		}
 		&.__with-label-help {
-			margin-top: 26px;
+			margin-top: 28px;
 			margin-bottom: 0;
 		}
 
