@@ -6,7 +6,7 @@ import { ExternalLink, Spinner, Tooltip } from '@wordpress/components'
 import { RawHTML, useCallback, useEffect, useState } from '@wordpress/element'
 
 // Internal dependencies
-import { getExternalData, hexToRGBA, mergeClasses, simpleMarkdown } from '../utils.jsx'
+import { getExternalZikitValue, hexToRGBA, mergeClasses, simpleMarkdown } from '../utils.jsx'
 import ConditionalWrap from './conditional-wrap.jsx'
 
 const getRowStyles = (index, colors, template = null) => {
@@ -57,7 +57,7 @@ const ZukitTable = ({
 }) => {
 	const isCssGrid = css === 'grid'
 	const gridTemplate = isCssGrid ? (config?.template ?? null) : null
-	const colors = getExternalData('info.colors', {})
+	const colors = getExternalZikitValue('info.colors', {})
 
 	// check if there are dynamic cells and call the parent handler if any
 	useEffect(() => {

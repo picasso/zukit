@@ -17,7 +17,7 @@ export function externalDataSettings(pageId) {
 }
 
 export function renderPage(pageId, settings = {}) {
-	const pageData = externalDataSettings(pageId)
+	const [pageData] = externalDataSettings(pageId)
 
 	// restRouter serves to identify the plugin/theme that currently uses the REST API
 	setRestBasics(pageData)

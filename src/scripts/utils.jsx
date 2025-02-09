@@ -36,21 +36,29 @@ import { getCategories, registerBlockCollection, setCategories } from '@wordpres
 import { G, Path, SVG } from '@wordpress/components'
 import { __ } from '@wordpress/i18n'
 
-let extData = null
-// Gets JSON data from PHP
-export function externalData(key, defaultValues = null) {
-	const { data = {} } = window[key] || {}
-	extData = isEmpty(defaultValues) ? data : defaults(data, defaultValues)
-	return extData
-}
-// Allows multiple access to external data after calling 'externalData' function
-export function getExternalData(key = null, defaultValue = null) {
-	if (isEmpty(extData))
-		window.console.warn(
-			'ZUKIT: utils.externalData(<your_key>) should be called before any getExternalData() call!',
+import debug from './debug.js'
+
+const extData = {}
+// gets JSON data from PHP
+export function externalData(dataKey, defaultValues = null, forColors = false) {
+	if (!extData[dataKey]) {
+		const { data = {} } = window[dataKey] ?? {}
+		debug.logGroup(
+			`{${isEmpty(data) ? '!' : '#'}${dataKey}} external ${forColors ? 'colors' : 'data'}`,
+			data,
 		)
-	if (key === null) return extData
-	return get(extData, key, defaultValue)
+		extData[dataKey] = isEmpty(defaultValues) ? data : defaults(data, defaultValues)
+	}
+	// Allows multiple access to external data after calling 'externalData' function
+	function getExternalValue(key = null, defaultValue = null) {
+		if (isEmpty(extData[dataKey]))
+			window.console.warn(
+				`ZUKIT: utils.externalData(${dataKey}) should be called before any getExternalData() call!`,
+			)
+		if (key === null) return extData[dataKey]
+		return get(extData[dataKey], key, defaultValue)
+	}
+	return [extData[dataKey], getExternalValue]
 }
 
 // Just a more familiar name
@@ -391,10 +399,13 @@ function node2comp(node, index) {
 // Some useful data -------------------------------------------------------------------------------]
 
 export const emptyGif = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+const [zukitData, getExternalZikitValue] = externalData('zukit_jsdata')
 
-const { colors: zukitRawColors = {} } = externalData('zukit_jsdata')
+const { colors: zukitRawColors = {} } = zukitData
 const defaultGetColor = '#cc1818'
 const zukitInstanceColors = {}
+
+export { getExternalZikitValue }
 
 // Returns one of predefined in SASS files colors
 export function getColor(key, defaultColor = defaultGetColor) {
@@ -403,7 +414,7 @@ export function getColor(key, defaultColor = defaultGetColor) {
 
 // Creates custom color getter which returns either framework colors or plugin/theme colors
 export function getColorGetter(dataKey) {
-	const { colors: instanceColors } = externalData(dataKey)
+	const [{ colors: instanceColors }] = externalData(dataKey, null, true)
 	if (isEmpty(instanceColors)) return getColor
 	zukitInstanceColors[dataKey] = merge({}, zukitRawColors, instanceColors)
 	return (key, defaultColor = defaultGetColor) => {
@@ -442,7 +453,7 @@ const zukitColors = getColorOptions(zukitRawColors, [
 	{ slug: 'none', color: 'white', name: 'None' },
 ])
 
-// Brand assets ---------------------------------------------------------------]
+// Brand assets -----------------------------------------------------------------------------------]
 
 export const brandAssets = {
 	namespace: 'zu',
@@ -511,7 +522,6 @@ export const blocksSet = {
 	registerCategory,
 	registerCollection,
 	externalData,
-	getExternalData,
 	mergeClasses,
 	hexToRGB,
 	hexToRGBA,
