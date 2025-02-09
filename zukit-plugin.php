@@ -36,7 +36,7 @@ class zukit_Plugin extends zukit_SingletonScripts {
 	// Options, admin basics, menu management and REST API support
 	use zukit_Options, zukit_Admin, zukit_AdminMenu, zukit_AjaxREST, zukit_Debug;
 
-	protected function singleton_config($file) {
+	final protected function singleton_config($file) {
 		if (isset($file)) {
 			$this->data = Zukit::get_file_metadata($file);
 			$this->is_plugin = $this->data['Kind'] === 'Plugin';
