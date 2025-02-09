@@ -64,7 +64,7 @@ function serializeData(data, cache = false, skip = []) {
 	}
 
 	let str = []
-	for (var p in obj) {
+	for (const p in obj) {
 		if (has(obj, p) && !includes(skip, p)) {
 			// process array as JSON if presented in value
 			let value = isArray(obj[p]) ? toJSON(obj[p]) : obj[p]
