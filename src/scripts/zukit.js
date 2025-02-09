@@ -1,3 +1,5 @@
+import './debug-load.js'
+
 import * as components from './components/index.js'
 import debug from './debug.js'
 import * as fetch from './fetch.js'
