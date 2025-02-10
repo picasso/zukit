@@ -1,17 +1,14 @@
 import { forEach, includes, isArray, isNaN, isNil, isPlainObject, trim } from 'lodash-es'
+import $ from 'jquery'
 
-// WordPress dependencies
-
-const $ = jQuery
-
-// -----------------------------------------------------------------------------]
+// ------------------------------------------------------------------------------------------------]
 // Remove element classes with wildcard matching. Optionally add classes:
 //     $( '#foo' ).alterClass( 'foo-* bar-*', 'foobar' )
 //
 //  Copyright (c) 2011 Pete Boere (https://gist.github.com/peteboere/1517285)
 //
 $.fn.alterClass = function (removals, additions) {
-	var self = this
+	let self = this
 
 	if (!removals || removals.indexOf('*') === -1) {
 		// Use native jQuery methods if there is no wildcard matching
@@ -19,13 +16,13 @@ $.fn.alterClass = function (removals, additions) {
 		return !additions ? self : self.addClass(additions)
 	}
 
-	var patt = new RegExp(
+	let patt = new RegExp(
 		'\\s' + removals.replace(/\*/g, '[A-Za-z0-9-_]+').split(' ').join('\\s|\\s') + '\\s',
 		'g',
 	)
 
 	self.each(function (_i, it) {
-		var cn = ' ' + it.className + ' '
+		let cn = ' ' + it.className + ' '
 		while (patt.test(cn)) {
 			cn = cn.replace(patt, ' ')
 		}
@@ -134,20 +131,19 @@ export function hasSelector(parent, selector) {
 	return $(parent).has(selector).length > 0
 }
 
-// Scroll back to the top of scrollable div (by default 'skeleton__content' of Settings Page)
-export function scrollTop(selector = '.block-editor-editor-skeleton__content') {
+// scroll back to the top of scrollable div (by default 'skeleton__body' of Settings Page)
+export function scrollTop(selector = '.interface-interface-skeleton__body') {
 	document.querySelector(selector).scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// Creates a function to observe the DOM mutation and attaches callback to it
+// creates a function to observe the DOM mutation and attaches callback to it
 export function createMutationObserver(callback) {
-	const MutationObserver = window.MutationObserver || window.WebKitMutationObserver
+	const MutationObserver = window.MutationObserver || window['WebKitMutationObserver']
 	const observer = new MutationObserver(callback)
-
 	return observer
 }
 
-// Finds an element by 'selector' and start observing it for the events of mutation.
+// finds an element by 'selector' and start observing it for the events of mutation.
 // By default observed only 'childList' and its 'subtree'. If en element was not found
 // then 'disconnect' observer.
 export function observeMutation(selector, observer) {
@@ -165,7 +161,7 @@ export function observeMutation(selector, observer) {
 	})
 }
 
-// Input/Textarea manipulations (compatible with React)------------------------]
+// Input/Textarea manipulations (compatible with React)--------------------------------------------]
 
 export const input = {
 	get(selector) {
