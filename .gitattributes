@@ -9,6 +9,11 @@ prettier.config.cjs export-ignore
 wp-dev.config.cjs export-ignore
 wp-scripts.config.cjs export-ignore
 zukit.code-workspace export-ignore
+.nvmrc export-ignore
+translate.sh export-ignore
+translate-2-json.mjs export-ignore
+config.codekit3 export-ignore
+NOTES.md export-ignore
 
 # Archive ignore stuff
 
