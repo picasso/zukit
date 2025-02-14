@@ -1,12 +1,12 @@
 import { castArray, forEach, isFunction, isPlainObject, keys, reduce, set, unset } from 'lodash-es'
 
-// WordPress dependencies
+// wordpress dependencies
 import { useCallback, useReducer, useRef } from '@wordpress/element'
 
-// Internal dependencies
+// internal dependencies
 import { ajaxUpdateOptions } from '../fetch.js'
 
-// The state update logic with the useReducer() -------------------------------]
+// The state update logic with the useReducer() ---------------------------------------------------]
 
 function optionsReducer(options, action) {
 	switch (action.type) {
@@ -74,9 +74,9 @@ export function useOptions(initialOptions, createNotice) {
 	)
 
 	const setUpdateHook = useCallback((key, callback) => {
-		var keys = castArray(key)
+		const keys = castArray(key)
 		// create object for all keys {key: callback}
-		var callbacks = reduce(keys, (acc, val) => ((acc[val] = callback), acc), {})
+		const callbacks = reduce(keys, (acc, val) => ((acc[val] = callback), acc), {})
 		hooks.current = { ...(hooks.current || {}), ...callbacks }
 	}, [])
 
