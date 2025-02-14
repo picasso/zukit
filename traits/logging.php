@@ -50,7 +50,7 @@ trait zukit_Logging {
 		if ($this->skip_log()) return;
 
 		$data = is_array($line_shift) ? $line_shift : $this->get_log_data($params, $line_shift, $context);
-		$log = PHP_EOL . $data['log_line'] . PHP_EOL . str_repeat($this->dline, strlen($data['log_line'])) . ($data['context'] ?? '');
+		$log = PHP_EOL . $data['log_line'] . PHP_EOL . str_repeat($this->dline, strlen($data['log_line'] ?? '')) . ($data['context'] ?? '');
 		foreach ($data['args'] as $index => $var) {
 			if ($var['name'] !== '?') $log .= $this->var_label($index, $var['name']);
 			$log .= PHP_EOL . $this->dump_log($var['value']) . PHP_EOL;
