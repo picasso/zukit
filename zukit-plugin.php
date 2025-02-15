@@ -16,7 +16,7 @@ require_once('traits/exchange.php');
 
 class zukit_Plugin extends zukit_SingletonScripts {
 
-	private static $zukit_version = '2.0.1'; // .' (modified)';
+	private static $zukit_version = '2.1.0'; // .' (modified)';
 	private static $zukit_debug = false;
 
 	public $config;

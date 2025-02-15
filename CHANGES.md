@@ -1,3 +1,42 @@
+#### 2.1.0 / 2025-02-15
+
+##### Core
+
+* refactored `setupOptionsStore` and its hooks
+* refactor `externalData` to avoid mixing `blocks` and `settings` data
+* improve `null` processing in REST responses
+* improve `getIds` helper for image collections
+* add `duration` support for `useLoaders` hook
+* add `init_inner` method to resolve `init` override in `zukit_Blocks`
+* make `singleton_config_scripts` and `singleton_config` as `final` to prevent their overriding in subclasses
+
+##### Components
+
+* add `boxed` mode for `TitleIndicator` component
+* fix `checkbox-control`, `components-select-control` and `components-base-control` css
+* fix `ListInputControl` css
+
+##### Debug
+
+* add `debug-load` context for `settings` page
+* make `DevTools` always available from global `window` scope
+* rename `zu_loge` into `zu_log_errorfile` to make it more clear
+
+##### Other
+
+* add `no-var` ESLint rule
+* fix PHP 8.2 deprecations
+* fix deprecated `position` prop in `Tooltip`
+* opting into the new margin-free styles
+* opting into the new 40px default height
+* fix deprecated plugin slots
+* fix deprecated `Button` props
+* fix deprecated `registerStore`
+* fix `preserveAspectRatio` for loaders
+* fix bug in `zusnippets_Loader`
+* fix bug when `$context` is not string
+* fix `gitattributes` generation
+
 #### 2.0.1 / 2025-01-08
 
 * update outdated npm packages
