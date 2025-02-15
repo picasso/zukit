@@ -1,11 +1,11 @@
-import { defaults, get, keys } from 'lodash-es'
+import { defaults, get, isEmpty, keys } from 'lodash-es'
 
-// WordPress dependencies
+// wordpress dependencies
 import apiFetch from '@wordpress/api-fetch'
 // https://developer.wordpress.org/block-editor/reference-guides/packages/packages-data/
-import { createReduxStore, register } from '@wordpress/data'
+import { createReduxStore, register as registerReduxStore } from '@wordpress/data'
 
-// Internal dependencies
+// internal dependencies
 import { requestURL } from '../fetch.js'
 export { requestURL }
 
@@ -80,11 +80,11 @@ export function getControls() {
 
 export function getResolvers(route, router, actions, fetchKey) {
 	return {
-		*getValue(key, params = {}) {
-			const requestKey = { key: fetchKey || key }
-			const path = requestURL(route, { ...requestKey, ...params }, router)
+		*getValue(requestKey, params = {}) {
+			const key = fetchKey ?? requestKey
+			const path = requestURL(route, { key, ...params }, router)
 			const value = yield actions.getValue(path)
-			return actions.setValue(key, isNull(value) ? undefined : value, params)
+			return actions.setValue(key, isEmpty(value) ? { [key]: null } : value, params)
 		},
 	}
 }
@@ -161,7 +161,8 @@ export function setupStore(params) {
 					? undefined
 					: getResolvers(getRoute, router, actions, fetchKey),
 			})
-			return register(store)
+			registerReduxStore(store)
+			return store
 		},
 	}
 }
