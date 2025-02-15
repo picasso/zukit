@@ -1,23 +1,22 @@
 import {
 	defaults,
-	isArray,
+	forEach,
 	isEmpty,
 	isFunction,
 	isNil,
 	isPlainObject,
+	isUndefined,
 	reduce,
 	some,
 } from 'lodash-es'
 
 // wordpress dependencies
 import { useDispatch, useSelect } from '@wordpress/data'
-import { useReducer, useRef } from '@wordpress/element'
+import { useCallback, useReducer, useRef, useState } from '@wordpress/element'
 
 // internal dependencies
 import { useCoreDataGeneric, useSvgFromFileGeneric } from './core-store.js'
 import { setupStore } from './generic-store.js'
-
-const emptyArray = []
 
 // custom hooks -----------------------------------------------------------------------------------]
 
@@ -55,65 +54,122 @@ export * from './core-store.js'
 
 // setup but do not register Zukit Options store (router needed!) ---------------------------------]
 
+function mergeWithPrevious(values) {
+	return (prevOptions) => {
+		if (!values) return prevOptions
+		const updated = { ...prevOptions }
+		forEach(values, (value, key) => {
+			updated[key] = value
+		})
+		return updated
+	}
+}
+
 export function setupOptionsStore(router) {
 	const ZUKIT_OPTIONS_STORE = `zukit/${router}`
 
-	const { register: registerOptionsStore } = setupStore(
-		ZUKIT_OPTIONS_STORE,
-		'options',
-		{ get: 'option', update: 'options' },
+	const { register: registerOptionsStore } = setupStore({
+		name: ZUKIT_OPTIONS_STORE,
+		stateKey: 'options',
+		routes: { get: 'option', update: 'options' },
 		router,
-	)
+	})
 
 	// Get/Set/Update Options ---------------------------------------------------------------------]
 
-	// Custom hook which returns 'option' by 'key'
+	const getAndConvert = (key, getValue) => {
+		const response = getValue?.(key)
+		const { scalar } = response ?? {}
+		// wordpress return single value as `{ scalar: value }`
+		return isEmpty(response) ? undefined : (scalar ?? response[key])
+	}
+
+	// custom hook which returns `option` by `key`
 	const useGetOption = (key, defaultValue = null) => {
-		const { value = null } = useSelect((select) => {
-			return { value: select(ZUKIT_OPTIONS_STORE).getValue(key) }
+		const value = useSelect((select) => {
+			const { getValue } = select(ZUKIT_OPTIONS_STORE)
+			return getAndConvert(key, getValue)
 		}, [])
 		return isNil(value) ? defaultValue : value
 	}
 
-	// Custom hook that returns all the 'options' that were passed in the 'keys' array
-	// if 'waitAll' is true - hook returns 'null' as long as there is at least one key with a value of 'null'
-	const useGetOptions = (keys, waitAll = false) => {
-		const optionKeys = isArray(keys) ? keys : emptyArray
-		const { gotOptions = null } = useSelect(
-			(select) => {
-				const { getValue } = select(ZUKIT_OPTIONS_STORE)
-				const reduced = reduce(
-					optionKeys,
-					(values, key) => {
-						values[key] = isNil(key) ? null : getValue(key)
-						return values
-					},
-					{},
-				)
-				return { gotOptions: reduced }
-			},
-			[optionKeys],
+	// custom hook that returns all the `options` that were passed in the `optionKeys` array
+	// if `waitAll` is `true` - hook returns `null` as long as
+	// there is at least one key with a value of `null`
+	const useGetOptions = (optionKeys, waitAll = false, setter = null) => {
+		const [options, setOptions] = useState(() =>
+			reduce(
+				optionKeys,
+				(acc, key) => {
+					acc[key] = undefined
+					return acc
+				},
+				{},
+			),
 		)
+		const [synced, setSynced] = useState(false)
 
-		if (waitAll && some(gotOptions, isNil)) return null
-		// если пустой объект, то всегда возвращаем null
-		return isEmpty(gotOptions) ? null : gotOptions
+		useSelect(
+			(select) => {
+				if (isEmpty(options) || some(options, isUndefined)) {
+					const { getValue } = select(ZUKIT_OPTIONS_STORE)
+					forEach(options, (value, key) => {
+						if (value === undefined) {
+							const newValue = getAndConvert(key, getValue)
+							if (newValue !== undefined) {
+								setOptions(mergeWithPrevious({ [key]: newValue }))
+							}
+						}
+					})
+				}
+			},
+			[optionKeys, options],
+		)
+		if (waitAll && some(options, isUndefined)) return null
+		if (!isEmpty(options)) {
+			if (!synced) {
+				setSynced(true)
+				dev.info('{!SYNC}')
+				setter?.(mergeWithPrevious(options))
+			}
+			return options
+		}
+		// if an object is empty, then always return `null`
+		return null
 	}
 
-	// Custom hook which set 'option' by 'key'
+	// internal helper
+	const useUpdateProxy = (setter) => {
+		const { updateValues } = useDispatch(ZUKIT_OPTIONS_STORE)
+		return (options) => {
+			updateValues(options).then((result) => {
+				setter?.(mergeWithPrevious(result?.values))
+			})
+		}
+	}
+	// custom hook which set `option` by `key`
 	const useSetOption = () => {
-		const { updateValues } = useDispatch(ZUKIT_OPTIONS_STORE)
-		return (key, value) => updateValues({ [key]: value })
+		const update = useUpdateProxy()
+		return (key, value) => update({ [key]: value })
 	}
 
-	// Custom hook which update 'option' by 'key'
+	// custom hook which update `option` by `key`
 	const useUpdateOptions = () => {
-		const { updateValues } = useDispatch(ZUKIT_OPTIONS_STORE)
-		return updateValues
+		return useUpdateProxy()
+	}
+
+	// custom hook which returns synced `options`
+	const useOptions = (initialKeys = null, waitAll = false) => {
+		const [options, setOptions] = useState(waitAll ? null : {})
+		useGetOptions(initialKeys, waitAll, setOptions)
+		const proxy = useUpdateProxy(setOptions)
+		const updateOptions = useCallback((update) => proxy(update), [proxy])
+		return [options, updateOptions]
 	}
 
 	return {
 		registerOptionsStore,
+		useOptions,
 		useGetOption,
 		useGetOptions,
 		useSetOption,
